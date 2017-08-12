@@ -28,7 +28,9 @@
 
   "frameworks": {
     "net4.5": {
-
+      "frameworkAssemblies": {
+        "System.Runtime": { "type": "build" }
+      }
     },
     "netstandard1.1": {
 
