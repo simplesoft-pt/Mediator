@@ -26,6 +26,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{8CF88C14
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{5E085FC3-0FEF-49CC-89A1-497282B131BA}"
+	ProjectSection(SolutionItems) = preProject
+		tools\PackAllNuGets.ps1 = tools\PackAllNuGets.ps1
+		tools\SimpleSoft.Mediator.PublicKey = tools\SimpleSoft.Mediator.PublicKey
+		tools\SimpleSoft.Mediator.snk = tools\SimpleSoft.Mediator.snk
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,5 +56,6 @@ Global
 		{7CDAAB98-B7A5-465E-AE84-1E6279125417} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
 		{619AD8F7-E7A2-4B10-96A1-3B9D25595971} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 		{8CF88C14-1D18-4E9E-B57B-00E36E3223DC} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
+		{5E085FC3-0FEF-49CC-89A1-497282B131BA} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
 	EndGlobalSection
 EndGlobal
