@@ -34,20 +34,20 @@ namespace SimpleSoft.Mediator
     public class DelegateHandlerFactory : IHandlerFactory
     {
         private readonly Service _serviceFactory;
-        private readonly CollectionService _collectionServiceFactory;
+        private readonly ServiceCollection _serviceCollectionFactory;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
         /// <param name="serviceFactory"></param>
-        /// <param name="collectionServiceFactory"></param>
-        public DelegateHandlerFactory(Service serviceFactory, CollectionService collectionServiceFactory)
+        /// <param name="serviceCollectionFactory"></param>
+        public DelegateHandlerFactory(Service serviceFactory, ServiceCollection serviceCollectionFactory)
         {
             if (serviceFactory == null) throw new ArgumentNullException(nameof(serviceFactory));
-            if (collectionServiceFactory == null) throw new ArgumentNullException(nameof(collectionServiceFactory));
+            if (serviceCollectionFactory == null) throw new ArgumentNullException(nameof(serviceCollectionFactory));
 
             _serviceFactory = serviceFactory;
-            _collectionServiceFactory = collectionServiceFactory;
+            _serviceCollectionFactory = serviceCollectionFactory;
         }
 
         /// <inheritdoc />
@@ -72,7 +72,7 @@ namespace SimpleSoft.Mediator
         public IEnumerable<IEventHandler<TEvent>> BuildEventHandlersFor<TEvent>() 
             where TEvent : IEvent
         {
-            var services = _collectionServiceFactory(typeof(IEventHandler<TEvent>));
+            var services = _serviceCollectionFactory(typeof(IEventHandler<TEvent>));
 
             return services?.Cast<IEventHandler<TEvent>>() ?? Enumerable.Empty<IEventHandler<TEvent>>();
         }
@@ -89,6 +89,6 @@ namespace SimpleSoft.Mediator
         /// </summary>
         /// <param name="serviceType">The service type</param>
         /// <returns>The collection of resolved instances</returns>
-        public delegate IEnumerable<object> CollectionService(Type serviceType);
+        public delegate IEnumerable<object> ServiceCollection(Type serviceType);
     }
 }
