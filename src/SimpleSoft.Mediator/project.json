@@ -22,6 +22,7 @@
   },
 
   "dependencies": {
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
     "SimpleSoft.Mediator.Abstractions": { "target": "project" }
   },
 
