@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $assemblyVersion = "1.0.0"
-$assemblyFileVersion = "1.0.0.17224"
+$assemblyFileVersion = "1.0.0.17225"
 $assemblyInformationalVersion = "1.0.0-rc01"
 $nugetsDestinationPath = "..\nuget-builds\$($assemblyInformationalVersion)"
 
