@@ -18,7 +18,8 @@
   },
   "buildOptions": {
     "xmlDoc": true,
-    "optimize": true
+    "optimize": true,
+    "keyFile": "../../tools/SimpleSoft.Mediator.snk"
   },
 
   "dependencies": {
