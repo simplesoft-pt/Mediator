@@ -1,8 +1,28 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.0.0-alpha01",
+  "title": "SimpleSoft.Mediator",
+  "description": "Mediator implementation for commands and events.",
+  "authors": [ "João Simões" ],
+  "copyright": "Copyright © 2017 Simplesoft.pt",
+  "packOptions": {
+    "summary": "Mediator implementation for commands and events.",
+    "tags": [ "patterns", "mediator" ],
+    "projectUrl": "https://github.com/simplesoft-pt/Mediator",
+    "licenseUrl": "https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE",
+    "releaseNotes": "",
+    "owners": [ "João Simões" ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/simplesoft-pt/Mediator.git"
+    }
+  },
+  "buildOptions": {
+    "xmlDoc": true,
+    "optimize": true
+  },
 
   "dependencies": {
-
+    "SimpleSoft.Mediator.Abstractions": { "target": "project" }
   },
 
   "frameworks": {
@@ -10,10 +30,7 @@
 
     },
     "netstandard1.1": {
-      "dependencies": {
-        "System.Runtime": "4.1.0",
-        "System.Runtime.InteropServices": "4.1.0"
-      }
+
     }
   }
 }
