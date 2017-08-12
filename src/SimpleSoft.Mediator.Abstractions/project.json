@@ -3,7 +3,7 @@
   "title": "SimpleSoft.Mediator.Abstractions",
   "description": "Mediator interfaces for commands and events.",
   "authors": [ "João Simões" ],
-  "copyright": "Copyright © 2017 João Simões",
+  "copyright": "Copyright © 2017 Simplesoft.pt",
   "packOptions": {
     "summary": "Mediator interfaces for commands and events.",
     "tags": [ "patterns", "mediator" ],
