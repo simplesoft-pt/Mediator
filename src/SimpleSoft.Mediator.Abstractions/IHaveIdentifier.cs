@@ -10,6 +10,6 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// The unique identifier
         /// </summary>
-        Guid Id { get; }
+        Guid Id { get; set; }
     }
 }
