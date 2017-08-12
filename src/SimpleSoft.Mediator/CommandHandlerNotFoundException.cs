@@ -8,7 +8,10 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class CommandHandlerNotFoundException : InvalidOperationException
     {
+        private const string DefaultMessageFormat = "The command '{0}' does not have any handler";
+
         internal CommandHandlerNotFoundException(Type commandType)
+            : base(string.Format(DefaultMessageFormat, commandType.Name))
         {
             CommandType = commandType;
         }
