@@ -34,10 +34,11 @@ namespace SimpleSoft.Mediator
     {
         private const string DefaultMessageFormat = "The command '{0}' does not have any handler";
 
-        internal CommandHandlerNotFoundException(Type commandType)
+        private CommandHandlerNotFoundException(Type commandType, object commandData)
             : base(string.Format(DefaultMessageFormat, commandType.Name))
         {
             CommandType = commandType;
+            CommandData = commandData;
         }
 
         /// <summary>
@@ -51,13 +52,44 @@ namespace SimpleSoft.Mediator
         public string CommandName => CommandType.Name;
 
         /// <summary>
+        /// The command that caused this exception
+        /// </summary>
+        public object CommandData { get; }
+
+        /// <summary>
+        /// Returns the <see cref="CommandData"/> instance as the
+        /// given <see cref="ICommand"/>.
+        /// </summary>
+        /// <typeparam name="TCommand">The command type</typeparam>
+        /// <returns>The command</returns>
+        public TCommand Command<TCommand>() where TCommand : ICommand
+        {
+            return (TCommand) CommandData;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="CommandData"/> instance as the
+        /// given <see cref="ICommand{TResult}"/>.
+        /// </summary>
+        /// <typeparam name="TCommand">The command type</typeparam>
+        /// <typeparam name="TResult">The command result type</typeparam>
+        /// <returns>The command</returns>
+        public TCommand Command<TCommand, TResult>() where TCommand : ICommand<TResult>
+        {
+            return (TCommand) CommandData;
+        }
+
+        /// <summary>
         /// Builds a new exception.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
         /// <returns>The exception instance</returns>
-        public static CommandHandlerNotFoundException Build<TCommand>() where TCommand : ICommand
+        public static CommandHandlerNotFoundException Build<TCommand>(TCommand cmd) 
+            where TCommand : ICommand
         {
-            return new CommandHandlerNotFoundException(typeof(TCommand));
+            if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+            return new CommandHandlerNotFoundException(typeof(TCommand), cmd);
         }
 
         /// <summary>
@@ -66,9 +98,12 @@ namespace SimpleSoft.Mediator
         /// <typeparam name="TCommand">The command type</typeparam>
         /// <typeparam name="TResult">The command result type</typeparam>
         /// <returns>The exception instance</returns>
-        public static CommandHandlerNotFoundException Build<TCommand, TResult>() where TCommand : ICommand<TResult>
+        public static CommandHandlerNotFoundException Build<TCommand, TResult>(TCommand cmd) 
+            where TCommand : ICommand<TResult>
         {
-            return new CommandHandlerNotFoundException(typeof(TCommand));
+            if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+            return new CommandHandlerNotFoundException(typeof(TCommand), cmd);
         }
     }
 }

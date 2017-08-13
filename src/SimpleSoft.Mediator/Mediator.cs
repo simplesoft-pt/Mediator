@@ -63,7 +63,7 @@ namespace SimpleSoft.Mediator
                 _logger.LogDebug("Building command handler");
                 var handler = _factory.BuildCommandHandlerFor<TCommand>();
                 if (handler == null)
-                    throw CommandHandlerNotFoundException.Build<TCommand>();
+                    throw CommandHandlerNotFoundException.Build(cmd);
 
                 _logger.LogDebug("Invoking command handler");
                 await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
@@ -81,7 +81,7 @@ namespace SimpleSoft.Mediator
                 _logger.LogDebug("Building command handler");
                 var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
                 if (handler == null)
-                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>();
+                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
 
                 _logger.LogDebug("Invoking command handler");
                 return await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
