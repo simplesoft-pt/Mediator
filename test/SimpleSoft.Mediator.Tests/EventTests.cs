@@ -1,4 +1,5 @@
 ﻿using System;
+using SimpleSoft.Mediator.Tests.Mocks;
 using Xunit;
 
 namespace SimpleSoft.Mediator.Tests
@@ -30,20 +31,6 @@ namespace SimpleSoft.Mediator.Tests
             Assert.Equal(id, evt.Id);
             Assert.Equal(createdOn, evt.CreatedOn);
             Assert.Equal(createdBy, evt.CreatedBy);
-        }
-
-        private class MockEvent : Event
-        {
-            public MockEvent()
-            {
-                
-            }
-
-            public MockEvent(Guid id, DateTimeOffset createdOn, string createdBy) 
-                : base(id, createdOn, createdBy)
-            {
-
-            }
         }
     }
 }

@@ -2,14 +2,14 @@ using System;
 
 namespace SimpleSoft.Mediator.Tests.Mocks
 {
-    public class MockCommand : Command
+    public class MockEvent : Event
     {
-        public MockCommand()
+        public MockEvent()
         {
 
         }
 
-        public MockCommand(Guid id, DateTimeOffset createdOn, string createdBy)
+        public MockEvent(Guid id, DateTimeOffset createdOn, string createdBy)
             : base(id, createdOn, createdBy)
         {
 

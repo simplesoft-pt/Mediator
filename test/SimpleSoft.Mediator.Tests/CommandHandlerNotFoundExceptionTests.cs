@@ -1,4 +1,5 @@
 ﻿using System;
+using SimpleSoft.Mediator.Tests.Mocks;
 using Xunit;
 
 namespace SimpleSoft.Mediator.Tests
@@ -57,16 +58,6 @@ namespace SimpleSoft.Mediator.Tests
             {
                 ex.Command<MockCommand>();
             });
-        }
-
-        public class MockCommand : Command
-        {
-
-        }
-
-        public class MockResultCommand : Command<object>
-        {
-
         }
     }
 }

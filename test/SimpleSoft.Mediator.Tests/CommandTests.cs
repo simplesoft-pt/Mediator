@@ -1,4 +1,5 @@
 ﻿using System;
+using SimpleSoft.Mediator.Tests.Mocks;
 using Xunit;
 
 namespace SimpleSoft.Mediator.Tests
@@ -23,7 +24,7 @@ namespace SimpleSoft.Mediator.Tests
         {
             var now = DateTimeOffset.Now;
 
-            var evt = new MockCommand<object>();
+            var evt = new MockResultCommand();
 
             Assert.NotEqual(default(Guid), evt.Id);
             Assert.NotEqual(default(DateTimeOffset), evt.CreatedOn);
@@ -52,39 +53,11 @@ namespace SimpleSoft.Mediator.Tests
             var createdOn = DateTimeOffset.Now.AddMinutes(-1);
             const string createdBy = "test-user";
 
-            var evt = new MockCommand<object>(id, createdOn, createdBy);
+            var evt = new MockResultCommand(id, createdOn, createdBy);
 
             Assert.Equal(id, evt.Id);
             Assert.Equal(createdOn, evt.CreatedOn);
             Assert.Equal(createdBy, evt.CreatedBy);
-        }
-
-        private class MockCommand : Command
-        {
-            public MockCommand()
-            {
-                
-            }
-
-            public MockCommand(Guid id, DateTimeOffset createdOn, string createdBy)
-                : base(id, createdOn, createdBy)
-            {
-
-            }
-        }
-
-        private class MockCommand<TResult> : Command<TResult>
-        {
-            public MockCommand()
-            {
-
-            }
-
-            public MockCommand(Guid id, DateTimeOffset createdOn, string createdBy)
-                : base(id, createdOn, createdBy)
-            {
-
-            }
         }
     }
 }
