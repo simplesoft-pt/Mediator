@@ -1,40 +1,41 @@
 ﻿{
-  "version": "1.0.0-rc01",
-  "title": "SimpleSoft.Mediator.Abstractions",
-  "description": "Mediator interfaces for commands and events.",
-  "authors": [ "João Simões" ],
-  "copyright": "Copyright © 2017 Simplesoft.pt",
-  "packOptions": {
-    "summary": "Mediator interfaces for commands and events.",
-    "tags": [ "patterns", "mediator" ],
-    "projectUrl": "https://github.com/simplesoft-pt/Mediator",
-    "licenseUrl": "https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE",
-    "releaseNotes": "",
-    "owners": [ "João Simões" ],
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/simplesoft-pt/Mediator.git"
-    }
-  },
-  "buildOptions": {
-    "xmlDoc": true,
-    "optimize": true,
-    "keyFile": "../../tools/SimpleSoft.Mediator.snk"
-  },
+    "version": "1.0.0-rc01",
+    "title": "SimpleSoft.Mediator.Abstractions",
+    "description": "Mediator interfaces for commands and events.",
+    "authors": [ "João Simões" ],
+    "copyright": "Copyright © 2017 Simplesoft.pt",
+    "packOptions": {
+        "summary": "Mediator interfaces for commands and events.",
+        "tags": [ "patterns", "mediator" ],
+        "projectUrl": "https://github.com/simplesoft-pt/Mediator",
+        "licenseUrl": "https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE",
+        "iconUrl": "https://avatars2.githubusercontent.com/u/30837484",
+        "releaseNotes": "",
+        "owners": [ "João Simões" ],
+        "repository": {
+            "type": "git",
+            "url": "https://github.com/simplesoft-pt/Mediator.git"
+        }
+    },
+    "buildOptions": {
+        "xmlDoc": true,
+        "optimize": true,
+        "keyFile": "../../tools/SimpleSoft.Mediator.snk"
+    },
 
-  "dependencies": {
-
-  },
-
-  "frameworks": {
-    "net4.5": {
+    "dependencies": {
 
     },
-    "netstandard1.1": {
-      "dependencies": {
-        "System.Runtime.InteropServices": "4.1.0",
-        "System.Threading.Tasks": "4.0.11"
-      }
+
+    "frameworks": {
+        "net4.5": {
+
+        },
+        "netstandard1.1": {
+            "dependencies": {
+                "System.Runtime.InteropServices": "4.1.0",
+                "System.Threading.Tasks": "4.0.11"
+            }
+        }
     }
-  }
 }

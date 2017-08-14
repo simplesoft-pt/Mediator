@@ -1,40 +1,41 @@
 ﻿{
-  "version": "1.0.0-rc01",
-  "title": "SimpleSoft.Mediator",
-  "description": "Mediator implementation for commands and events.",
-  "authors": [ "João Simões" ],
-  "copyright": "Copyright © 2017 Simplesoft.pt",
-  "packOptions": {
-    "summary": "Mediator implementation for commands and events.",
-    "tags": [ "patterns", "mediator" ],
-    "projectUrl": "https://github.com/simplesoft-pt/Mediator",
-    "licenseUrl": "https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE",
-    "releaseNotes": "",
-    "owners": [ "João Simões" ],
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/simplesoft-pt/Mediator.git"
-    }
-  },
-  "buildOptions": {
-    "xmlDoc": true,
-    "optimize": true,
-    "keyFile": "../../tools/SimpleSoft.Mediator.snk"
-  },
-
-  "dependencies": {
-    "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
-    "SimpleSoft.Mediator.Abstractions": { "target": "project" }
-  },
-
-  "frameworks": {
-    "net4.5": {
-      "frameworkAssemblies": {
-        "System.Runtime": { "type": "build" }
-      }
+    "version": "1.0.0-rc01",
+    "title": "SimpleSoft.Mediator",
+    "description": "Mediator implementation for commands and events.",
+    "authors": [ "João Simões" ],
+    "copyright": "Copyright © 2017 Simplesoft.pt",
+    "packOptions": {
+        "summary": "Mediator implementation for commands and events.",
+        "tags": [ "patterns", "mediator" ],
+        "projectUrl": "https://github.com/simplesoft-pt/Mediator",
+        "licenseUrl": "https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE",
+        "iconUrl": "https://avatars2.githubusercontent.com/u/30837484",
+        "releaseNotes": "",
+        "owners": [ "João Simões" ],
+        "repository": {
+            "type": "git",
+            "url": "https://github.com/simplesoft-pt/Mediator.git"
+        }
     },
-    "netstandard1.1": {
+    "buildOptions": {
+        "xmlDoc": true,
+        "optimize": true,
+        "keyFile": "../../tools/SimpleSoft.Mediator.snk"
+    },
 
+    "dependencies": {
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+        "SimpleSoft.Mediator.Abstractions": { "target": "project" }
+    },
+
+    "frameworks": {
+        "net4.5": {
+            "frameworkAssemblies": {
+                "System.Runtime": { "type": "build" }
+            }
+        },
+        "netstandard1.1": {
+
+        }
     }
-  }
 }
