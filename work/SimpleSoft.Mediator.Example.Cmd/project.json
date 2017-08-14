@@ -1,0 +1,19 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Microsoft.Extensions.DependencyInjection": "1.1.1",
+    "Microsoft.Extensions.Logging": "1.1.2",
+    "Microsoft.Extensions.Logging.Console": "1.1.2",
+    "SimpleSoft.Mediator": "1.0.0-rc01"
+  },
+
+  "frameworks": {
+    "net4.7": {
+
+    }
+  }
+}
