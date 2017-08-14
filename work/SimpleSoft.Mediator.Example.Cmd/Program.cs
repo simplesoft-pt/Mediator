@@ -10,6 +10,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
 {
     public class Program
     {
+        private static readonly CancellationTokenSource TokenSource = new CancellationTokenSource();
         private static readonly ILoggerFactory LoggerFactory;
         private static readonly ILogger<Program> Logger;
 
@@ -25,12 +26,19 @@ namespace SimpleSoft.Mediator.Example.Cmd
             Logger.LogInformation("Application started...");
             try
             {
-                var serviceProvider = BuildServiceProvider();
+                Console.CancelKeyPress += (sender, eventArgs) =>
+                {
+                    TokenSource.Cancel();
+                    eventArgs.Cancel = true;
+                };
 
-                var mediator = serviceProvider.GetRequiredService<IMediator>();
-                mediator.PublishAsync<RegisterUserCommand, Guid>(new RegisterUserCommand(
-                        Guid.NewGuid(), "someone@domain.com", "123456"), CancellationToken.None)
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                BuildServiceProvider().GetRequiredService<Application>()
+                    .RunAsync(TokenSource.Token).ConfigureAwait(false)
+                    .GetAwaiter().GetResult();
+            }
+            catch (TaskCanceledException)
+            {
+                Logger.LogWarning("The code execution has been canceled.");
             }
             catch (Exception e)
             {
@@ -46,15 +54,17 @@ namespace SimpleSoft.Mediator.Example.Cmd
         private static IServiceProvider BuildServiceProvider()
         {
             var serviceCollection = new ServiceCollection()
-                .AddSingleton(LoggerFactory)
-                .AddLogging()
-                .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                .AddSingleton<IHandlerFactory>(s => new DelegateHandlerFactory(s.GetService, s.GetServices))
-                .AddSingleton<IMediator, Mediator>();
+                    .AddSingleton(LoggerFactory)
+                    .AddLogging()
+                    .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
+                    .AddSingleton<IHandlerFactory>(s => new DelegateHandlerFactory(s.GetService, s.GetServices))
+                    .AddSingleton<IMediator, Mediator>()
+                    .AddSingleton<Application>()
+                ;
 
                 // this should be a class implementing ICommandHandler<RegisterUserCommand>
-            serviceCollection    
-                .AddTransient(s => DelegateHandler.Command<RegisterUserCommand, Guid>((cmd, ct) =>
+            serviceCollection
+                .AddTransient(s => DelegateHandler.Command<RegisterUserCommand, Guid>(async (cmd, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
                     if (store.Values.Any(e => e.Email.Equals(cmd.Email, StringComparison.OrdinalIgnoreCase)))
@@ -64,6 +74,8 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         throw new InvalidOperationException("Duplicated user email");
                     }
 
+                    await Task.Delay(1000, ct);
+
                     var userId = Guid.NewGuid();
                     store.Add(userId, new User
                     {
@@ -71,14 +83,14 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         Password = cmd.Password
                     });
 
-                    //  this could be a UserCreatedEvent instead
+                    //  this could be a UserCreatedEvent instead of a command returning a result
                     //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
-                    return Task.FromResult(userId);
+                    return userId;
                 }));
 
             // this should be a class implementing ICommandHandler<ChangeUserPasswordCommand>
             serviceCollection
-                .AddTransient(s => DelegateHandler.Command<ChangeUserPasswordCommand>((cmd, ct) =>
+                .AddTransient(s => DelegateHandler.Command<ChangeUserPasswordCommand>(async (cmd, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
                     User user;
@@ -86,8 +98,10 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     {
                         if (user.Password.Equals(cmd.OldPassword))
                         {
+                            await Task.Delay(1000, ct);
+
                             user.Password = cmd.NewPassword;
-                            return Task.CompletedTask;
+                            return;
                         }
 
                         throw new InvalidOperationException($"Invalid password for user id '{cmd.UserId}'");
