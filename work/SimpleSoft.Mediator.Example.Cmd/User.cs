@@ -1,6 +1,4 @@
-using System;
-
-namespace SimpleSoft.Mediator.Example.Cmd.Middleware
+namespace SimpleSoft.Mediator.Example.Cmd
 {
     public class User
     {

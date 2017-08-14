@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SimpleSoft.Mediator.Example.Cmd.Middleware
+namespace SimpleSoft.Mediator.Example.Cmd
 {
-    public class RegisterUserCommand : Command
+    public class RegisterUserCommand : Command<Guid>
     {
         public RegisterUserCommand(Guid id, string email, string password)
         {
