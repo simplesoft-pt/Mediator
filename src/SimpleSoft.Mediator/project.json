@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc01",
+    "version": "1.0.0-rc02",
     "title": "SimpleSoft.Mediator",
     "description": "Mediator implementation for commands and events.",
     "authors": [ "João Simões" ],
