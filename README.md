@@ -27,7 +27,7 @@ This library is compatible with the folowing frameworks:
 * .NET Core 5.0
 
 ## Usage
-Documentation is available via [wiki](https://github.com/simplesoft-pt/Mediator/wiki) or you can check the [working](https://github.com/simplesoft-pt/Mediator/tree/master/work/) or [test](https://github.com/simplesoft-pt/Mediator/tree/master/test) code.
+Documentation is available via [wiki](https://github.com/simplesoft-pt/Mediator/wiki) or you can check the [working](https://github.com/simplesoft-pt/Mediator/tree/master/work/) examples or [test](https://github.com/simplesoft-pt/Mediator/tree/master/test) code.
 
 Here is an example of a command handler that also sends some events:
 ```csharp
@@ -46,8 +46,29 @@ public class CommandFailedEvent : Event {
 }
 
 public class UsersCommandHandler : ICommandHandler<CreateUserCommand> {
-  public async Task HandleAsync(CreateUserCommand cmd, CancellationToken ct){
   
+  private readonly IMediator _mediator;
+  
+  public UsersCommandHandler(IMediator mediator) {
+    _mediator = mediator;
+  }
+  
+  public async Task HandleAsync(CreateUserCommand cmd, CancellationToken ct){
+    var userId = Guid.NewGuid();
+    
+    // try add the user to some store
+    
+    if(/*user was added*/) {
+      await _mediator.BroadcastAsync(new UserCreatedEvent {
+        UserId = userId
+      }, ct);
+    }
+    else {
+      await _mediator.BroadcastAsync(new CommandFailedEvent {
+        CommandId = cmd.Id,
+        Message = "Duplicated user or something"
+      }, ct);
+    }
   }
 }
 ```
