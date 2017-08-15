@@ -1,2 +1,2 @@
 # Mediator
-Mediator implementation that provides commands and event handlers
+Mediator library for .NET to help inplement in-process command and event patterns.
