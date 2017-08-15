@@ -19,3 +19,35 @@ Install-Package SimpleSoft.Mediator
 dotnet add package SimpleSoft.Mediator.Abstractions
 dotnet add package SimpleSoft.Mediator
 ```
+## Compatibility
+This library is compatible with the folowing frameworks:
+
+* .NET Framework 4.5;
+* .NET Standard 1.1;
+* .NET Core 5.0
+
+## Usage
+Documentation is available via [wiki](https://github.com/simplesoft-pt/Mediator/wiki) or you can check the [working](https://github.com/simplesoft-pt/Mediator/tree/master/work/) or [test](https://github.com/simplesoft-pt/Mediator/tree/master/test) code.
+
+Here is an example of a command handler that also sends some events:
+```csharp
+public class CreateUserCommand : Command {
+  public string Email { get; set; }
+  public string Password { get; set; }
+}
+
+public class UserCreatedEvent : Event {
+  public Guid UserId { get; set; }
+}
+
+public class CommandFailedEvent : Event {
+  public Guid CommandId { get; set; }
+  public string Message { get; set; }
+}
+
+public class UsersCommandHandler : ICommandHandler<CreateUserCommand> {
+  public async Task HandleAsync(CreateUserCommand cmd, CancellationToken ct){
+  
+  }
+}
+```
