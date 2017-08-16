@@ -39,7 +39,7 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to publish</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct)
+        Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken))
             where TCommand : ICommand;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to publish</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
-        Task<TResult> PublishAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct)
+        Task<TResult> PublishAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default(CancellationToken))
             where TCommand : ICommand<TResult>;
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SimpleSoft.Mediator
         /// <param name="evt">The event to broadcast</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct)
+        Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default(CancellationToken))
             where TEvent : IEvent;
     }
 }

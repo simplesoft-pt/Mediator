@@ -15,7 +15,7 @@ namespace SimpleSoft.Mediator.Internal
             _handler = handler;
         }
 
-        public async Task HandleAsync(TCommand cmd, CancellationToken ct)
+        public async Task HandleAsync(TCommand cmd, CancellationToken ct = default(CancellationToken))
         {
             await _handler(cmd, ct).ConfigureAwait(false);
         }
@@ -32,7 +32,7 @@ namespace SimpleSoft.Mediator.Internal
             _handler = handler;
         }
 
-        public async Task<TResult> HandleAsync(TCommand cmd, CancellationToken ct)
+        public async Task<TResult> HandleAsync(TCommand cmd, CancellationToken ct = default(CancellationToken))
         {
             return await _handler(cmd, ct).ConfigureAwait(false);
         }

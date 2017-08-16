@@ -53,7 +53,8 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct) where TCommand : ICommand
+        public async Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken)) 
+            where TCommand : ICommand
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
             
@@ -71,7 +72,8 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task<TResult> PublishAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct) where TCommand : ICommand<TResult>
+        public async Task<TResult> PublishAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default(CancellationToken)) 
+            where TCommand : ICommand<TResult>
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
             
@@ -89,7 +91,8 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct) where TEvent : IEvent
+        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default(CancellationToken)) 
+            where TEvent : IEvent
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
