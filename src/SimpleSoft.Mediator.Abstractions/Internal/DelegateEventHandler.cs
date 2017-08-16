@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace SimpleSoft.Mediator.Internal
 {
-    internal class DelegateEventHandler<TEvent> : IEventHandler<TEvent>
+    internal sealed class DelegateEventHandler<TEvent> : IEventHandler<TEvent>
         where TEvent : IEvent
     {
         private readonly Func<TEvent, CancellationToken, Task> _handler;

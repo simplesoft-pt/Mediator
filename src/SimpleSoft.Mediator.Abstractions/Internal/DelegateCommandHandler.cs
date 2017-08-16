@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace SimpleSoft.Mediator.Internal
 {
-    internal class DelegateCommandHandler<TCommand> : ICommandHandler<TCommand>
+    internal sealed class DelegateCommandHandler<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
         private readonly Func<TCommand, CancellationToken, Task> _handler;
@@ -45,7 +45,7 @@ namespace SimpleSoft.Mediator.Internal
         }
     }
 
-    internal class DelegateCommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    internal sealed class DelegateCommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
         where TCommand : ICommand<TResult>
     {
         private readonly Func<TCommand, CancellationToken, Task<TResult>> _handler;
