@@ -40,11 +40,6 @@ public class UserCreatedEvent : Event {
   public Guid UserId { get; set; }
 }
 
-public class CommandFailedEvent : Event {
-  public Guid CommandId { get; set; }
-  public string Message { get; set; }
-}
-
 public class UsersCommandHandler : ICommandHandler<CreateUserCommand> {
   
   private readonly IMediator _mediator;
@@ -58,17 +53,9 @@ public class UsersCommandHandler : ICommandHandler<CreateUserCommand> {
     
     // try add the user to some store
     
-    if(/*user was added*/) {
-      await _mediator.BroadcastAsync(new UserCreatedEvent {
-        UserId = userId
-      }, ct);
-    }
-    else {
-      await _mediator.BroadcastAsync(new CommandFailedEvent {
-        CommandId = cmd.Id,
-        Message = "Duplicated user or something"
-      }, ct);
-    }
+    await _mediator.BroadcastAsync(new UserCreatedEvent {
+      UserId = userId
+    }, ct);
   }
 }
 ```
