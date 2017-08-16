@@ -34,6 +34,9 @@
                 "System.Runtime": { "type": "build" }
             }
         },
+        "netcore5.0": {
+
+        },
         "netstandard1.1": {
 
         }
