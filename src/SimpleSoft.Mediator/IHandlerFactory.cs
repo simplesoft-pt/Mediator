@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {
@@ -56,5 +57,23 @@ namespace SimpleSoft.Mediator
         /// <returns>A collection of event handlers</returns>
         IEnumerable<IEventHandler<TEvent>> BuildEventHandlersFor<TEvent>()
             where TEvent : IEvent;
+
+        /// <summary>
+        /// Builds a collection of <see cref="IHandlingExecutingFilter"/>.
+        /// </summary>
+        /// <returns>A collection of filters</returns>
+        IEnumerable<IHandlingExecutingFilter> BuildExecutingFilters();
+
+        /// <summary>
+        /// Builds a collection of <see cref="IHandlingExecutedFilter"/>.
+        /// </summary>
+        /// <returns>A collection of filters</returns>
+        IEnumerable<IHandlingExecutedFilter> BuildExecutedFilters();
+
+        /// <summary>
+        /// Builds a collection of <see cref="IHandlingFailedFilter"/>.
+        /// </summary>
+        /// <returns>A collection of filters</returns>
+        IEnumerable<IHandlingFailedFilter> BuildFailedFilters();
     }
 }

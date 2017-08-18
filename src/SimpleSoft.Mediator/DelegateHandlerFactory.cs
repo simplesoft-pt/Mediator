@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {
@@ -75,6 +76,30 @@ namespace SimpleSoft.Mediator
             var services = _serviceCollectionFactory(typeof(IEventHandler<TEvent>));
 
             return services?.Cast<IEventHandler<TEvent>>() ?? Enumerable.Empty<IEventHandler<TEvent>>();
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IHandlingExecutingFilter> BuildExecutingFilters()
+        {
+            var services = _serviceCollectionFactory(typeof(IHandlingExecutingFilter));
+
+            return services?.Cast<IHandlingExecutingFilter>() ?? Enumerable.Empty<IHandlingExecutingFilter>();
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IHandlingExecutedFilter> BuildExecutedFilters()
+        {
+            var services = _serviceCollectionFactory(typeof(IHandlingExecutedFilter));
+
+            return services?.Cast<IHandlingExecutedFilter>() ?? Enumerable.Empty<IHandlingExecutedFilter>();
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IHandlingFailedFilter> BuildFailedFilters()
+        {
+            var services = _serviceCollectionFactory(typeof(IHandlingFailedFilter));
+
+            return services?.Cast<IHandlingFailedFilter>() ?? Enumerable.Empty<IHandlingFailedFilter>();
         }
 
         /// <summary>
