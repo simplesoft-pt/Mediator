@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace SimpleSoft.Mediator.Pipeline
 {
     /// <summary>
-    /// Handling middleware interface that can be used to intercept commands and events
+    /// Handling middleware that can be used to intercept commands and events
     /// </summary>
     public interface IHandlingMiddleware
     {
@@ -42,5 +42,4 @@ namespace SimpleSoft.Mediator.Pipeline
         Task OnEventAsync<TEvent>(HandlingEventDelegate<TEvent> next, TEvent evt, CancellationToken ct)
             where TEvent : IEvent;
     }
-
 }
