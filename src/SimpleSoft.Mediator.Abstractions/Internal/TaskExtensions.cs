@@ -26,8 +26,19 @@ using System.Threading.Tasks;
 
 namespace SimpleSoft.Mediator.Internal
 {
-    internal static class TaskExtensions
+  internal static class TaskExtensions
+  {
+#if NET40
+    public static readonly Task CompletedTask;
+
+    static TaskExtensions()
     {
-        public static readonly Task CompletedTask = Task.FromResult(true);
+      var tcs = new TaskCompletionSource<bool>();
+      tcs.SetResult(true);
+      CompletedTask = tcs.Task;
     }
+#else
+      public static readonly Task CompletedTask = Task.FromResult(true);
+#endif
+  }
 }
