@@ -2,7 +2,7 @@
 
 namespace SimpleSoft.Mediator.Internal
 {
-    internal static class Helpers
+    internal static class TaskExtensions
     {
         public static readonly Task CompletedTask = Task.FromResult(true);
     }

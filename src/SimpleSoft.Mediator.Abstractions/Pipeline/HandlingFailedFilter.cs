@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using SimpleSoft.Mediator.Internal;
+using TaskExtensions = SimpleSoft.Mediator.Internal.TaskExtensions;
 
 namespace SimpleSoft.Mediator.Pipeline
 {
@@ -13,19 +14,19 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <inheritdoc />
         public virtual Task CommandFailedAsync<TCommand>(TCommand cmd, Exception exception, CancellationToken ct) where TCommand : ICommand
         {
-            return Helpers.CompletedTask;
+            return TaskExtensions.CompletedTask;
         }
 
         /// <inheritdoc />
         public virtual Task CommandFailedAsync<TCommand, TResult>(TCommand cmd, Exception exception, CancellationToken ct) where TCommand : ICommand<TResult>
         {
-            return Helpers.CompletedTask;
+            return TaskExtensions.CompletedTask;
         }
 
         /// <inheritdoc />
         public virtual Task EventFailedAsync<TEvent>(TEvent evt, Exception exception, CancellationToken ct) where TEvent : IEvent
         {
-            return Helpers.CompletedTask;
+            return TaskExtensions.CompletedTask;
         }
     }
 }
