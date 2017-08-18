@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // The MIT License (MIT)
 // 
 // Copyright (c) 2017 Simplesoft.pt
@@ -25,32 +25,26 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Pipeline
+namespace SimpleSoft.Mediator.Middleware
 {
     /// <summary>
-    /// Handling middleware that can be used to intercept commands and events
+    /// Method invoked when an <see cref="ICommand"/> is published.
     /// </summary>
-    public abstract class HandlingMiddleware : IHandlingMiddleware
-    {
-        /// <inheritdoc />
-        public virtual async Task OnCommandAsync<TCommand>(HandlingCommandDelegate<TCommand> next, TCommand cmd, CancellationToken ct) 
-            where TCommand : ICommand
-        {
-            await next(cmd, ct).ConfigureAwait(false);
-        }
+    /// <typeparam name="TCommand">The command type</typeparam>
+    /// <param name="cmd">The command published</param>
+    /// <param name="ct">The cancellation token</param>
+    /// <returns>A task to be awaited</returns>
+    public delegate Task HandlingCommandDelegate<in TCommand>(TCommand cmd, CancellationToken ct)
+        where TCommand : ICommand;
 
-        /// <inheritdoc />
-        public virtual async Task<TResult> OnCommandAsync<TCommand, TResult>(HandlingCommandDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)
-            where TCommand : ICommand<TResult>
-        {
-            return await next(cmd, ct).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public virtual async Task OnEventAsync<TEvent>(HandlingEventDelegate<TEvent> next, TEvent evt, CancellationToken ct) 
-            where TEvent : IEvent
-        {
-            await next(evt, ct).ConfigureAwait(false);
-        }
-    }
+    /// <summary>
+    /// Method invoked when an <see cref="ICommand{TResult}"/> is published.
+    /// </summary>
+    /// <typeparam name="TCommand">The command type</typeparam>
+    /// <typeparam name="TResult">The result type</typeparam>
+    /// <param name="cmd">The command published</param>
+    /// <param name="ct">The cancellation token</param>
+    /// <returns>A task to be awaited for the result</returns>
+    public delegate Task<TResult> HandlingCommandDelegate<in TCommand, TResult>(TCommand cmd, CancellationToken ct)
+        where TCommand : ICommand<TResult>;
 }

@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SimpleSoft.Mediator.Pipeline;
+using SimpleSoft.Mediator.Middleware;
 
 namespace SimpleSoft.Mediator
 {
