@@ -15,7 +15,7 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <param name="cmd">The command to be handled</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task CommandExecutingAsync<TCommand>(TCommand cmd, CancellationToken ct)
+        Task CommandExecutedAsync<TCommand>(TCommand cmd, CancellationToken ct)
             where TCommand : ICommand;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <param name="result">The command result</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task CommandExecutingAsync<TCommand, TResult>(TCommand cmd, TResult result, CancellationToken ct)
+        Task CommandExecutedAsync<TCommand, TResult>(TCommand cmd, TResult result, CancellationToken ct)
             where TCommand : ICommand<TResult>;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <param name="evt">The event to be handled</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task BeforeEventAsync<TEvent>(TEvent evt, CancellationToken ct)
+        Task EventExecutedAsync<TEvent>(TEvent evt, CancellationToken ct)
             where TEvent : IEvent;
     }
 }

@@ -36,7 +36,7 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <param name="evt">The event to be handled</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task BeforeEventAsync<TEvent>(TEvent evt, CancellationToken ct)
+        Task EventExecutingAsync<TEvent>(TEvent evt, CancellationToken ct)
             where TEvent : IEvent;
     }
 }
