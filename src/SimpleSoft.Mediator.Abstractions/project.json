@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc02",
+    "version": "1.0.0-rc03",
     "title": "SimpleSoft.Mediator.Abstractions",
     "description": "Mediator interfaces for commands and events.",
     "authors": [ "João Simões" ],
