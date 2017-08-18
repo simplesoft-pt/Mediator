@@ -59,21 +59,9 @@ namespace SimpleSoft.Mediator
             where TEvent : IEvent;
 
         /// <summary>
-        /// Builds a collection of <see cref="IHandlingExecutingFilter"/>.
+        /// Builds a collection of <see cref="IHandlingMiddleware"/>.
         /// </summary>
         /// <returns>A collection of filters</returns>
-        IEnumerable<IHandlingExecutingFilter> BuildExecutingFilters();
-
-        /// <summary>
-        /// Builds a collection of <see cref="IHandlingExecutedFilter"/>.
-        /// </summary>
-        /// <returns>A collection of filters</returns>
-        IEnumerable<IHandlingExecutedFilter> BuildExecutedFilters();
-
-        /// <summary>
-        /// Builds a collection of <see cref="IHandlingFailedFilter"/>.
-        /// </summary>
-        /// <returns>A collection of filters</returns>
-        IEnumerable<IHandlingFailedFilter> BuildFailedFilters();
+        IEnumerable<IHandlingMiddleware> BuildMiddlewares();
     }
 }

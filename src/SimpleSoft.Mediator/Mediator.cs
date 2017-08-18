@@ -61,39 +61,13 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
             {
-                _logger.LogDebug("Invoking handling executing filters");
-                foreach (var filter in _factory.BuildExecutingFilters())
-                    await filter.OnExecutingCommandAsync(cmd, ct).ConfigureAwait(false);
-
                 _logger.LogDebug("Building command handler");
                 var handler = _factory.BuildCommandHandlerFor<TCommand>();
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build(cmd);
 
-                try
-                {
-                    _logger.LogDebug("Invoking command handler");
-                    await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    try
-                    {
-                        _logger.LogDebug("Invoking handling failed filters");
-                        foreach (var filter in _factory.BuildFailedFilters())
-                            await filter.OnFailedCommandAsync(cmd, e, ct).ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new AggregateException(
-                            "The handler failed but so did the handling failed filters", e, ex);
-                    }
-                    throw;
-                }
-
-                _logger.LogDebug("Invoking handling executed filters");
-                foreach (var filter in _factory.BuildExecutedFilters())
-                    await filter.OnExecutedCommandAsync(cmd, ct).ConfigureAwait(false);
+                _logger.LogDebug("Invoking command handler");
+                await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
             }
         }
 
@@ -106,42 +80,13 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
             {
-                _logger.LogDebug("Invoking handling executing filters");
-                foreach (var filter in _factory.BuildExecutingFilters())
-                    await filter.OnExecutingCommandAsync<TCommand, TResult>(cmd, ct).ConfigureAwait(false);
-
                 _logger.LogDebug("Building command handler");
                 var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
 
-                TResult result;
-                try
-                {
-                    _logger.LogDebug("Invoking command handler");
-                    result = await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    try
-                    {
-                        _logger.LogDebug("Invoking handling failed filters");
-                        foreach (var filter in _factory.BuildFailedFilters())
-                            await filter.OnFailedCommandAsync<TCommand, TResult>(cmd, e, ct).ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new AggregateException(
-                            "The handler failed but so did the handling failed filters", e, ex);
-                    }
-                    throw;
-                }
-
-                _logger.LogDebug("Invoking handling executed filters");
-                foreach (var filter in _factory.BuildExecutedFilters())
-                    await filter.OnExecutedCommandAsync(cmd, result, ct).ConfigureAwait(false);
-
-                return result;
+                _logger.LogDebug("Invoking command handler");
+                return await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
             }
         }
 
@@ -154,35 +99,9 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "EventName:{eventName} EventId:{eventId}", typeof(TEvent).Name, evt.Id))
             {
-                _logger.LogDebug("Invoking handling executing filters");
-                foreach (var filter in _factory.BuildExecutingFilters())
-                    await filter.OnExecutingEventAsync(evt, ct).ConfigureAwait(false);
-
-                try
-                {
-                    _logger.LogDebug("Invoking event handlers");
-                    foreach (var handler in _factory.BuildEventHandlersFor<TEvent>())
-                        await handler.HandleAsync(evt, ct).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    try
-                    {
-                        _logger.LogDebug("Invoking handling failed filters");
-                        foreach (var filter in _factory.BuildFailedFilters())
-                            await filter.OnFailedEventAsync(evt, e, ct).ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new AggregateException(
-                            "The handler failed but so did the handling failed filters", e, ex);
-                    }
-                    throw;
-                }
-
-                _logger.LogDebug("Invoking handling executed filters");
-                foreach (var filter in _factory.BuildExecutedFilters())
-                    await filter.OnExecutedEventAsync(evt, ct).ConfigureAwait(false);
+                _logger.LogDebug("Invoking event handlers");
+                foreach (var handler in _factory.BuildEventHandlersFor<TEvent>())
+                    await handler.HandleAsync(evt, ct).ConfigureAwait(false);
             }
         }
     }
