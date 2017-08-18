@@ -23,9 +23,7 @@
 #endregion
 
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 
 [assembly: AssemblyTitle("SimpleSoft.Mediator.Abstractions")]
 [assembly: AssemblyDescription("Mediator implementation for commands and events.")]
-[assembly: Guid("5e0fa32f-c55a-432d-a65c-4cbb3f0ec992")]

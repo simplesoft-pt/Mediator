@@ -28,4 +28,3 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SimpleSoft.Mediator.Abstractions")]
 [assembly: AssemblyDescription("Mediator interfaces for commands and events.")]
-[assembly: Guid("619ad8f7-e7a2-4b10-96a1-3b9d25595971")]
