@@ -23,9 +23,11 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {
@@ -66,8 +68,26 @@ namespace SimpleSoft.Mediator
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build(cmd);
 
-                _logger.LogDebug("Invoking command handler");
-                await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
+                HandlingCommandDelegate<TCommand> next = async (command, cancellationToken) =>
+                {
+                    _logger.LogDebug("Invoking command handler");
+                    await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                };
+
+                _logger.LogDebug("Building middleware delegates");
+                foreach (var middleware in _factory.BuildMiddlewares().Reverse())
+                {
+                    var old = next;
+                    next = async (command, cancellationToken) =>
+                    {
+                        if (_logger.IsEnabled(LogLevel.Debug))
+                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
+                        await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
+                    };
+                }
+
+                _logger.LogDebug("Invoking middleware delegates");
+                await next(cmd, ct).ConfigureAwait(false);
             }
         }
 
@@ -85,8 +105,26 @@ namespace SimpleSoft.Mediator
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
 
-                _logger.LogDebug("Invoking command handler");
-                return await handler.HandleAsync(cmd, ct).ConfigureAwait(false);
+                HandlingCommandDelegate<TCommand, TResult> next = async (command, cancellationToken) =>
+                {
+                    _logger.LogDebug("Invoking command handler");
+                    return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                };
+
+                _logger.LogDebug("Building middleware delegates");
+                foreach (var middleware in _factory.BuildMiddlewares().Reverse())
+                {
+                    var old = next;
+                    next = async (command, cancellationToken) =>
+                    {
+                        if (_logger.IsEnabled(LogLevel.Debug))
+                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
+                        return await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
+                    };
+                }
+
+                _logger.LogDebug("Invoking middleware delegates");
+                return await next(cmd, ct).ConfigureAwait(false);
             }
         }
 
@@ -99,9 +137,30 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "EventName:{eventName} EventId:{eventId}", typeof(TEvent).Name, evt.Id))
             {
-                _logger.LogDebug("Invoking event handlers");
-                foreach (var handler in _factory.BuildEventHandlersFor<TEvent>())
-                    await handler.HandleAsync(evt, ct).ConfigureAwait(false);
+                _logger.LogDebug("Building event handlers");
+                var handlers = _factory.BuildEventHandlersFor<TEvent>();
+
+                HandlingEventDelegate<TEvent> next = async (@event, cancellationToken) =>
+                {
+                    _logger.LogDebug("Invoking event handlers");
+                    foreach (var handler in handlers)
+                        await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
+                };
+
+                _logger.LogDebug("Building middleware delegates");
+                foreach (var middleware in _factory.BuildMiddlewares().Reverse())
+                {
+                    var old = next;
+                    next = async (@event, cancellationToken) =>
+                    {
+                        if (_logger.IsEnabled(LogLevel.Debug))
+                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
+                        await middleware.OnEventAsync(old, @event, cancellationToken).ConfigureAwait(false);
+                    };
+                }
+
+                _logger.LogDebug("Invoking middleware delegates");
+                await next(evt, ct).ConfigureAwait(false);
             }
         }
     }
