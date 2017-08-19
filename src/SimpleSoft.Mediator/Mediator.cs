@@ -31,7 +31,7 @@ using SimpleSoft.Mediator.Middleware;
 namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// The mediator to publish commands and broadcast events
+    /// Mediator to publish commands, broadcast events and fetch queries
     /// </summary>
     public class Mediator : IMediator
     {

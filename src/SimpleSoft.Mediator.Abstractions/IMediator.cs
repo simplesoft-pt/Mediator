@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Represents the mediator to receive commands and events
+    /// Mediator to publish commands, broadcast events and fetch queries
     /// </summary>
     public interface IMediator
     {

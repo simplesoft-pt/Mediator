@@ -30,16 +30,14 @@ using SimpleSoft.Mediator.Middleware;
 namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Handler factory that uses delegates to build the required services
+    /// Mediator factory that uses delegates to build the required services
     /// </summary>
     public class DelegateMediatorFactory : IMediatorFactory
     {
         private static readonly IEnumerable<ICommandMiddleware> EmptyCommandMiddlewares =
             Enumerable.Empty<ICommandMiddleware>();
-
         private static readonly IEnumerable<IEventMiddleware> EmptyEventMiddlewares =
             Enumerable.Empty<IEventMiddleware>();
-
         private static readonly IEnumerable<IQueryMiddleware> EmptyQueryMiddlewares =
             Enumerable.Empty<IQueryMiddleware>();
 
@@ -49,8 +47,9 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// Creates a new instance
         /// </summary>
-        /// <param name="serviceFactory"></param>
-        /// <param name="serviceCollectionFactory"></param>
+        /// <param name="serviceFactory">The factory for single services</param>
+        /// <param name="serviceCollectionFactory">The factory for collections of services</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DelegateMediatorFactory(Service serviceFactory, ServiceCollection serviceCollectionFactory)
         {
             if (serviceFactory == null) throw new ArgumentNullException(nameof(serviceFactory));

@@ -28,7 +28,7 @@ using SimpleSoft.Mediator.Middleware;
 namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// The handler factory
+    /// The factory for mediator dependencies
     /// </summary>
     public interface IMediatorFactory
     {
