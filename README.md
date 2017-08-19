@@ -52,7 +52,7 @@ public class User {
   public string Email { get; set; }
 }
 
-public class UsersCommandHandler : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
+public class UsersService : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
   
   private readonly IMediator _mediator;
   
