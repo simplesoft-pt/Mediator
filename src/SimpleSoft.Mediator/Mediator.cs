@@ -105,7 +105,7 @@ namespace SimpleSoft.Mediator
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
 
-                HandlingCommandDelegate<TCommand, TResult> next = async (command, cancellationToken) =>
+                CommandMiddlewareDelegate<TCommand, TResult> next = async (command, cancellationToken) =>
                 {
                     _logger.LogDebug("Invoking command handler");
                     return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);

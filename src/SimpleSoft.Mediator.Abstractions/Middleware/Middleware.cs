@@ -40,7 +40,7 @@ namespace SimpleSoft.Mediator.Middleware
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResult> OnCommandAsync<TCommand, TResult>(HandlingCommandDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)
+        public virtual async Task<TResult> OnCommandAsync<TCommand, TResult>(CommandMiddlewareDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)
             where TCommand : ICommand<TResult>
         {
             return await next(cmd, ct).ConfigureAwait(false);

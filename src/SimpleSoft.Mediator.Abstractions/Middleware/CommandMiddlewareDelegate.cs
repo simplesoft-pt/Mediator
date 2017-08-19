@@ -45,6 +45,6 @@ namespace SimpleSoft.Mediator.Middleware
     /// <param name="cmd">The command published</param>
     /// <param name="ct">The cancellation token</param>
     /// <returns>A task to be awaited for the result</returns>
-    public delegate Task<TResult> HandlingCommandDelegate<in TCommand, TResult>(TCommand cmd, CancellationToken ct)
+    public delegate Task<TResult> CommandMiddlewareDelegate<in TCommand, TResult>(TCommand cmd, CancellationToken ct)
         where TCommand : ICommand<TResult>;
 }
