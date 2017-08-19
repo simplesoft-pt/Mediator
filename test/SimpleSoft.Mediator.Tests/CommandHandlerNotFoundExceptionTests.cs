@@ -7,6 +7,30 @@ namespace SimpleSoft.Mediator.Tests
     public class CommandHandlerNotFoundExceptionTests
     {
         [Fact]
+        public void GivenANullCommandWhenBuildingACommandHandlerNotFoundExceptionThenArgumentNullExceptionMustBeThrown()
+        {
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+            {
+                var e = CommandHandlerNotFoundException.Build<ICommand>(null);
+                Assert.Null(e);
+            });
+
+            Assert.NotNull(ex);
+        }
+
+        [Fact]
+        public void GivenANullCommandWithResultWhenBuildingACommandHandlerNotFoundExceptionThenArgumentNullExceptionMustBeThrown()
+        {
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+            {
+                var e = CommandHandlerNotFoundException.Build<ICommand<object>, object>(null);
+                Assert.Null(e);
+            });
+
+            Assert.NotNull(ex);
+        }
+
+        [Fact]
         public void GivenACommandWhenBuildingACommandHandlerNotFoundExceptionThenAllPropertiesMustBeCorrect()
         {
             var cmd = new MockCommand();
@@ -29,7 +53,7 @@ namespace SimpleSoft.Mediator.Tests
             Assert.NotNull(ex.Command<MockCommand>());
             Assert.Throws<InvalidCastException>(() =>
             {
-                ex.Command<MockResultCommand, object>();
+                ex.Command<ICommand<object>, object>();
             });
         }
 
@@ -56,7 +80,7 @@ namespace SimpleSoft.Mediator.Tests
             Assert.NotNull(ex.Command<MockResultCommand, object>());
             Assert.Throws<InvalidCastException>(() =>
             {
-                ex.Command<MockCommand>();
+                ex.Command<ICommand>();
             });
         }
     }
