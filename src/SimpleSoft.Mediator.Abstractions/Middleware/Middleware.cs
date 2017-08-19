@@ -30,10 +30,10 @@ namespace SimpleSoft.Mediator.Middleware
     /// <summary>
     /// Handling middleware that can be used to intercept commands and events
     /// </summary>
-    public abstract class HandlingMiddleware : IHandlingMiddleware
+    public abstract class Middleware : IMiddleware
     {
         /// <inheritdoc />
-        public virtual async Task OnCommandAsync<TCommand>(HandlingCommandDelegate<TCommand> next, TCommand cmd, CancellationToken ct) 
+        public virtual async Task OnCommandAsync<TCommand>(CommandMiddlewareDelegate<TCommand> next, TCommand cmd, CancellationToken ct) 
             where TCommand : ICommand
         {
             await next(cmd, ct).ConfigureAwait(false);
@@ -47,7 +47,7 @@ namespace SimpleSoft.Mediator.Middleware
         }
 
         /// <inheritdoc />
-        public virtual async Task OnEventAsync<TEvent>(HandlingEventDelegate<TEvent> next, TEvent evt, CancellationToken ct) 
+        public virtual async Task OnEventAsync<TEvent>(EventMiddlewareDelegate<TEvent> next, TEvent evt, CancellationToken ct) 
             where TEvent : IEvent
         {
             await next(evt, ct).ConfigureAwait(false);

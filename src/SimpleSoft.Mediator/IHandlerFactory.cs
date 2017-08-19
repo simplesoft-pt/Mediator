@@ -59,9 +59,15 @@ namespace SimpleSoft.Mediator
             where TEvent : IEvent;
 
         /// <summary>
-        /// Builds a collection of <see cref="IHandlingMiddleware"/>.
+        /// Builds a collection of all registered <see cref="ICommandMiddleware"/>.
         /// </summary>
-        /// <returns>A collection of filters</returns>
-        IEnumerable<IHandlingMiddleware> BuildMiddlewares();
+        /// <returns>A collection of command middlewares</returns>
+        IEnumerable<ICommandMiddleware> BuildCommandMiddlewares();
+
+        /// <summary>
+        /// Builds a collection of all registered <see cref="IEventMiddleware"/>.
+        /// </summary>
+        /// <returns>A collection of event middlewares</returns>
+        IEnumerable<IEventMiddleware> BuildEventMiddlewares();
     }
 }

@@ -68,14 +68,14 @@ namespace SimpleSoft.Mediator
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build(cmd);
 
-                HandlingCommandDelegate<TCommand> next = async (command, cancellationToken) =>
+                CommandMiddlewareDelegate<TCommand> next = async (command, cancellationToken) =>
                 {
                     _logger.LogDebug("Invoking command handler");
                     await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
                 };
 
                 _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildMiddlewares().Reverse())
+                foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
                 {
                     var old = next;
                     next = async (command, cancellationToken) =>
@@ -112,7 +112,7 @@ namespace SimpleSoft.Mediator
                 };
 
                 _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildMiddlewares().Reverse())
+                foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
                 {
                     var old = next;
                     next = async (command, cancellationToken) =>
@@ -140,7 +140,7 @@ namespace SimpleSoft.Mediator
                 _logger.LogDebug("Building event handlers");
                 var handlers = _factory.BuildEventHandlersFor<TEvent>();
 
-                HandlingEventDelegate<TEvent> next = async (@event, cancellationToken) =>
+                EventMiddlewareDelegate<TEvent> next = async (@event, cancellationToken) =>
                 {
                     _logger.LogDebug("Invoking event handlers");
                     foreach (var handler in handlers)
@@ -148,7 +148,7 @@ namespace SimpleSoft.Mediator
                 };
 
                 _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildMiddlewares().Reverse())
+                foreach (var middleware in _factory.BuildEventMiddlewares().Reverse())
                 {
                     var old = next;
                     next = async (@event, cancellationToken) =>

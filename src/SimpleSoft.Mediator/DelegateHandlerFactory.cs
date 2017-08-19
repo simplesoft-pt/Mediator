@@ -34,6 +34,12 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class DelegateHandlerFactory : IHandlerFactory
     {
+        private static readonly IEnumerable<ICommandMiddleware> EmptyCommandMiddlewares =
+            Enumerable.Empty<ICommandMiddleware>();
+
+        private static readonly IEnumerable<IEventMiddleware> EmptyEventMiddlewares =
+            Enumerable.Empty<IEventMiddleware>();
+
         private readonly Service _serviceFactory;
         private readonly ServiceCollection _serviceCollectionFactory;
 
@@ -79,11 +85,19 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public IEnumerable<IHandlingMiddleware> BuildMiddlewares()
+        public IEnumerable<ICommandMiddleware> BuildCommandMiddlewares()
         {
-            var services = _serviceCollectionFactory(typeof(IHandlingMiddleware));
+            var services = _serviceCollectionFactory(typeof(ICommandMiddleware));
 
-            return services?.Cast<IHandlingMiddleware>() ?? Enumerable.Empty<IHandlingMiddleware>();
+            return services?.Cast<ICommandMiddleware>() ?? EmptyCommandMiddlewares;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IEventMiddleware> BuildEventMiddlewares()
+        {
+            var services = _serviceCollectionFactory(typeof(IEventMiddleware));
+
+            return services?.Cast<IEventMiddleware>() ?? EmptyEventMiddlewares;
         }
 
         /// <summary>
