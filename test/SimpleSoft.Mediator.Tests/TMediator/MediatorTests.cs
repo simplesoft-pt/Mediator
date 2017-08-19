@@ -14,15 +14,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var m = new Mediator(null,
-                    new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
-                Assert.Null(m);
-            });
-            Assert.NotNull(ex);
-
-            ex = Assert.Throws<ArgumentNullException>(() =>
-            {
-                var m = new Mediator(LoggingManager.CreateTestLogger<Mediator>(), null);
+                var m = new Mediator(new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
                 Assert.Null(m);
             });
             Assert.NotNull(ex);
@@ -32,7 +24,6 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenPublishingNullCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                LoggingManager.CreateTestLogger<Mediator>(),
                 new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -46,7 +37,6 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenPublishingNullResultCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                LoggingManager.CreateTestLogger<Mediator>(),
                 new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -60,7 +50,6 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenPublishingNullEventThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                LoggingManager.CreateTestLogger<Mediator>(),
                 new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -76,7 +65,6 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var handlerFound = false;
 
             var mediator = new Mediator(
-                LoggingManager.CreateTestLogger<Mediator>(),
                 new DelegateMediatorFactory(
                     type =>
                     {
@@ -95,7 +83,6 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var handlerFound = false;
 
             var mediator = new Mediator(
-                LoggingManager.CreateTestLogger<Mediator>(),
                 new DelegateMediatorFactory(
                     type =>
                     {
@@ -112,7 +99,6 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenPassingACommandWithoutAnHandlerThenCommandHandlerNotFoundExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                LoggingManager.CreateTestLogger<Mediator>(),
                 new DelegateMediatorFactory(
                     type => null,
                     type => Enumerable.Empty<object>()));

@@ -30,7 +30,9 @@
 
   "frameworks": {
     "net4.5": {
-
+      "frameworkAssemblies": {
+        "System.Runtime": { "type": "build" }
+      }
     },
     "netcore5.0": {
 

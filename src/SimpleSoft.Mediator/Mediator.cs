@@ -26,7 +26,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SimpleSoft.Mediator.Middleware;
 
 namespace SimpleSoft.Mediator
@@ -36,59 +35,41 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class Mediator : IMediator
     {
-        private readonly ILogger<Mediator> _logger;
         private readonly IMediatorFactory _factory;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
-        /// <param name="logger">The logger factory</param>
         /// <param name="factory">The handler factory</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mediator(ILogger<Mediator> logger, IMediatorFactory factory)
+        public Mediator(IMediatorFactory factory)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
 
-            _logger = logger;
             _factory = factory;
         }
 
         /// <inheritdoc />
-        public async Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken)) 
+        public async Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken))
             where TCommand : ICommand
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
-            
-            using (_logger.BeginScope(
-                "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
+
+            var handler = _factory.BuildCommandHandlerFor<TCommand>();
+            if (handler == null)
+                throw CommandHandlerNotFoundException.Build(cmd);
+
+            CommandMiddlewareDelegate<TCommand> next = async (command, cancellationToken) =>
+                await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+
+            foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
             {
-                _logger.LogDebug("Building command handler");
-                var handler = _factory.BuildCommandHandlerFor<TCommand>();
-                if (handler == null)
-                    throw CommandHandlerNotFoundException.Build(cmd);
-
-                CommandMiddlewareDelegate<TCommand> next = async (command, cancellationToken) =>
-                {
-                    _logger.LogDebug("Invoking command handler");
-                    await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                };
-
-                _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
-                {
-                    var old = next;
-                    next = async (command, cancellationToken) =>
-                    {
-                        if (_logger.IsEnabled(LogLevel.Debug))
-                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
-                        await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
-                    };
-                }
-
-                _logger.LogDebug("Invoking middleware delegates");
-                await next(cmd, ct).ConfigureAwait(false);
+                var old = next;
+                next = async (command, cancellationToken) =>
+                    await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
             }
+
+            await next(cmd, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -96,109 +77,70 @@ namespace SimpleSoft.Mediator
             where TCommand : ICommand<TResult>
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
-            
-            using (_logger.BeginScope(
-                "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
+
+            var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
+            if (handler == null)
+                throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
+
+            CommandMiddlewareDelegate<TCommand, TResult> next = async (command, cancellationToken) =>
+                await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+
+            foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
             {
-                _logger.LogDebug("Building command handler");
-                var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
-                if (handler == null)
-                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
-
-                CommandMiddlewareDelegate<TCommand, TResult> next = async (command, cancellationToken) =>
-                {
-                    _logger.LogDebug("Invoking command handler");
-                    return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                };
-
-                _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
-                {
-                    var old = next;
-                    next = async (command, cancellationToken) =>
-                    {
-                        if (_logger.IsEnabled(LogLevel.Debug))
-                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
-                        return await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
-                    };
-                }
-
-                _logger.LogDebug("Invoking middleware delegates");
-                return await next(cmd, ct).ConfigureAwait(false);
+                var old = next;
+                next = async (command, cancellationToken) =>
+                    await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
             }
+
+            return await next(cmd, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default(CancellationToken)) 
+        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default(CancellationToken))
             where TEvent : IEvent
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
-            using (_logger.BeginScope(
-                "EventName:{eventName} EventId:{eventId}", typeof(TEvent).Name, evt.Id))
+            var handlers = _factory.BuildEventHandlersFor<TEvent>();
+
+            EventMiddlewareDelegate<TEvent> next = async (@event, cancellationToken) =>
             {
-                _logger.LogDebug("Building event handlers");
-                var handlers = _factory.BuildEventHandlersFor<TEvent>();
+                foreach (var handler in handlers)
+                    await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
+            };
 
-                EventMiddlewareDelegate<TEvent> next = async (@event, cancellationToken) =>
-                {
-                    _logger.LogDebug("Invoking event handlers");
-                    foreach (var handler in handlers)
-                        await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
-                };
-
-                _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildEventMiddlewares().Reverse())
-                {
-                    var old = next;
-                    next = async (@event, cancellationToken) =>
-                    {
-                        if (_logger.IsEnabled(LogLevel.Debug))
-                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
-                        await middleware.OnEventAsync(old, @event, cancellationToken).ConfigureAwait(false);
-                    };
-                }
-
-                _logger.LogDebug("Invoking middleware delegates");
-                await next(evt, ct).ConfigureAwait(false);
+            foreach (var middleware in _factory.BuildEventMiddlewares().Reverse())
+            {
+                var old = next;
+                next = async (@event, cancellationToken) =>
+                    await middleware.OnEventAsync(old, @event, cancellationToken).ConfigureAwait(false);
             }
+
+            await next(evt, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default(CancellationToken))
+        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query,
+            CancellationToken ct = default(CancellationToken))
             where TQuery : IQuery<TResult>
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
 
-            using (_logger.BeginScope(
-                "QueryName:{queryName} QueryId:{queryId}", typeof(TQuery).Name, query.Id))
+            var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
+            if (handler == null)
+                throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
+
+            QueryMiddlewareDelegate<TQuery, TResult> next = async (q, cancellationToken) =>
+                await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
+
+            foreach (var middleware in _factory.BuildQueryMiddlewares().Reverse())
             {
-                _logger.LogDebug("Building query handler");
-                var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
-                if (handler == null)
-                    throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
-
-                QueryMiddlewareDelegate<TQuery, TResult> next = async (q, cancellationToken) =>
-                {
-                    _logger.LogDebug("Invoking query handler");
-                    return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
-                };
-
-                _logger.LogDebug("Building middleware delegates");
-                foreach (var middleware in _factory.BuildQueryMiddlewares().Reverse())
-                {
-                    var old = next;
-                    next = async (q, cancellationToken) =>
-                    {
-                        if (_logger.IsEnabled(LogLevel.Debug))
-                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
-                        return await middleware.OnQueryAsync(old, q, cancellationToken).ConfigureAwait(false);
-                    };
-                }
-
-                _logger.LogDebug("Invoking middleware delegates");
-                return await next(query, ct).ConfigureAwait(false);
+                var old = next;
+                next = async (q, cancellationToken) =>
+                    await middleware.OnQueryAsync(old, q, cancellationToken).ConfigureAwait(false);
             }
+
+            return await next(query, ct).ConfigureAwait(false);
         }
     }
 }
