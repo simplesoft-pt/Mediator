@@ -36,6 +36,7 @@ namespace SimpleSoft.Mediator
     /// Represents a command with a result
     /// </summary>
     /// <typeparam name="TResult">The result type</typeparam>
+    // ReSharper disable once UnusedTypeParameter
     public interface ICommand<out TResult> : IHaveIdentifier, IHaveCreatedMeta
     {
 
