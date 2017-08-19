@@ -35,7 +35,7 @@ namespace SimpleSoft.Mediator
         private const string DefaultMessageFormat = "The query '{0}' does not have any handler";
 
         private QueryHandlerNotFoundException(Type queryType, object queryData)
-            : base(string.Format((string) DefaultMessageFormat, queryType.Name))
+            : base(string.Format(DefaultMessageFormat, queryType.Name))
         {
             QueryType = queryType;
             QueryData = queryData;
