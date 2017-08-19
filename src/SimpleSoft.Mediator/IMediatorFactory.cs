@@ -59,6 +59,16 @@ namespace SimpleSoft.Mediator
             where TEvent : IEvent;
 
         /// <summary>
+        /// Builds an <see cref="IQueryHandler{TQuery,TResult}"/> for a 
+        /// given <see cref="IQuery{TResult}"/>.
+        /// </summary>
+        /// <typeparam name="TQuery">The query type</typeparam>
+        /// <typeparam name="TResult">The query result type</typeparam>
+        /// <returns>The query handler or null if not found</returns>
+        IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>()
+            where TQuery : IQuery<TResult>;
+
+        /// <summary>
         /// Builds a collection of all registered <see cref="ICommandMiddleware"/>.
         /// </summary>
         /// <returns>A collection of command middlewares</returns>

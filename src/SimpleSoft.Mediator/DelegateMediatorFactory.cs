@@ -85,6 +85,15 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
+        public IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>()
+            where TQuery : IQuery<TResult>
+        {
+            var service = _serviceFactory(typeof(IQueryHandler<TQuery, TResult>));
+
+            return (IQueryHandler<TQuery, TResult>) service;
+        }
+
+        /// <inheritdoc />
         public IEnumerable<ICommandMiddleware> BuildCommandMiddlewares()
         {
             var services = _serviceCollectionFactory(typeof(ICommandMiddleware));

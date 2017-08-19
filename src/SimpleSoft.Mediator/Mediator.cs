@@ -163,5 +163,24 @@ namespace SimpleSoft.Mediator
                 await next(evt, ct).ConfigureAwait(false);
             }
         }
+
+        /// <inheritdoc />
+        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default(CancellationToken))
+            where TQuery : IQuery<TResult>
+        {
+            if (query == null) throw new ArgumentNullException(nameof(query));
+
+            using (_logger.BeginScope(
+                "QueryName:{queryName} QueryId:{queryId}", typeof(TQuery).Name, query.Id))
+            {
+                _logger.LogDebug("Building command handler");
+                var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
+                if (handler == null)
+                    throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
+
+                _logger.LogDebug("Invoking handler");
+                return await handler.HandleAsync(query, ct).ConfigureAwait(false);
+            }
+        }
     }
 }
