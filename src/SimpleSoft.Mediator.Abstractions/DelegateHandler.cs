@@ -73,5 +73,19 @@ namespace SimpleSoft.Mediator
         {
             return new DelegateEventHandler<TEvent>(handler);
         }
+
+        /// <summary>
+        /// Builds a query handler that wraps the given delegate.
+        /// </summary>
+        /// <typeparam name="TQuery">The query type</typeparam>
+        /// <typeparam name="TResult">The query result type</typeparam>
+        /// <param name="handler">The delegate to wrap</param>
+        /// <returns>The query handler</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IQueryHandler<TQuery, TResult> Query<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> handler)
+            where TQuery : IQuery<TResult>
+        {
+            return new DelegateQueryHandler<TQuery, TResult>(handler);
+        }
     }
 }
