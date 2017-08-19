@@ -173,13 +173,31 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "QueryName:{queryName} QueryId:{queryId}", typeof(TQuery).Name, query.Id))
             {
-                _logger.LogDebug("Building command handler");
+                _logger.LogDebug("Building query handler");
                 var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
                 if (handler == null)
                     throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
 
-                _logger.LogDebug("Invoking handler");
-                return await handler.HandleAsync(query, ct).ConfigureAwait(false);
+                QueryMiddlewareDelegate<TQuery, TResult> next = async (q, cancellationToken) =>
+                {
+                    _logger.LogDebug("Invoking query handler");
+                    return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
+                };
+
+                _logger.LogDebug("Building middleware delegates");
+                foreach (var middleware in _factory.BuildQueryMiddlewares().Reverse())
+                {
+                    var old = next;
+                    next = async (q, cancellationToken) =>
+                    {
+                        if (_logger.IsEnabled(LogLevel.Debug))
+                            _logger.LogDebug("Invoking middleware '{middlewareType}'", middleware.GetType().Name);
+                        return await middleware.OnQueryAsync(old, q, cancellationToken).ConfigureAwait(false);
+                    };
+                }
+
+                _logger.LogDebug("Invoking middleware delegates");
+                return await next(query, ct).ConfigureAwait(false);
             }
         }
     }

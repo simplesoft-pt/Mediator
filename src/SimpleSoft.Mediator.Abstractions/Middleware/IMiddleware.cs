@@ -25,9 +25,9 @@
 namespace SimpleSoft.Mediator.Middleware
 {
     /// <summary>
-    /// Handling middleware that can be used to intercept commands and events
+    /// Handling middleware that can be used to intercept commands, events and queries
     /// </summary>
-    public interface IMiddleware : ICommandMiddleware, IEventMiddleware
+    public interface IMiddleware : ICommandMiddleware, IEventMiddleware, IQueryMiddleware
     {
 
     }

@@ -79,5 +79,11 @@ namespace SimpleSoft.Mediator
         /// </summary>
         /// <returns>A collection of event middlewares</returns>
         IEnumerable<IEventMiddleware> BuildEventMiddlewares();
+
+        /// <summary>
+        /// Builds a collection of all registered <see cref="IQueryMiddleware"/>.
+        /// </summary>
+        /// <returns>A collection of query middlewares</returns>
+        IEnumerable<IQueryMiddleware> BuildQueryMiddlewares();
     }
 }

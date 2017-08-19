@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace SimpleSoft.Mediator.Middleware
 {
     /// <summary>
-    /// Handling middleware that can be used to intercept commands and events
+    /// Handling middleware that can be used to intercept commands events and queries
     /// </summary>
     public abstract class Middleware : IMiddleware
     {
@@ -51,6 +51,13 @@ namespace SimpleSoft.Mediator.Middleware
             where TEvent : IEvent
         {
             await next(evt, ct).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<TResult> OnQueryAsync<TQuery, TResult>(QueryMiddlewareDelegate<TQuery, TResult> next, TQuery query, CancellationToken ct)
+            where TQuery : IQuery<TResult>
+        {
+            return await next(query, ct).ConfigureAwait(false);
         }
     }
 }

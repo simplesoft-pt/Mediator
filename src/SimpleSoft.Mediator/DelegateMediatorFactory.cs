@@ -40,6 +40,9 @@ namespace SimpleSoft.Mediator
         private static readonly IEnumerable<IEventMiddleware> EmptyEventMiddlewares =
             Enumerable.Empty<IEventMiddleware>();
 
+        private static readonly IEnumerable<IQueryMiddleware> EmptyQueryMiddlewares =
+            Enumerable.Empty<IQueryMiddleware>();
+
         private readonly Service _serviceFactory;
         private readonly ServiceCollection _serviceCollectionFactory;
 
@@ -107,6 +110,14 @@ namespace SimpleSoft.Mediator
             var services = _serviceCollectionFactory(typeof(IEventMiddleware));
 
             return services?.Cast<IEventMiddleware>() ?? EmptyEventMiddlewares;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IQueryMiddleware> BuildQueryMiddlewares()
+        {
+            var services = _serviceCollectionFactory(typeof(IQueryMiddleware));
+
+            return services?.Cast<IQueryMiddleware>() ?? EmptyQueryMiddlewares;
         }
 
         /// <summary>
