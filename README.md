@@ -40,10 +40,19 @@ public class CreateUserCommand : Command {
 }
 
 public class UserCreatedEvent : Event {
+  public User User { get; set; }
+}
+
+public class UserByIdQuery : Query<User> {
   public Guid UserId { get; set; }
 }
 
-public class UsersCommandHandler : ICommandHandler<CreateUserCommand> {
+public class User {
+  public Guid Id { get; set; }
+  public string Email { get; set; }
+}
+
+public class UsersCommandHandler : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
   
   private readonly IMediator _mediator;
   
@@ -51,14 +60,25 @@ public class UsersCommandHandler : ICommandHandler<CreateUserCommand> {
     _mediator = mediator;
   }
   
-  public async Task HandleAsync(CreateUserCommand cmd, CancellationToken ct){
+  public async Task HandleAsync(CreateUserCommand cmd, CancellationToken ct) {
     var userId = Guid.NewGuid();
     
     // try add the user to some store
     
     await _mediator.BroadcastAsync(new UserCreatedEvent {
-      UserId = userId
+      User = new User {
+        Id = userId,
+        Email = cmd.Email
+      }
     }, ct);
+  }
+  
+  public async Task<User> HandleAsync(UserByIdQuery query, CancellationToken ct) {
+    User user = null;
+    
+    // search the store by user id
+    
+    return user;
   }
 }
 ```
