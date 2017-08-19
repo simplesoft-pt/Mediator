@@ -17,6 +17,6 @@ namespace SimpleSoft.Mediator
         /// <param name="query">The query to handle</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
-        Task<TResult> HandleAsync(TQuery query, CancellationToken ct = default(CancellationToken));
+        Task<TResult> HandleAsync(TQuery query, CancellationToken ct);
     }
 }

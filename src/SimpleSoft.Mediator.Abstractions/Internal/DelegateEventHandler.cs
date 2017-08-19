@@ -39,7 +39,7 @@ namespace SimpleSoft.Mediator.Internal
             _handler = handler;
         }
 
-        public async Task HandleAsync(TEvent evt, CancellationToken ct = default(CancellationToken))
+        public async Task HandleAsync(TEvent evt, CancellationToken ct)
         {
             await _handler(evt, ct).ConfigureAwait(false);
         }

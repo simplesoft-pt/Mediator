@@ -39,7 +39,7 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to handle</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task HandleAsync(TCommand cmd, CancellationToken ct = default(CancellationToken));
+        Task HandleAsync(TCommand cmd, CancellationToken ct);
     }
 
     /// <summary>
@@ -55,6 +55,6 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to handle</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
-        Task<TResult> HandleAsync(TCommand cmd, CancellationToken ct = default(CancellationToken));
+        Task<TResult> HandleAsync(TCommand cmd, CancellationToken ct);
     }
 }

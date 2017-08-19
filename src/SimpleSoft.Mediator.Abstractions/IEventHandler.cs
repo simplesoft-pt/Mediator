@@ -39,6 +39,6 @@ namespace SimpleSoft.Mediator
         /// <param name="evt">The event to handle</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task HandleAsync(TEvent evt, CancellationToken ct = default(CancellationToken));
+        Task HandleAsync(TEvent evt, CancellationToken ct);
     }
 }
