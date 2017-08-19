@@ -62,7 +62,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     .AddSingleton<Application>()
                 ;
 
-                // this should be a class implementing ICommandHandler<RegisterUserCommand>
+            // this should be a class implementing ICommandHandler<RegisterUserCommand>
             serviceCollection
                 .AddTransient(s => DelegateHandler.Command<RegisterUserCommand, Guid>(async (cmd, ct) =>
                 {
@@ -108,6 +108,18 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     }
 
                     throw new InvalidOperationException($"User id '{cmd.UserId}' could not be found");
+                }));
+
+            // this should be a class implementing IQueryHandler<UserByIdQuery,User>
+            serviceCollection
+                .AddTransient(s => DelegateHandler.Query<UserByIdQuery, User>(async (query, ct) =>
+                {
+                    var store = s.GetRequiredService<IDictionary<Guid, User>>();
+
+                    await Task.Delay(1000, ct);
+
+                    User user;
+                    return store.TryGetValue(query.UserId, out user) ? user : null;
                 }));
 
             return serviceCollection.BuildServiceProvider(true);

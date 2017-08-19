@@ -24,9 +24,20 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 var userId = await _mediator.PublishAsync<RegisterUserCommand, Guid>(
                     new RegisterUserCommand(Guid.NewGuid(), $"someuser{i:D2}@domain.com", "123456"), ct);
 
-                _logger.LogDebug("Changing password for user '{userId}'", userId);
-                await _mediator.PublishAsync(new ChangeUserPasswordCommand(
-                    Guid.NewGuid(), userId, "123456", "654321"), ct);
+                _logger.LogDebug("Getting user '{userId}'", userId);
+                var user = await _mediator.FetchAsync<UserByIdQuery, User>(
+                    new UserByIdQuery(Guid.NewGuid(), userId), ct);
+
+                if (user == null)
+                {
+                    _logger.LogDebug("User '{userId}' could not be found");
+                }
+                else
+                {
+                    _logger.LogDebug("Changing password for user '{userId}'", userId);
+                    await _mediator.PublishAsync(new ChangeUserPasswordCommand(
+                        Guid.NewGuid(), userId, "123456", "654321"), ct);
+                }
             }
         }
     }
