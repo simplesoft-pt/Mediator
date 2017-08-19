@@ -57,7 +57,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     .AddSingleton(LoggerFactory)
                     .AddLogging()
                     .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                    .AddSingleton<IHandlerFactory>(s => new DelegateHandlerFactory(s.GetService, s.GetServices))
+                    .AddSingleton<IMediatorFactory>(s => new DelegateMediatorFactory(s.GetService, s.GetServices))
                     .AddSingleton<IMediator, Mediator>()
                     .AddSingleton<Application>()
                 ;

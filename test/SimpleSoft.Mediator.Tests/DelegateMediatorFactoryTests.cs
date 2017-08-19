@@ -4,33 +4,33 @@ using Xunit;
 
 namespace SimpleSoft.Mediator.Tests
 {
-    public class DelegateHandlerFactoryTests
+    public class DelegateMediatorFactoryTests
     {
         [Fact]
-        public void GivenADelegateHandlerFactoryWhenPassingNullArgumentsThenAnArgumentNullExceptionMustBeThrown()
+        public void GivenADelegateFactoryWhenPassingNullArgumentsThenAnArgumentNullExceptionMustBeThrown()
         {
             var ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var factory = new DelegateHandlerFactory(null, type => null);
+                var factory = new DelegateMediatorFactory(null, type => null);
                 Assert.Null(factory);
             });
             Assert.NotNull(ex);
 
             ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var factory = new DelegateHandlerFactory(type => null, null);
+                var factory = new DelegateMediatorFactory(type => null, null);
                 Assert.Null(factory);
             });
             Assert.NotNull(ex);
         }
 
         [Fact]
-        public void GivenADelegateHandlerFactoryWhenBuildingHandlersThenDelegatesMustBeInvoked()
+        public void GivenADelegateFactoryWhenBuildingHandlersThenDelegatesMustBeInvoked()
         {
             var serviceInvoked = false;
             var serviceCollectionInvoked = false;
 
-            var factory = new DelegateHandlerFactory(
+            var factory = new DelegateMediatorFactory(
                 type =>
                 {
                     serviceInvoked = true;

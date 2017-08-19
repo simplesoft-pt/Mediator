@@ -30,7 +30,7 @@ namespace SimpleSoft.Mediator
     /// <summary>
     /// The handler factory
     /// </summary>
-    public interface IHandlerFactory
+    public interface IMediatorFactory
     {
         /// <summary>
         /// Builds an <see cref="ICommandHandler{TCommand}"/> for a given <see cref="ICommand"/>.

@@ -32,7 +32,7 @@ namespace SimpleSoft.Mediator
     /// <summary>
     /// Handler factory that uses delegates to build the required services
     /// </summary>
-    public class DelegateHandlerFactory : IHandlerFactory
+    public class DelegateMediatorFactory : IMediatorFactory
     {
         private static readonly IEnumerable<ICommandMiddleware> EmptyCommandMiddlewares =
             Enumerable.Empty<ICommandMiddleware>();
@@ -48,7 +48,7 @@ namespace SimpleSoft.Mediator
         /// </summary>
         /// <param name="serviceFactory"></param>
         /// <param name="serviceCollectionFactory"></param>
-        public DelegateHandlerFactory(Service serviceFactory, ServiceCollection serviceCollectionFactory)
+        public DelegateMediatorFactory(Service serviceFactory, ServiceCollection serviceCollectionFactory)
         {
             if (serviceFactory == null) throw new ArgumentNullException(nameof(serviceFactory));
             if (serviceCollectionFactory == null) throw new ArgumentNullException(nameof(serviceCollectionFactory));

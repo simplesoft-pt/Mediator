@@ -15,7 +15,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var ex = Assert.Throws<ArgumentNullException>(() =>
             {
                 var m = new Mediator(null,
-                    new DelegateHandlerFactory(type => null, type => Enumerable.Empty<object>()));
+                    new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
                 Assert.Null(m);
             });
             Assert.NotNull(ex);
@@ -33,7 +33,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var mediator = new Mediator(
                 LoggingManager.CreateTestLogger<Mediator>(),
-                new DelegateHandlerFactory(type => null, type => Enumerable.Empty<object>()));
+                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
@@ -47,7 +47,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var mediator = new Mediator(
                 LoggingManager.CreateTestLogger<Mediator>(),
-                new DelegateHandlerFactory(type => null, type => Enumerable.Empty<object>()));
+                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
@@ -61,7 +61,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var mediator = new Mediator(
                 LoggingManager.CreateTestLogger<Mediator>(),
-                new DelegateHandlerFactory(type => null, type => Enumerable.Empty<object>()));
+                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
@@ -77,7 +77,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
 
             var mediator = new Mediator(
                 LoggingManager.CreateTestLogger<Mediator>(),
-                new DelegateHandlerFactory(
+                new DelegateMediatorFactory(
                     type =>
                     {
                         handlerFound = type == typeof(ICommandHandler<MockCommand>);
@@ -96,7 +96,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
 
             var mediator = new Mediator(
                 LoggingManager.CreateTestLogger<Mediator>(),
-                new DelegateHandlerFactory(
+                new DelegateMediatorFactory(
                     type =>
                     {
                         handlerFound = type == typeof(ICommandHandler<MockResultCommand, object>);
@@ -113,7 +113,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var mediator = new Mediator(
                 LoggingManager.CreateTestLogger<Mediator>(),
-                new DelegateHandlerFactory(
+                new DelegateMediatorFactory(
                     type => null,
                     type => Enumerable.Empty<object>()));
 

@@ -37,7 +37,7 @@ namespace SimpleSoft.Mediator
     public class Mediator : IMediator
     {
         private readonly ILogger<Mediator> _logger;
-        private readonly IHandlerFactory _factory;
+        private readonly IMediatorFactory _factory;
 
         /// <summary>
         /// Creates a new instance
@@ -45,7 +45,7 @@ namespace SimpleSoft.Mediator
         /// <param name="logger">The logger factory</param>
         /// <param name="factory">The handler factory</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mediator(ILogger<Mediator> logger, IHandlerFactory factory)
+        public Mediator(ILogger<Mediator> logger, IMediatorFactory factory)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
