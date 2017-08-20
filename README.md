@@ -6,11 +6,11 @@ Using a mediator instance, publish commands, broadcast events and fetch queries 
 ## Installation
 The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft.Mediator) packages:
 
-| NuGet | Description |
-| --- | --- |
-| [SimpleSoft.Mediator.Abstractions](https://www.nuget.org/packages/SimpleSoft.Mediator.Abstractions/) | interfaces and abstract implementations (commands, events, queries, mediator, ...) |
-| [SimpleSoft.Mediator](https://www.nuget.org/packages/SimpleSoft.Mediator/) | the library implementation |
-| [SimpleSoft.Mediator.Extensions.Logging](https://www.nuget.org/packages/SimpleSoft.Mediator.Extensions.Logging/) | implementation wrappers that support logging using `Microsoft.Extensions.Logging` interfaces |
+| NuGet | Description | Version |
+| --- | --- | --- |
+| [SimpleSoft.Mediator.Abstractions](https://www.nuget.org/packages/simplesoft.mediator.abstractions) | interfaces and abstract implementations (commands, events, queries, mediator, ...) | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.abstractions.svg)](https://www.nuget.org/packages/simplesoft.mediator.abstractions) |
+| [SimpleSoft.Mediator](https://www.nuget.org/packages/simplesoft.mediator) | library implementation typically is only known by the main project (eg. dependency injection container) | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.svg)](https://www.nuget.org/packages/simplesoft.mediator) |
+| [SimpleSoft.Mediator.Extensions.Logging](https://www.nuget.org/packages/simplesoft.mediator.extensions.logging) | implementation wrappers that support logging using `Microsoft.Extensions.Logging` interfaces | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.extensions.logging.svg)](https://www.nuget.org/packages/simplesoft.mediator.extensions.logging) |
 
 ### Package Manager
 ```powershell
