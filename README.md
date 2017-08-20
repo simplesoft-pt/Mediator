@@ -60,7 +60,7 @@ public class UsersService : ICommandHandler<CreateUserCommand>, IQueryHandler<Us
   
   private readonly IMediator _mediator;
   
-  public UsersCommandHandler(IMediator mediator) {
+  public UsersService(IMediator mediator) {
     _mediator = mediator;
   }
   
