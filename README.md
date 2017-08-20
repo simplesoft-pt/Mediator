@@ -8,25 +8,29 @@ The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft
 
 | NuGet | Description |
 | --- | --- |
-| [SimpleSoft.Mediator.Abstractions](https://www.nuget.org/packages/SimpleSoft.Mediator.Abstractions/) | interfaces and abstract implementations for commands, events, handlers, middleware and mediator |
-| [SimpleSoft.Mediator](https://www.nuget.org/packages/SimpleSoft.Mediator/) | implementation of the mediator pattern. Typically is only known by the main project (eg. dependency injection container) |
+| [SimpleSoft.Mediator.Abstractions](https://www.nuget.org/packages/SimpleSoft.Mediator.Abstractions/) | interfaces and abstract implementations (commands, events, queries, mediator, ...) |
+| [SimpleSoft.Mediator](https://www.nuget.org/packages/SimpleSoft.Mediator/) | the library implementation |
+| [SimpleSoft.Mediator.Extensions.Logging](https://www.nuget.org/packages/SimpleSoft.Mediator.Extensions.Logging/) | implementation wrappers that support logging using `Microsoft.Extensions.Logging` interfaces |
 
 ### Package Manager
 ```powershell
 Install-Package SimpleSoft.Mediator.Abstractions
 Install-Package SimpleSoft.Mediator
+Install-Package SimpleSoft.Mediator.Extensions.Logging
 ```
 
 ### .NET CLI
 ```powershell
 dotnet add package SimpleSoft.Mediator.Abstractions
 dotnet add package SimpleSoft.Mediator
+dotnet add package SimpleSoft.Mediator.Extensions.Logging
 ```
 ## Compatibility
 This library is compatible with the folowing frameworks:
 
+* .NET Framework 4.0;
 * .NET Framework 4.5;
-* .NET Standard 1.1;
+* .NET Standard 1.0;
 * .NET Core 5.0
 
 ## Usage
