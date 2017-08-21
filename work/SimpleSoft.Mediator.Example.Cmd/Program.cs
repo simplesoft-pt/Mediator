@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleSoft.Mediator.Middleware;
 
 namespace SimpleSoft.Mediator.Example.Cmd
 {
@@ -54,15 +55,20 @@ namespace SimpleSoft.Mediator.Example.Cmd
         private static IServiceProvider BuildServiceProvider()
         {
             var serviceCollection = new ServiceCollection()
-                    .AddSingleton(LoggerFactory)
-                    .AddLogging()
-                    .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                    .AddSingleton<DelegateMediatorFactory.Service>(s => s.GetService)
-                    .AddSingleton<DelegateMediatorFactory.ServiceCollection>(s => s.GetServices)
-                    .AddSingleton<IMediatorFactory, Logging.DelegateMediatorFactory>()
-                    .AddSingleton<IMediator, Logging.Mediator>()
-                    .AddSingleton<Application>()
-                ;
+                .AddSingleton(LoggerFactory)
+                .AddLogging()
+                .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
+                .AddSingleton<DelegateMediatorFactory.Service>(s => s.GetService)
+                .AddSingleton<DelegateMediatorFactory.ServiceCollection>(s => s.GetServices)
+                .AddSingleton<IMediatorFactory, Logging.DelegateMediatorFactory>()
+                .AddSingleton<IMediator, Logging.Mediator>()
+                .AddSingleton<Application>();
+
+            serviceCollection
+                .AddSingleton<LoggingMiddleware>()
+                .AddSingleton<ICommandMiddleware>(s => s.GetRequiredService<LoggingMiddleware>())
+                .AddSingleton<IEventMiddleware>(s => s.GetRequiredService<LoggingMiddleware>())
+                .AddSingleton<IQueryMiddleware>(s => s.GetRequiredService<LoggingMiddleware>());
 
             // this should be a class implementing ICommandHandler<RegisterUserCommand>
             serviceCollection
@@ -71,9 +77,9 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
                     if (store.Values.Any(e => e.Email.Equals(cmd.Email, StringComparison.OrdinalIgnoreCase)))
                     {
-                        // this could be a fail event instead
-                        //  eg. await _mediator.BroadcastAsync(new CommandFailedEvent(cmd.Id), ct);
-                        throw new InvalidOperationException("Duplicated user email");
+                  // this could be a fail event instead
+                  //  eg. await _mediator.BroadcastAsync(new CommandFailedEvent(cmd.Id), ct);
+                  throw new InvalidOperationException("Duplicated user email");
                     }
 
                     await Task.Delay(1000, ct);
@@ -85,9 +91,9 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         Password = cmd.Password
                     });
 
-                    //  this could be a UserCreatedEvent instead of a command returning a result
-                    //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
-                    return userId;
+              //  this could be a UserCreatedEvent instead of a command returning a result
+              //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
+              return userId;
                 }));
 
             // this should be a class implementing ICommandHandler<ChangeUserPasswordCommand>
