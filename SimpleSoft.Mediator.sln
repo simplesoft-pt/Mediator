@@ -45,6 +45,9 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Extensi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9E75A35F-ED02-4712-A2C9-44B58EEA1BCD}"
 	ProjectSection(SolutionItems) = preProject
+		resources\lifecycle-commands.png = resources\lifecycle-commands.png
+		resources\lifecycle-events.png = resources\lifecycle-events.png
+		resources\lifecycle-queries.png = resources\lifecycle-queries.png
 		resources\Lifecycle.odp = resources\Lifecycle.odp
 	EndProjectSection
 EndProject
