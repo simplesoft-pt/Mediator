@@ -36,7 +36,7 @@ namespace SimpleSoft.Mediator
         /// </summary>
         public class Mediator : IMediator
         {
-            private readonly ILogger<SimpleSoft.Mediator.Mediator> _logger;
+            private readonly ILogger<Mediator> _logger;
             private readonly IMediator _mediator;
 
             /// <summary>
@@ -45,12 +45,24 @@ namespace SimpleSoft.Mediator
             /// <param name="factory">The factory to be used</param>
             /// <param name="logger">The logger instance</param>
             /// <exception cref="ArgumentNullException"></exception>
-            public Mediator(IMediatorFactory factory, ILogger<SimpleSoft.Mediator.Mediator> logger)
+            public Mediator(IMediatorFactory factory, ILogger<Mediator> logger)
+                :this(new SimpleSoft.Mediator.Mediator(factory), logger)
             {
-                if (factory == null) throw new ArgumentNullException(nameof(factory));
+
+            }
+
+            /// <summary>
+            /// Creates a new instance.
+            /// </summary>
+            /// <param name="mediator">The mediator to be wrapped</param>
+            /// <param name="logger">The logger instance</param>
+            /// <exception cref="ArgumentNullException"></exception>
+            public Mediator(IMediator mediator, ILogger<Mediator> logger)
+            {
+                if (mediator == null) throw new ArgumentNullException(nameof(mediator));
                 if (logger == null) throw new ArgumentNullException(nameof(logger));
 
-                _mediator = new SimpleSoft.Mediator.Mediator(factory);
+                _mediator = mediator;
                 _logger = logger;
             }
 

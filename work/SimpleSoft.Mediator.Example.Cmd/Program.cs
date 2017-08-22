@@ -61,7 +61,10 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddSingleton<DelegateMediatorFactory.Service>(s => s.GetService)
                 .AddSingleton<DelegateMediatorFactory.ServiceCollection>(s => s.GetServices)
                 .AddSingleton<IMediatorFactory, Logging.DelegateMediatorFactory>()
-                .AddSingleton<IMediator, Logging.Mediator>()
+                .AddSingleton<IMediator>(
+                    s => new Logging.Mediator(
+                        s.GetRequiredService<IMediatorFactory>(),
+                        s.GetRequiredService<ILogger<Logging.Mediator>>()))
                 .AddSingleton<Application>();
 
             serviceCollection
