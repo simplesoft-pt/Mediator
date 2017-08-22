@@ -1,6 +1,6 @@
 ﻿{
   "version": "1.0.0-rc04",
-  "title": "SimpleSoft.Mediator.Extensions.Logging",
+  "title": "SimpleSoft.Mediator.Microsoft.Extensions.Logging",
   "description": "Logging support using Microsot.Extensions.Logging.",
   "authors": [ "João Simões" ],
   "copyright": "Copyright © 2017 Simplesoft.pt",

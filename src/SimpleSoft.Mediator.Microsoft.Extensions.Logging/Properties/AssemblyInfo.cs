@@ -25,5 +25,5 @@
 using System.Reflection;
 
 
-[assembly: AssemblyTitle("SimpleSoft.Mediator.Extensions.Logging")]
+[assembly: AssemblyTitle("SimpleSoft.Mediator.Microsoft.Extensions.Logging")]
 [assembly: AssemblyDescription("Logging support using Microsot.Extensions.Logging")]

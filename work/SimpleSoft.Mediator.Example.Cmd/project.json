@@ -8,7 +8,7 @@
     "Microsoft.Extensions.DependencyInjection": "1.1.1",
     "Microsoft.Extensions.Logging": "1.1.2",
     "Microsoft.Extensions.Logging.Console": "1.1.2",
-    "SimpleSoft.Mediator.Extensions.Logging": { "target": "project" }
+    "SimpleSoft.Mediator.Microsoft.Extensions.Logging": { "target": "project" }
   },
 
   "frameworks": {

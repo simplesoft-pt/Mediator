@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "work", "work", "{0BD9E4D4-1
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Example.Cmd", "work\SimpleSoft.Mediator.Example.Cmd\SimpleSoft.Mediator.Example.Cmd.xproj", "{0675BDF9-1A58-41BD-A786-5679D863E869}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Extensions.Logging", "src\SimpleSoft.Mediator.Extensions.Logging\SimpleSoft.Mediator.Extensions.Logging.xproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Microsoft.Extensions.Logging", "src\SimpleSoft.Mediator.Microsoft.Extensions.Logging\SimpleSoft.Mediator.Microsoft.Extensions.Logging.xproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9E75A35F-ED02-4712-A2C9-44B58EEA1BCD}"
 	ProjectSection(SolutionItems) = preProject
