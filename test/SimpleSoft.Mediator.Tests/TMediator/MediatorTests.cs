@@ -14,7 +14,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var m = new Mediator(new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
+                var m = new Mediator(null);
                 Assert.Null(m);
             });
             Assert.NotNull(ex);
