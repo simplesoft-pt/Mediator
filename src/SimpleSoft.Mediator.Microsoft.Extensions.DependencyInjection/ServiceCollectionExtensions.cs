@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace SimpleSoft.Mediator
 {
@@ -23,9 +24,9 @@ namespace SimpleSoft.Mediator
             var options = new MediatorOptions();
             config?.Invoke(options);
 
-            services.Add(new ServiceDescriptor(
+            services.TryAdd(new ServiceDescriptor(
                 typeof(IMediator), options.MediatorBuilder, options.MediatorLifetime));
-            services.Add(new ServiceDescriptor(
+            services.TryAdd(new ServiceDescriptor(
                 typeof(IMediatorFactory), options.FactoryBuilder, options.FactoryLifetime));
 
             return services;
