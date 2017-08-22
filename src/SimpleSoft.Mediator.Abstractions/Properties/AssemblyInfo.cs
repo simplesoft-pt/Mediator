@@ -23,7 +23,6 @@
 #endregion
 
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 
 [assembly: AssemblyTitle("SimpleSoft.Mediator.Abstractions")]
