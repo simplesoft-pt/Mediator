@@ -55,17 +55,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers the given instance as an <see cref="ICommandHandler{TCommand}"/>.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="instance">The instance to be used</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, THandler>(
-            this IServiceCollection services, THandler instance)
-            where THandler : class, ICommandHandler<TCommand>
+        public static IServiceCollection AddMediatorHandlerForCommand<TCommand>(
+            this IServiceCollection services, ICommandHandler<TCommand> instance)
             where TCommand : ICommand
         {
-            services.AddSingleton<ICommandHandler<TCommand>>(instance);
+            services.AddSingleton(instance);
 
             return services;
         }
@@ -75,18 +73,16 @@ namespace Microsoft.Extensions.DependencyInjection
         /// instances.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="factory">The factory to be user</param>
         /// <param name="lifetime">The handler lifetime</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, THandler>(
-            this IServiceCollection services, Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
-            where THandler : class, ICommandHandler<TCommand>
+        public static IServiceCollection AddMediatorHandlerForCommand<TCommand>(
+            this IServiceCollection services, Func<IServiceProvider, ICommandHandler<TCommand>> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where TCommand : ICommand
         {
-            services.Add<ICommandHandler<TCommand>>(factory, lifetime);
+            services.Add(factory, lifetime);
 
             return services;
         }
@@ -95,13 +91,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers the given type as an <see cref="ICommandHandler{TCommand,TResult}"/>.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
+        /// <typeparam name="THandler">The handler type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="lifetime">The handler lifetime</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, THandler, TResult>(
+        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, TResult, THandler>(
             this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where THandler : class, ICommandHandler<TCommand, TResult>
             where TCommand : ICommand<TResult>
@@ -115,18 +111,16 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers the given instance as an <see cref="ICommandHandler{TCommand,TResult}"/>.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="instance">The instance to be used</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, THandler, TResult>(
-            this IServiceCollection services, THandler instance)
-            where THandler : class, ICommandHandler<TCommand, TResult>
+        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, TResult>(
+            this IServiceCollection services, ICommandHandler<TCommand, TResult> instance)
             where TCommand : ICommand<TResult>
         {
-            services.AddSingleton<ICommandHandler<TCommand, TResult>>(instance);
+            services.AddSingleton(instance);
 
             return services;
         }
@@ -136,19 +130,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// instances.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="factory">The factory to be user</param>
         /// <param name="lifetime">The handler lifetime</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, THandler, TResult>(
-            this IServiceCollection services, Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
-            where THandler : class, ICommandHandler<TCommand, TResult>
+        public static IServiceCollection AddMediatorHandlerForCommand<TCommand, TResult>(
+            this IServiceCollection services, Func<IServiceProvider, ICommandHandler<TCommand, TResult>> factory, 
+            ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where TCommand : ICommand<TResult>
         {
-            services.Add<ICommandHandler<TCommand, TResult>>(factory, lifetime);
+            services.Add(factory, lifetime);
 
             return services;
         }
@@ -180,17 +173,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers the given instance as an <see cref="IEventHandler{TEvent}"/>.
         /// </summary>
         /// <typeparam name="TEvent">The event type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="instance">The instance to be used</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForEvent<TEvent, THandler>(
-            this IServiceCollection services, THandler instance)
-            where THandler : class, IEventHandler<TEvent>
+        public static IServiceCollection AddMediatorHandlerForEvent<TEvent>(
+            this IServiceCollection services, IEventHandler<TEvent> instance)
             where TEvent : IEvent
         {
-            services.AddSingleton<IEventHandler<TEvent>>(instance);
+            services.AddSingleton(instance);
 
             return services;
         }
@@ -200,18 +191,17 @@ namespace Microsoft.Extensions.DependencyInjection
         /// instances.
         /// </summary>
         /// <typeparam name="TEvent">The event type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="factory">The factory to be user</param>
         /// <param name="lifetime">The handler lifetime</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForEvent<TEvent, THandler>(
-            this IServiceCollection services, Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
-            where THandler : class, IEventHandler<TEvent>
+        public static IServiceCollection AddMediatorHandlerForEvent<TEvent>(
+            this IServiceCollection services, Func<IServiceProvider, IEventHandler<TEvent>> factory, 
+            ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where TEvent : IEvent
         {
-            services.Add<IEventHandler<TEvent>>(factory, lifetime);
+            services.Add(factory, lifetime);
 
             return services;
         }
@@ -224,13 +214,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers the given type as an <see cref="IQueryHandler{TQuery,TResult}"/>.
         /// </summary>
         /// <typeparam name="TQuery">The query type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
+        /// <typeparam name="THandler">The handler type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="lifetime">The handler lifetime</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForQuery<TQuery, THandler, TResult>(
+        public static IServiceCollection AddMediatorHandlerForQuery<TQuery, TResult, THandler>(
             this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where THandler : class, IQueryHandler<TQuery, TResult>
             where TQuery : IQuery<TResult>
@@ -244,18 +234,16 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers the given instance as an <see cref="IQueryHandler{TQuery,TResult}"/>.
         /// </summary>
         /// <typeparam name="TQuery">The query type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="instance">The instance to be used</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForQuery<TQuery, THandler, TResult>(
-            this IServiceCollection services, THandler instance)
-            where THandler : class, IQueryHandler<TQuery, TResult>
+        public static IServiceCollection AddMediatorHandlerForQuery<TQuery, TResult>(
+            this IServiceCollection services, IQueryHandler<TQuery, TResult> instance)
             where TQuery : IQuery<TResult>
         {
-            services.AddSingleton<IQueryHandler<TQuery, TResult>>(instance);
+            services.AddSingleton(instance);
 
             return services;
         }
@@ -265,19 +253,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// instances.
         /// </summary>
         /// <typeparam name="TQuery">The command type</typeparam>
-        /// <typeparam name="THandler">The handler type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="services">The service collection</param>
         /// <param name="factory">The factory to be user</param>
         /// <param name="lifetime">The handler lifetime</param>
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediatorHandlerForQuery<TQuery, THandler, TResult>(
-            this IServiceCollection services, Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
-            where THandler : class, IQueryHandler<TQuery, TResult>
+        public static IServiceCollection AddMediatorHandlerForQuery<TQuery, TResult>(
+            this IServiceCollection services, Func<IServiceProvider, IQueryHandler<TQuery, TResult>> factory, 
+            ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where TQuery : IQuery<TResult>
         {
-            services.Add<IQueryHandler<TQuery, TResult>>(factory, lifetime);
+            services.Add(factory, lifetime);
 
             return services;
         }
