@@ -70,7 +70,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddSingleton<Application>();
 
             serviceCollection
-                .AddMediatorMiddleware<LoggingMiddleware>();
+                .AddMediatorMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton);
 
             // this should be a class implementing ICommandHandler<RegisterUserCommand>
             serviceCollection.AddMediatorHandlerForCommand(
