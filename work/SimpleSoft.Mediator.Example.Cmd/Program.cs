@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SimpleSoft.Mediator.Middleware;
 
 namespace SimpleSoft.Mediator.Example.Cmd
 {
@@ -71,21 +70,18 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddSingleton<Application>();
 
             serviceCollection
-                .AddSingleton<LoggingMiddleware>()
-                .AddSingleton<ICommandMiddleware>(s => s.GetRequiredService<LoggingMiddleware>())
-                .AddSingleton<IEventMiddleware>(s => s.GetRequiredService<LoggingMiddleware>())
-                .AddSingleton<IQueryMiddleware>(s => s.GetRequiredService<LoggingMiddleware>());
+                .AddMediatorMiddleware<LoggingMiddleware>();
 
             // this should be a class implementing ICommandHandler<RegisterUserCommand>
-            serviceCollection
-                .AddTransient(s => DelegateHandler.Command<RegisterUserCommand, Guid>(async (cmd, ct) =>
+            serviceCollection.AddMediatorHandlerForCommand(
+                s => DelegateHandler.Command<RegisterUserCommand, Guid>(async (cmd, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
                     if (store.Values.Any(e => e.Email.Equals(cmd.Email, StringComparison.OrdinalIgnoreCase)))
                     {
-                  // this could be a fail event instead
-                  //  eg. await _mediator.BroadcastAsync(new CommandFailedEvent(cmd.Id), ct);
-                  throw new InvalidOperationException("Duplicated user email");
+                        // this could be a fail event instead
+                        //  eg. await _mediator.BroadcastAsync(new CommandFailedEvent(cmd.Id), ct);
+                        throw new InvalidOperationException("Duplicated user email");
                     }
 
                     await Task.Delay(1000, ct);
@@ -97,14 +93,14 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         Password = cmd.Password
                     });
 
-              //  this could be a UserCreatedEvent instead of a command returning a result
-              //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
-              return userId;
-                }));
+                    //  this could be a UserCreatedEvent instead of a command returning a result
+                    //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
+                    return userId;
+                }), ServiceLifetime.Transient);
 
             // this should be a class implementing ICommandHandler<ChangeUserPasswordCommand>
-            serviceCollection
-                .AddTransient(s => DelegateHandler.Command<ChangeUserPasswordCommand>(async (cmd, ct) =>
+            serviceCollection.AddMediatorHandlerForCommand(
+                s => DelegateHandler.Command<ChangeUserPasswordCommand>(async (cmd, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
                     User user;
@@ -122,11 +118,11 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     }
 
                     throw new InvalidOperationException($"User id '{cmd.UserId}' could not be found");
-                }));
+                }), ServiceLifetime.Transient);
 
             // this should be a class implementing IQueryHandler<UserByIdQuery,User>
-            serviceCollection
-                .AddTransient(s => DelegateHandler.Query<UserByIdQuery, User>(async (query, ct) =>
+            serviceCollection.AddMediatorHandlerForQuery(
+                s => DelegateHandler.Query<UserByIdQuery, User>(async (query, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
 
@@ -134,7 +130,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
                     User user;
                     return store.TryGetValue(query.UserId, out user) ? user : null;
-                }));
+                }), ServiceLifetime.Transient);
 
             return serviceCollection.BuildServiceProvider(true);
         }
