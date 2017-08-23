@@ -53,7 +53,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
         private static IServiceProvider BuildServiceProvider()
         {
-            var serviceCollection = new ServiceCollection()
+            var services = new ServiceCollection()
                 .AddSingleton(LoggerFactory)
                 .AddLogging()
                 .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
@@ -69,12 +69,12 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 })
                 .AddSingleton<Application>();
 
-            serviceCollection
+            services
                 .AddMediatorMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
                 .AddMediatorMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
 
             // this should be a class implementing ICommandHandler<RegisterUserCommand>
-            serviceCollection.AddMediatorHandlerForCommand(
+            services.AddMediatorHandlerForCommand(
                 s => DelegateHandler.Command<RegisterUserCommand, Guid>(async (cmd, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
@@ -100,7 +100,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 }), ServiceLifetime.Transient);
 
             // this should be a class implementing ICommandHandler<ChangeUserPasswordCommand>
-            serviceCollection.AddMediatorHandlerForCommand(
+            services.AddMediatorHandlerForCommand(
                 s => DelegateHandler.Command<ChangeUserPasswordCommand>(async (cmd, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
@@ -122,7 +122,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 }), ServiceLifetime.Transient);
 
             // this should be a class implementing IQueryHandler<UserByIdQuery,User>
-            serviceCollection.AddMediatorHandlerForQuery(
+            services.AddMediatorHandlerForQuery(
                 s => DelegateHandler.Query<UserByIdQuery, User>(async (query, ct) =>
                 {
                     var store = s.GetRequiredService<IDictionary<Guid, User>>();
@@ -133,7 +133,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     return store.TryGetValue(query.UserId, out user) ? user : null;
                 }), ServiceLifetime.Transient);
 
-            return serviceCollection.BuildServiceProvider(true);
+            return services.BuildServiceProvider(true);
         }
     }
 }
