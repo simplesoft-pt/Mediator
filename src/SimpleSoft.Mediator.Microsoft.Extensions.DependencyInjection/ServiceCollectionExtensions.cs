@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// Extensions for the <see cref="IServiceCollection"/> interface.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public static partial class ServiceCollectionExtensions
     {
         /// <summary>
         /// Configures the mediator into the <see cref="IServiceCollection"/>.
@@ -53,6 +53,28 @@ namespace Microsoft.Extensions.DependencyInjection
                 typeof(IMediator), options.MediatorBuilder, options.MediatorLifetime));
             services.TryAdd(new ServiceDescriptor(
                 typeof(IMediatorFactory), options.FactoryBuilder, options.FactoryLifetime));
+
+            return services;
+        }
+
+        internal static IServiceCollection Add<TService, TImpl>(this IServiceCollection services, ServiceLifetime lifetime)
+            where TImpl : TService
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
+            services.Add(new ServiceDescriptor(typeof(TService), typeof(TImpl), lifetime));
+
+            return services;
+        }
+
+        internal static IServiceCollection Add<TService>(this IServiceCollection services,
+            Func<IServiceProvider, TService> factory, ServiceLifetime lifetime)
+            where TService : class
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+
+            services.Add(new ServiceDescriptor(typeof(TService), factory, lifetime));
 
             return services;
         }
