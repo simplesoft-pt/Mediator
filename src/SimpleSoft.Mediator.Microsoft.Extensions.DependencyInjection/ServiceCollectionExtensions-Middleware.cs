@@ -204,7 +204,8 @@ namespace Microsoft.Extensions.DependencyInjection
         #region IMiddleware
 
         /// <summary>
-        /// Registers the given type as a <see cref="IQueryMiddleware"/>.
+        /// Registers the given type as a <see cref="ICommandMiddleware"/>,
+        /// <see cref="IEventMiddleware"/> and <see cref="IQueryMiddleware"/>.
         /// </summary>
         /// <typeparam name="T">The middleware implementation type</typeparam>
         /// <param name="services">The services collection</param>
@@ -224,7 +225,8 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Registers the given instance as a <see cref="IQueryMiddleware"/>.
+        /// Registers the given instance as a <see cref="ICommandMiddleware"/>,
+        /// <see cref="IEventMiddleware"/> and <see cref="IQueryMiddleware"/>.
         /// </summary>
         /// <typeparam name="T">The middleware implementation type</typeparam>
         /// <param name="services">The services collection</param>
@@ -243,7 +245,8 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Registers the given function as a factory for <see cref="IQueryMiddleware"/>.
+        /// Registers the given function as a factory for <see cref="ICommandMiddleware"/>,
+        /// <see cref="IEventMiddleware"/> and <see cref="IQueryMiddleware"/> instances.
         /// </summary>
         /// <typeparam name="T">The middleware implementation type</typeparam>
         /// <param name="services">The services collection</param>
