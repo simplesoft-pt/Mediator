@@ -23,10 +23,11 @@
 #endregion
 
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using SimpleSoft.Mediator;
 
-namespace SimpleSoft.Mediator
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// Extensions for the <see cref="IServiceCollection"/> interface.

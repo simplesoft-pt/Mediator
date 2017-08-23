@@ -23,9 +23,10 @@
 #endregion
 
 using System;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleSoft.Mediator;
 
-namespace SimpleSoft.Mediator
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// The mediator registration options
