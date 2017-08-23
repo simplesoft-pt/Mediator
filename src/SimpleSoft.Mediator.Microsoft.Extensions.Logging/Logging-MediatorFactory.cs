@@ -35,28 +35,23 @@ namespace SimpleSoft.Mediator
         /// Mediator factory that uses delegates to build the required services
         /// while making some helpful logs
         /// </summary>
-        public class DelegateMediatorFactory : IMediatorFactory
+        public class MediatorFactory : IMediatorFactory
         {
-            private readonly ILogger<SimpleSoft.Mediator.DelegateMediatorFactory> _logger;
             private readonly IMediatorFactory _factory;
+            private readonly ILogger<MediatorFactory> _logger;
 
             /// <summary>
             /// Creates a new instance
             /// </summary>
-            /// <param name="serviceFactory">The factory for single services</param>
-            /// <param name="serviceCollectionFactory">The factory for collections of services</param>
+            /// <param name="factory">The factory to be wrapped</param>
             /// <param name="logger">The logger to use</param>
             /// <exception cref="ArgumentNullException"></exception>
-            public DelegateMediatorFactory(
-                SimpleSoft.Mediator.DelegateMediatorFactory.Service serviceFactory,
-                SimpleSoft.Mediator.DelegateMediatorFactory.ServiceCollection serviceCollectionFactory,
-                ILogger<SimpleSoft.Mediator.DelegateMediatorFactory> logger)
+            public MediatorFactory(IMediatorFactory factory, ILogger<MediatorFactory> logger)
             {
-                if (serviceFactory == null) throw new ArgumentNullException(nameof(serviceFactory));
-                if (serviceCollectionFactory == null) throw new ArgumentNullException(nameof(serviceCollectionFactory));
+                if (factory == null) throw new ArgumentNullException(nameof(factory));
                 if (logger == null) throw new ArgumentNullException(nameof(logger));
 
-                _factory = new SimpleSoft.Mediator.DelegateMediatorFactory(serviceFactory, serviceCollectionFactory);
+                _factory = factory;
                 _logger = logger;
             }
 
@@ -107,6 +102,28 @@ namespace SimpleSoft.Mediator
             {
                 _logger.LogDebug("Building query middleware collection");
                 return _factory.BuildQueryMiddlewares();
+            }
+
+            /// <summary>
+            /// Wrapper implementation using an instance of <see cref="DelegateMediatorFactory"/>.
+            /// </summary>
+            public class Delegate : MediatorFactory
+            {
+                /// <summary>
+                /// Creates a new instance
+                /// </summary>
+                /// <param name="serviceFactory">The factory for single services</param>
+                /// <param name="serviceCollectionFactory">The factory for collections of services</param>
+                /// <param name="logger">The logger to use</param>
+                /// <exception cref="ArgumentNullException"></exception>
+                public Delegate(
+                    DelegateMediatorFactory.Service serviceFactory,
+                    DelegateMediatorFactory.ServiceCollection serviceCollectionFactory,
+                    ILogger<MediatorFactory> logger)
+                    : base(new DelegateMediatorFactory(serviceFactory, serviceCollectionFactory), logger)
+                {
+
+                }
             }
         }
     }

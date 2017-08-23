@@ -32,24 +32,12 @@ namespace SimpleSoft.Mediator
     public static partial class Logging
     {
         /// <summary>
-        /// Mediator with logging support
+        /// Mediator wrapper with logging support
         /// </summary>
         public class Mediator : IMediator
         {
             private readonly ILogger<Mediator> _logger;
             private readonly IMediator _mediator;
-
-            /// <summary>
-            /// Creates a new instance.
-            /// </summary>
-            /// <param name="factory">The factory to be used</param>
-            /// <param name="logger">The logger instance</param>
-            /// <exception cref="ArgumentNullException"></exception>
-            public Mediator(IMediatorFactory factory, ILogger<Mediator> logger)
-                :this(new SimpleSoft.Mediator.Mediator(factory), logger)
-            {
-
-            }
 
             /// <summary>
             /// Creates a new instance.
@@ -113,6 +101,24 @@ namespace SimpleSoft.Mediator
                 {
                     _logger.LogDebug("Fetching query data");
                     return await _mediator.FetchAsync<TQuery, TResult>(query, ct).ConfigureAwait(false);
+                }
+            }
+
+            /// <summary>
+            /// Default wrapper using an instance of <see cref="SimpleSoft.Mediator.Mediator"/>.
+            /// </summary>
+            public class Default : Mediator
+            {
+                /// <summary>
+                /// Creates a new instance.
+                /// </summary>
+                /// <param name="factory">The factory to be used</param>
+                /// <param name="logger">The logger instance</param>
+                /// <exception cref="ArgumentNullException"></exception>
+                public Default(IMediatorFactory factory, ILogger<Mediator> logger)
+                    : base(new SimpleSoft.Mediator.Mediator(factory), logger)
+                {
+
                 }
             }
         }
