@@ -29,7 +29,7 @@ namespace SimpleSoft.Mediator
     /// <summary>
     /// Aggregates mediator wrappers that support logging
     /// </summary>
-    public static partial class Logging
+    public static class LoggerExtensions
     {
         internal static readonly object[] EmptyObjectArray = new object[0];
 
