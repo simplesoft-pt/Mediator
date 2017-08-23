@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleSoft.Mediator.Middleware;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {

@@ -22,19 +22,13 @@
 // SOFTWARE.
 #endregion
 
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace SimpleSoft.Mediator.Middleware
+namespace SimpleSoft.Mediator.Pipeline
 {
     /// <summary>
-    /// Method invoked when an <see cref="IQuery{TResult}"/> is fetched.
+    /// Handling middleware that can be used to intercept commands, events and queries
     /// </summary>
-    /// <typeparam name="TQuery">The query type</typeparam>
-    /// <typeparam name="TResult">The result type</typeparam>
-    /// <param name="query">The query to fetch</param>
-    /// <param name="ct">The cancellation token</param>
-    /// <returns>A task to be awaited for the result</returns>
-    public delegate Task<TResult> QueryMiddlewareDelegate<in TQuery, TResult>(TQuery query, CancellationToken ct)
-        where TQuery : IQuery<TResult>;
+    public interface IMiddleware : ICommandMiddleware, IEventMiddleware, IQueryMiddleware
+    {
+
+    }
 }

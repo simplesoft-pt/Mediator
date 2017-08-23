@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // The MIT License (MIT)
 // 
 // Copyright (c) 2017 Simplesoft.pt
@@ -22,13 +22,18 @@
 // SOFTWARE.
 #endregion
 
-namespace SimpleSoft.Mediator.Middleware
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SimpleSoft.Mediator.Pipeline
 {
     /// <summary>
-    /// Handling middleware that can be used to intercept commands, events and queries
+    /// Method invoked when an <see cref="IEvent"/> is broadcast.
     /// </summary>
-    public interface IMiddleware : ICommandMiddleware, IEventMiddleware, IQueryMiddleware
-    {
-
-    }
+    /// <typeparam name="TEvent">The event type</typeparam>
+    /// <param name="evt">The event broadcasted</param>
+    /// <param name="ct">The cancellation token</param>
+    /// <returns>A task to be awaited</returns>
+    public delegate Task EventMiddlewareDelegate<in TEvent>(TEvent evt, CancellationToken ct)
+        where TEvent : IEvent;
 }

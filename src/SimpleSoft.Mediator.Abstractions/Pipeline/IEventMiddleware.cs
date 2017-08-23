@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // The MIT License (MIT)
 // 
 // Copyright (c) 2017 Simplesoft.pt
@@ -25,26 +25,22 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Middleware
+namespace SimpleSoft.Mediator.Pipeline
 {
     /// <summary>
-    /// Method invoked when an <see cref="ICommand"/> is published.
+    /// Handling middleware that can be used to intercept events
     /// </summary>
-    /// <typeparam name="TCommand">The command type</typeparam>
-    /// <param name="cmd">The command published</param>
-    /// <param name="ct">The cancellation token</param>
-    /// <returns>A task to be awaited</returns>
-    public delegate Task CommandMiddlewareDelegate<in TCommand>(TCommand cmd, CancellationToken ct)
-        where TCommand : ICommand;
-
-    /// <summary>
-    /// Method invoked when an <see cref="ICommand{TResult}"/> is published.
-    /// </summary>
-    /// <typeparam name="TCommand">The command type</typeparam>
-    /// <typeparam name="TResult">The result type</typeparam>
-    /// <param name="cmd">The command published</param>
-    /// <param name="ct">The cancellation token</param>
-    /// <returns>A task to be awaited for the result</returns>
-    public delegate Task<TResult> CommandMiddlewareDelegate<in TCommand, TResult>(TCommand cmd, CancellationToken ct)
-        where TCommand : ICommand<TResult>;
+    public interface IEventMiddleware
+    {
+        /// <summary>
+        /// Method invoked when an <see cref="IEvent"/> is broadcast.
+        /// </summary>
+        /// <typeparam name="TEvent">The event type</typeparam>
+        /// <param name="next">The next middleware into the chain</param>
+        /// <param name="evt">The event broadcasted</param>
+        /// <param name="ct">The cancellation token</param>
+        /// <returns>A task to be awaited</returns>
+        Task OnEventAsync<TEvent>(EventMiddlewareDelegate<TEvent> next, TEvent evt, CancellationToken ct)
+            where TEvent : IEvent;
+    }
 }

@@ -2,11 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SimpleSoft.Mediator.Middleware;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator.Example.Cmd
 {
-    public class LoggingMiddleware : Middleware.Middleware
+    public class LoggingMiddleware : Middleware
     {
         private readonly ILogger<LoggingMiddleware> _logger;
 

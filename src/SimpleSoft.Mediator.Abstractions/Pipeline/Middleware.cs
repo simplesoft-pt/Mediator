@@ -25,7 +25,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Middleware
+namespace SimpleSoft.Mediator.Pipeline
 {
     /// <summary>
     /// Handling middleware that can be used to intercept commands events and queries

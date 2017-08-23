@@ -23,7 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
-using SimpleSoft.Mediator.Middleware;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {

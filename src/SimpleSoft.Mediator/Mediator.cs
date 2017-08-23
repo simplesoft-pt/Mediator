@@ -26,7 +26,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SimpleSoft.Mediator.Middleware;
+using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {
