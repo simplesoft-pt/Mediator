@@ -55,12 +55,13 @@ namespace SimpleSoft.Mediator
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
-            var handler = _factory.BuildCommandHandlerFor<TCommand>();
-            if (handler == null)
-                throw CommandHandlerNotFoundException.Build(cmd);
-
             CommandMiddlewareDelegate<TCommand> next = async (command, cancellationToken) =>
+            {
+                var handler = _factory.BuildCommandHandlerFor<TCommand>();
+                if (handler == null)
+                    throw CommandHandlerNotFoundException.Build(cmd);
                 await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            };
 
             foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
             {
@@ -77,13 +78,14 @@ namespace SimpleSoft.Mediator
             where TCommand : ICommand<TResult>
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
-
-            var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
-            if (handler == null)
-                throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
-
+            
             CommandMiddlewareDelegate<TCommand, TResult> next = async (command, cancellationToken) =>
-                await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            {
+                var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
+                if (handler == null)
+                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
+                return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            };
 
             foreach (var middleware in _factory.BuildCommandMiddlewares().Reverse())
             {
@@ -101,10 +103,9 @@ namespace SimpleSoft.Mediator
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
-            var handlers = _factory.BuildEventHandlersFor<TEvent>();
-
             EventMiddlewareDelegate<TEvent> next = async (@event, cancellationToken) =>
             {
+                var handlers = _factory.BuildEventHandlersFor<TEvent>();
                 foreach (var handler in handlers)
                     await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
             };
@@ -125,13 +126,14 @@ namespace SimpleSoft.Mediator
             where TQuery : IQuery<TResult>
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
-
-            var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
-            if (handler == null)
-                throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
-
+            
             QueryMiddlewareDelegate<TQuery, TResult> next = async (q, cancellationToken) =>
-                await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
+            {
+                var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
+                if (handler == null)
+                    throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
+                return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
+            };
 
             foreach (var middleware in _factory.BuildQueryMiddlewares().Reverse())
             {
