@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-rc04",
+  "version": "1.0.0-rc05-final",
   "title": "SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection",
   "description": "LDependency injection support using Microsot.Extensions.DependencyInjection",
   "authors": [ "João Simões" ],

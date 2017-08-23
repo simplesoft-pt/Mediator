@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-rc04",
+  "version": "1.0.0-rc05-final",
   "title": "SimpleSoft.Mediator.Microsoft.Extensions.Logging",
   "description": "Logging support using Microsot.Extensions.Logging.",
   "authors": [ "João Simões" ],
