@@ -17,14 +17,16 @@ The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft
 ```powershell
 Install-Package SimpleSoft.Mediator.Abstractions
 Install-Package SimpleSoft.Mediator
-Install-Package SimpleSoft.Mediator.Extensions.Logging
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions.Logging
 ```
 
 ### .NET CLI
 ```powershell
 dotnet add package SimpleSoft.Mediator.Abstractions
 dotnet add package SimpleSoft.Mediator
-dotnet add package SimpleSoft.Mediator.Extensions.Logging
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.Logging
 ```
 ## Compatibility
 This library is compatible with the folowing frameworks:
