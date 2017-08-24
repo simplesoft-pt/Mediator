@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,66 +72,11 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddMediatorMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
                 .AddMediatorMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
 
-            // this should be a class implementing ICommandHandler<RegisterUserCommand>
-            services.AddMediatorHandlerForCommand(
-                s => DelegateHandler.Command<RegisterUserCommand, Guid>(async (cmd, ct) =>
-                {
-                    var store = s.GetRequiredService<IDictionary<Guid, User>>();
-                    if (store.Values.Any(e => e.Email.Equals(cmd.Email, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        // this could be a fail event instead
-                        //  eg. await _mediator.BroadcastAsync(new CommandFailedEvent(cmd.Id), ct);
-                        throw new InvalidOperationException("Duplicated user email");
-                    }
-
-                    await Task.Delay(1000, ct);
-
-                    var userId = Guid.NewGuid();
-                    store.Add(userId, new User
-                    {
-                        Email = cmd.Email,
-                        Password = cmd.Password
-                    });
-
-                    //  this could be a UserCreatedEvent instead of a command returning a result
-                    //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
-                    return userId;
-                }), ServiceLifetime.Transient);
-
-            // this should be a class implementing ICommandHandler<ChangeUserPasswordCommand>
-            services.AddMediatorHandlerForCommand(
-                s => DelegateHandler.Command<ChangeUserPasswordCommand>(async (cmd, ct) =>
-                {
-                    var store = s.GetRequiredService<IDictionary<Guid, User>>();
-                    User user;
-                    if (store.TryGetValue(cmd.UserId, out user))
-                    {
-                        if (user.Password.Equals(cmd.OldPassword))
-                        {
-                            await Task.Delay(1000, ct);
-
-                            user.Password = cmd.NewPassword;
-                            return;
-                        }
-
-                        throw new InvalidOperationException($"Invalid password for user id '{cmd.UserId}'");
-                    }
-
-                    throw new InvalidOperationException($"User id '{cmd.UserId}' could not be found");
-                }), ServiceLifetime.Transient);
-
-            // this should be a class implementing IQueryHandler<UserByIdQuery,User>
-            services.AddMediatorHandlerForQuery(
-                s => DelegateHandler.Query<UserByIdQuery, User>(async (query, ct) =>
-                {
-                    var store = s.GetRequiredService<IDictionary<Guid, User>>();
-
-                    await Task.Delay(1000, ct);
-
-                    User user;
-                    return store.TryGetValue(query.UserId, out user) ? user : null;
-                }), ServiceLifetime.Transient);
-
+            services
+                .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
+                .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
+                .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
+            
             return services.BuildServiceProvider(true);
         }
     }
