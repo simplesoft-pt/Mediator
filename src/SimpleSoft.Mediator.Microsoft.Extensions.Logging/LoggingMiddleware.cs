@@ -35,7 +35,7 @@ namespace SimpleSoft.Mediator
     /// When using the Logging.<see cref="LoggingMediator"/> wrapper this middleware
     /// is not required.
     /// </summary>
-    public class LoggingMiddleware : ICommandMiddleware, IEventMiddleware, IQueryMiddleware
+    public class LoggingMiddleware : IMiddleware
     {
         private readonly ILogger<LoggingMiddleware> _logger;
 
