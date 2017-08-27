@@ -56,17 +56,25 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddSingleton(LoggerFactory)
                 .AddLogging()
                 .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                .AddMediator(options =>
-                {
-                    var factoryBuilder = options.FactoryBuilder;
-                    options.FactoryBuilder = s =>
-                        factoryBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>());
-
-                    var mediatorBuilder = options.MediatorBuilder;
-                    options.MediatorBuilder = s =>
-                        mediatorBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediator>>());
-                })
                 .AddSingleton<Application>();
+
+            services = ConfigureMediator(services);
+            
+            return services.BuildServiceProvider(true);
+        }
+
+        private static IServiceCollection ConfigureMediator(IServiceCollection services)
+        {
+            services.AddMediator(options =>
+            {
+                var factoryBuilder = options.FactoryBuilder;
+                options.FactoryBuilder = s =>
+                    factoryBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>());
+
+                var mediatorBuilder = options.MediatorBuilder;
+                options.MediatorBuilder = s =>
+                    mediatorBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediator>>());
+            });
 
             services
                 .AddMediatorMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
@@ -76,8 +84,8 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
                 .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
                 .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
-            
-            return services.BuildServiceProvider(true);
+
+            return services;
         }
     }
 }
