@@ -59,12 +59,12 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 .AddMediator(options =>
                 {
                     var factoryBuilder = options.FactoryBuilder;
-                    options.FactoryBuilder = s => new LoggingMediatorFactory(
-                        factoryBuilder(s), s.GetRequiredService<ILogger<LoggingMediatorFactory>>());
+                    options.FactoryBuilder = s =>
+                        factoryBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>());
 
                     var mediatorBuilder = options.MediatorBuilder;
-                    options.MediatorBuilder = s => new LoggingMediator(
-                        mediatorBuilder(s), s.GetRequiredService<ILogger<LoggingMediator.Default>>());
+                    options.MediatorBuilder = s =>
+                        mediatorBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediator>>());
                 })
                 .AddSingleton<Application>();
 
