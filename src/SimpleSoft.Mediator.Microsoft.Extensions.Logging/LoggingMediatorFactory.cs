@@ -36,7 +36,7 @@ namespace SimpleSoft.Mediator
     public class LoggingMediatorFactory : IMediatorFactory
     {
         private readonly IMediatorFactory _factory;
-        private readonly ILogger<LoggingMediatorFactory> _logger;
+        private readonly ILogger<IMediatorFactory> _logger;
 
         /// <summary>
         /// Creates a new instance
@@ -44,7 +44,7 @@ namespace SimpleSoft.Mediator
         /// <param name="factory">The factory to be wrapped</param>
         /// <param name="logger">The logger to use</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public LoggingMediatorFactory(IMediatorFactory factory, ILogger<LoggingMediatorFactory> logger)
+        public LoggingMediatorFactory(IMediatorFactory factory, ILogger<IMediatorFactory> logger)
         {
             if (factory == null) throw new ArgumentNullException(nameof(factory));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
@@ -117,7 +117,7 @@ namespace SimpleSoft.Mediator
             public Delegate(
                 DelegateMediatorFactory.Service serviceFactory,
                 DelegateMediatorFactory.ServiceCollection serviceCollectionFactory,
-                ILogger<LoggingMediatorFactory> logger)
+                ILogger<IMediatorFactory> logger)
                 : base(new DelegateMediatorFactory(serviceFactory, serviceCollectionFactory), logger)
             {
 

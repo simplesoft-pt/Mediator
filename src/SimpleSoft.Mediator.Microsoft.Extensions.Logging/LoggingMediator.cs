@@ -34,7 +34,7 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class LoggingMediator : IMediator
     {
-        private readonly ILogger<LoggingMediator> _logger;
+        private readonly ILogger<IMediator> _logger;
         private readonly IMediator _mediator;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SimpleSoft.Mediator
         /// <param name="mediator">The mediator to be wrapped</param>
         /// <param name="logger">The logger instance</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public LoggingMediator(IMediator mediator, ILogger<LoggingMediator> logger)
+        public LoggingMediator(IMediator mediator, ILogger<IMediator> logger)
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
@@ -113,7 +113,7 @@ namespace SimpleSoft.Mediator
             /// <param name="factory">The factory to be used</param>
             /// <param name="logger">The logger instance</param>
             /// <exception cref="ArgumentNullException"></exception>
-            public Default(IMediatorFactory factory, ILogger<LoggingMediator> logger)
+            public Default(IMediatorFactory factory, ILogger<IMediator> logger)
                 : base(new Mediator(factory), logger)
             {
 
