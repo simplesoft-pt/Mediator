@@ -1,20 +1,21 @@
 ﻿{
-  "version": "1.0.0-*",
-  "buildOptions": {
-    "emitEntryPoint": true
-  },
+    "version": "1.0.0-*",
+    "buildOptions": {
+        "emitEntryPoint": true
+    },
 
-  "dependencies": {
-    "Microsoft.Extensions.DependencyInjection": "1.1.1",
-    "Microsoft.Extensions.Logging": "1.1.2",
-    "Microsoft.Extensions.Logging.Console": "1.1.2",
-    "SimpleSoft.Mediator.Microsoft.Extensions.Logging": { "target": "project" },
-    "SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection": { "target": "project" }
-  },
+    "dependencies": {
+        "Microsoft.Extensions.DependencyInjection": "1.1.1",
+        "Microsoft.Extensions.Logging": "1.1.2",
+        "Microsoft.Extensions.Logging.Console": "1.1.2",
+        "Newtonsoft.Json": "10.0.3",
+        "SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection": { "target": "project" },
+        "SimpleSoft.Mediator.Microsoft.Extensions.Logging": { "target": "project" }
+    },
 
-  "frameworks": {
-    "net4.7": {
+    "frameworks": {
+        "net4.7": {
 
+        }
     }
-  }
 }

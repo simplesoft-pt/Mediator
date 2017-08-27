@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator.Example.Cmd
@@ -19,20 +20,24 @@ namespace SimpleSoft.Mediator.Example.Cmd
         {
             try
             {
-                _logger.LogDebug("Command about to be published");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug(
+                        "Command published: {command}", JsonConvert.SerializeObject(cmd));
+                }
 
                 await next(cmd, ct).ConfigureAwait(false);
 
-                _logger.LogDebug("Command was published");
+                _logger.LogDebug("Command handled: <no result>");
             }
             catch (TaskCanceledException)
             {
-                _logger.LogWarning("Command publish operation was canceled");
+                _logger.LogWarning("Command handling was canceled");
                 throw;
             }
             catch (Exception e)
             {
-                _logger.LogError(0, e, "Command publish failed");
+                _logger.LogError(0, e, "Command handling failed");
                 throw;
             }
         }
@@ -41,21 +46,25 @@ namespace SimpleSoft.Mediator.Example.Cmd
         {
             try
             {
-                _logger.LogDebug("Command with result about to be published");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug(
+                        "Command published: {command}", JsonConvert.SerializeObject(cmd));
 
                 var result = await next(cmd, ct).ConfigureAwait(false);
 
-                _logger.LogDebug("Command with result was published");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug(
+                        "Command handled: {commandResult}", JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (TaskCanceledException)
             {
-                _logger.LogWarning("Command with result publish operation was canceled");
+                _logger.LogWarning("Command handling was canceled");
                 throw;
             }
             catch (Exception e)
             {
-                _logger.LogError(0, e, "Command with result publish failed");
+                _logger.LogError(0, e, "Command handling failed");
                 throw;
             }
         }
@@ -64,20 +73,22 @@ namespace SimpleSoft.Mediator.Example.Cmd
         {
             try
             {
-                _logger.LogDebug("Event about to be broadcast");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug(
+                        "Event broadcasted: {event}", JsonConvert.SerializeObject(evt));
 
                 await next(evt, ct).ConfigureAwait(false);
 
-                _logger.LogDebug("Event was broadcast");
+                _logger.LogDebug("Event handled");
             }
             catch (TaskCanceledException)
             {
-                _logger.LogWarning("Event broadcast operation was canceled");
+                _logger.LogWarning("Event handling was canceled");
                 throw;
             }
             catch (Exception e)
             {
-                _logger.LogError(0, e, "Event broadcast failed");
+                _logger.LogError(0, e, "Event handling failed");
                 throw;
             }
         }
@@ -86,21 +97,26 @@ namespace SimpleSoft.Mediator.Example.Cmd
         {
             try
             {
-                _logger.LogDebug("Query about to be fetched");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug(
+                        "Query fetched: {query}", JsonConvert.SerializeObject(query));
 
                 var result = await next(query, ct).ConfigureAwait(false);
 
-                _logger.LogDebug("Query was fetched");
+
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug(
+                        "Query handled: {queryResult}", JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (TaskCanceledException)
             {
-                _logger.LogWarning("Query fetch operation was canceled");
+                _logger.LogWarning("Query handling was canceled");
                 throw;
             }
             catch (Exception e)
             {
-                _logger.LogError(0, e, "Query fetch failed");
+                _logger.LogError(0, e, "Query handling failed");
                 throw;
             }
         }
