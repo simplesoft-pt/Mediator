@@ -65,15 +65,12 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
         private static IServiceCollection ConfigureMediator(IServiceCollection services)
         {
-            services.AddMediator(options =>
+            services.AddMediator(o =>
             {
-                var factoryBuilder = options.FactoryBuilder;
-                options.FactoryBuilder = s =>
-                    factoryBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>());
-
-                var mediatorBuilder = options.MediatorBuilder;
-                options.MediatorBuilder = s =>
-                    mediatorBuilder(s).UsingLogger(s.GetRequiredService<ILogger<IMediator>>());
+                o.UseFactory(
+                    s => new MicrosoftMediatorFactory(s).UsingLogger(
+                        s.GetRequiredService<ILogger<IMediatorFactory>>()));
+                o.UseMediator<LoggingMediator.Default>();
             });
 
             services

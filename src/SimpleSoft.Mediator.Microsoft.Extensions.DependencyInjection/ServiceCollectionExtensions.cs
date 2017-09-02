@@ -49,10 +49,8 @@ namespace Microsoft.Extensions.DependencyInjection
             var options = new MediatorOptions();
             config?.Invoke(options);
 
-            services.TryAdd(new ServiceDescriptor(
-                typeof(IMediator), options.MediatorBuilder, options.MediatorLifetime));
-            services.TryAdd(new ServiceDescriptor(
-                typeof(IMediatorFactory), options.FactoryBuilder, options.FactoryLifetime));
+            services.TryAdd(options.MediatorDescriptor);
+            services.TryAdd(options.FactoryDescriptor);
 
             return services;
         }
