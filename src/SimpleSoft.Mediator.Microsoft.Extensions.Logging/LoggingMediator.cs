@@ -103,7 +103,7 @@ namespace SimpleSoft.Mediator
         }
 
         /// <summary>
-        /// Default wrapper using an instance of <see cref="SimpleSoft.Mediator.Mediator"/>.
+        /// Default wrapper using an instance of <see cref="Mediator"/>.
         /// </summary>
         public class Default : LoggingMediator
         {

@@ -56,28 +56,36 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public ICommandHandler<TCommand> BuildCommandHandlerFor<TCommand>() where TCommand : ICommand
         {
-            _logger.LogDebug("Building command handler");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Building command handler for '{commandType}'", typeof(TCommand));
             return _factory.BuildCommandHandlerFor<TCommand>();
         }
 
         /// <inheritdoc />
         public ICommandHandler<TCommand, TResult> BuildCommandHandlerFor<TCommand, TResult>() where TCommand : ICommand<TResult>
         {
-            _logger.LogDebug("Building command handler");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug(
+                    "Building command handler for '{commandType}<{resultType}>'",
+                    typeof(TCommand), typeof(TResult));
             return _factory.BuildCommandHandlerFor<TCommand, TResult>();
         }
 
         /// <inheritdoc />
         public IEnumerable<IEventHandler<TEvent>> BuildEventHandlersFor<TEvent>() where TEvent : IEvent
         {
-            _logger.LogDebug("Building event handlers");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Building event handlers for '{eventType}'", typeof(TEvent));
             return _factory.BuildEventHandlersFor<TEvent>();
         }
 
         /// <inheritdoc />
         public IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>() where TQuery : IQuery<TResult>
         {
-            _logger.LogDebug("Building query handler");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug(
+                    "Building query handler for '{queryType}<{resultType}>'",
+                    typeof(TQuery), typeof(TResult));
             return _factory.BuildQueryHandlerFor<TQuery, TResult>();
         }
 
