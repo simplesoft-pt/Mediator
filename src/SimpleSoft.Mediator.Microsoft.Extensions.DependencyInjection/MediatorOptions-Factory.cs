@@ -36,14 +36,15 @@ namespace Microsoft.Extensions.DependencyInjection
         private static readonly Type FactoryType = typeof(IMediatorFactory);
 
         /// <summary>
-        /// The default builder delegate for <see cref="IMediatorFactory"/> instances.
+        /// The default builder delegate for <see cref="IMediatorFactory"/> instances. It
+        /// builds instances of <see cref="MicrosoftMediatorFactory"/>.
         /// </summary>
         public static readonly Func<IServiceProvider, IMediatorFactory> DefaultFactoryBuilder =
             s => new MicrosoftMediatorFactory(s);
 
         /// <summary>
         /// The service descriptor for the <see cref="IMediatorFactory"/> instance.
-        /// By default it will build a singleton <see cref="MicrosoftMediatorFactory"/> instance.
+        /// By default it uses the <see cref="DefaultFactoryBuilder"/> delegate.
         /// </summary>
         public ServiceDescriptor FactoryDescriptor { get; private set; }
             = new ServiceDescriptor(FactoryType, DefaultFactoryBuilder, ServiceLifetime.Singleton);

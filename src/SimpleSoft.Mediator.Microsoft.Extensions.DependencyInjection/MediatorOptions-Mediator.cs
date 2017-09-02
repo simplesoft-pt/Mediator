@@ -36,14 +36,15 @@ namespace Microsoft.Extensions.DependencyInjection
         private static readonly Type MediatorType = typeof(IMediator);
 
         /// <summary>
-        /// The default builder delegate for <see cref="IMediator"/> instances.
+        /// The default builder delegate for <see cref="IMediator"/> instances. It
+        /// builds instances of <see cref="Mediator"/>.
         /// </summary>
         public static readonly Func<IServiceProvider, IMediator> DefaultMediatorBuilder =
             s => new Mediator(s.GetRequiredService<IMediatorFactory>());
 
         /// <summary>
         /// The service descriptor for the <see cref="IMediator"/> instance.
-        /// By default it will build a singleton <see cref="Mediator"/> instance.
+        /// By default it uses the <see cref="DefaultMediatorBuilder"/> delegate.
         /// </summary>
         public ServiceDescriptor MediatorDescriptor { get; private set; }
             = new ServiceDescriptor(MediatorType, DefaultMediatorBuilder, ServiceLifetime.Singleton);
