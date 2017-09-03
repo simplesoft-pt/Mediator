@@ -33,8 +33,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public partial class MediatorOptions
     {
-        private static readonly Type FactoryType = typeof(IMediatorFactory);
-
         /// <summary>
         /// The default builder delegate for <see cref="IMediatorFactory"/> instances. It
         /// builds instances of <see cref="MicrosoftMediatorFactory"/>.
@@ -47,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// By default it uses the <see cref="DefaultFactoryBuilder"/> delegate.
         /// </summary>
         public ServiceDescriptor FactoryDescriptor { get; private set; }
-            = new ServiceDescriptor(FactoryType, DefaultFactoryBuilder, ServiceLifetime.Singleton);
+            = new ServiceDescriptor(Constants.FactoryType, DefaultFactoryBuilder, Constants.DefaultFactoryLifetime);
 
         /// <summary>
         /// Uses the given <see cref="IMediatorFactory"/> instance.
@@ -59,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            FactoryDescriptor = new ServiceDescriptor(FactoryType, instance);
+            FactoryDescriptor = new ServiceDescriptor(Constants.FactoryType, instance);
             return this;
         }
 
@@ -69,10 +67,10 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <typeparam name="TFactory">The factory type</typeparam>
         /// <param name="lifetime">The instance lifetime</param>
         /// <returns>The mediator options after changes</returns>
-        public MediatorOptions UseFactory<TFactory>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+        public MediatorOptions UseFactory<TFactory>(ServiceLifetime lifetime = Constants.DefaultFactoryLifetime)
             where TFactory : IMediatorFactory
         {
-            FactoryDescriptor = new ServiceDescriptor(FactoryType, typeof(TFactory), lifetime);
+            FactoryDescriptor = new ServiceDescriptor(Constants.FactoryType, typeof(TFactory), lifetime);
             return this;
         }
 
@@ -83,11 +81,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="lifetime">The instance lifetime</param>
         /// <returns>The mediator options after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public MediatorOptions UseFactory(Func<IServiceProvider, IMediatorFactory> factory, ServiceLifetime lifetime = ServiceLifetime.Singleton)
+        public MediatorOptions UseFactory(Func<IServiceProvider, IMediatorFactory> factory, ServiceLifetime lifetime = Constants.DefaultFactoryLifetime)
         {
             if (factory == null) throw new ArgumentNullException(nameof(factory));
 
-            FactoryDescriptor = new ServiceDescriptor(FactoryType, factory, lifetime);
+            FactoryDescriptor = new ServiceDescriptor(Constants.FactoryType, factory, lifetime);
             return this;
         }
     }

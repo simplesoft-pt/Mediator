@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using SimpleSoft.Mediator;
 using SimpleSoft.Mediator.Pipeline;
 
 // ReSharper disable once CheckNamespace
@@ -41,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddlewareForCommands<T>(
-            this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            this IServiceCollection services, ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, ICommandMiddleware
         {
             services.Add<ICommandMiddleware, T>(lifetime);
@@ -77,7 +78,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddlewareForCommands<T>(
             this IServiceCollection services, Func<IServiceProvider, T> factory,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, ICommandMiddleware
         {
             services.Add<ICommandMiddleware>(factory, lifetime);
@@ -98,7 +99,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddlewareForEvents<T>(
-            this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            this IServiceCollection services, ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, IEventMiddleware
         {
             services.Add<IEventMiddleware, T>(lifetime);
@@ -134,7 +135,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddlewareForEvents<T>(
             this IServiceCollection services, Func<IServiceProvider, T> factory,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, IEventMiddleware
         {
             services.Add<IEventMiddleware>(factory, lifetime);
@@ -155,7 +156,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddlewareForQueries<T>(
-            this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            this IServiceCollection services, ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, IQueryMiddleware
         {
             services.Add<IQueryMiddleware, T>(lifetime);
@@ -191,7 +192,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddlewareForQueries<T>(
             this IServiceCollection services, Func<IServiceProvider, T> factory,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, IQueryMiddleware
         {
             services.Add<IQueryMiddleware>(factory, lifetime);
@@ -213,7 +214,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddleware<T>(
-            this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            this IServiceCollection services, ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, IMiddleware
         {
             services.Add<T, T>(lifetime);
@@ -256,7 +257,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMediatorMiddleware<T>(
             this IServiceCollection services, Func<IServiceProvider, T> factory,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = Constants.DefaultMiddlewareLifetime)
             where T : class, IMiddleware
         {
             services.Add(factory, lifetime);

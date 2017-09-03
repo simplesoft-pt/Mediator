@@ -33,8 +33,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public partial class MediatorOptions
     {
-        private static readonly Type MediatorType = typeof(IMediator);
-
         /// <summary>
         /// The default builder delegate for <see cref="IMediator"/> instances. It
         /// builds instances of <see cref="Mediator"/>.
@@ -47,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// By default it uses the <see cref="DefaultMediatorBuilder"/> delegate.
         /// </summary>
         public ServiceDescriptor MediatorDescriptor { get; private set; }
-            = new ServiceDescriptor(MediatorType, DefaultMediatorBuilder, ServiceLifetime.Singleton);
+            = new ServiceDescriptor(Constants.MediatorType, DefaultMediatorBuilder, Constants.DefaultMediatorLifetime);
 
         /// <summary>
         /// Uses the given <see cref="IMediator"/> instance.
@@ -59,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            MediatorDescriptor = new ServiceDescriptor(MediatorType, instance);
+            MediatorDescriptor = new ServiceDescriptor(Constants.MediatorType, instance);
             return this;
         }
 
@@ -69,10 +67,10 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <typeparam name="TMediator">The mediator type</typeparam>
         /// <param name="lifetime">The instance lifetime</param>
         /// <returns>The mediator options after changes</returns>
-        public MediatorOptions UseMediator<TMediator>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+        public MediatorOptions UseMediator<TMediator>(ServiceLifetime lifetime = Constants.DefaultMediatorLifetime)
             where TMediator : IMediator
         {
-            MediatorDescriptor = new ServiceDescriptor(MediatorType, typeof(TMediator), lifetime);
+            MediatorDescriptor = new ServiceDescriptor(Constants.MediatorType, typeof(TMediator), lifetime);
             return this;
         }
 
@@ -83,11 +81,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="lifetime">The instance lifetime</param>
         /// <returns>The mediator options after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public MediatorOptions UseMediator(Func<IServiceProvider, IMediator> factory, ServiceLifetime lifetime = ServiceLifetime.Singleton)
+        public MediatorOptions UseMediator(Func<IServiceProvider, IMediator> factory, ServiceLifetime lifetime = Constants.DefaultMediatorLifetime)
         {
             if (factory == null) throw new ArgumentNullException(nameof(factory));
 
-            MediatorDescriptor = new ServiceDescriptor(MediatorType, factory, lifetime);
+            MediatorDescriptor = new ServiceDescriptor(Constants.MediatorType, factory, lifetime);
             return this;
         }
     }
