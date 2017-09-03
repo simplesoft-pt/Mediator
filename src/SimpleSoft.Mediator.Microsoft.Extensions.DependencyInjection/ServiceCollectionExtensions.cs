@@ -24,7 +24,6 @@
 
 using System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using SimpleSoft.Mediator;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -51,6 +50,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAdd(options.MediatorDescriptor);
             services.TryAdd(options.FactoryDescriptor);
+
+            services.Add(options.CommandMiddlewareDescriptors);
+            services.Add(options.EventMiddlewareDescriptors);
+            services.Add(options.QueryMiddlewareDescriptors);
 
             return services;
         }

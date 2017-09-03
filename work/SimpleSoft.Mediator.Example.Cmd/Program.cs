@@ -72,11 +72,11 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         s => MediatorOptions.DefaultFactoryBuilder(s)
                             .UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>()))
                     .UseMediator<LoggingMediator.Default>();
-            });
 
-            services
-                .AddMediatorMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
-                .AddMediatorMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
+                options
+                    .AddMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
+                    .AddMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
+            });
 
             services
                 .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
