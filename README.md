@@ -1,7 +1,7 @@
 # Mediator
 Small .NET library that helps with the implementation of mediator pattern for commands, events and queries.
 
-Using a mediator instance, publish commands, broadcast events and fetch queries from their respective generic handlers.
+Using a mediator instance, send commands, broadcast events and fetch queries from their respective generic handlers.
 
 ## Installation
 The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft.Mediator) packages:
@@ -59,7 +59,7 @@ public class User {
   public string Email { get; set; }
 }
 
-public class UsersService : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
+public class ExampleService : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
   
   private readonly IMediator _mediator;
   

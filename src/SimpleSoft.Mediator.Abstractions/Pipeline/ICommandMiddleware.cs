@@ -33,23 +33,23 @@ namespace SimpleSoft.Mediator.Pipeline
     public interface ICommandMiddleware
     {
         /// <summary>
-        /// Method invoked when an <see cref="ICommand"/> is published.
+        /// Method invoked when an <see cref="ICommand"/> is sent.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
         /// <param name="next">The next middleware into the chain</param>
-        /// <param name="cmd">The command published</param>
+        /// <param name="cmd">The command sent</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
         Task OnCommandAsync<TCommand>(CommandMiddlewareDelegate<TCommand> next, TCommand cmd, CancellationToken ct)
             where TCommand : ICommand;
 
         /// <summary>
-        /// Method invoked when an <see cref="ICommand{TResult}"/> is published.
+        /// Method invoked when an <see cref="ICommand{TResult}"/> is sent.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="next">The next middleware into the chain</param>
-        /// <param name="cmd">The command published</param>
+        /// <param name="cmd">The command sent</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
         Task<TResult> OnCommandAsync<TCommand, TResult>(CommandMiddlewareDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)

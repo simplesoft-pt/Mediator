@@ -28,21 +28,21 @@ using System.Threading.Tasks;
 namespace SimpleSoft.Mediator.Pipeline
 {
     /// <summary>
-    /// Method invoked when an <see cref="ICommand"/> is published.
+    /// Method invoked when an <see cref="ICommand"/> is sent.
     /// </summary>
     /// <typeparam name="TCommand">The command type</typeparam>
-    /// <param name="cmd">The command published</param>
+    /// <param name="cmd">The command sent</param>
     /// <param name="ct">The cancellation token</param>
     /// <returns>A task to be awaited</returns>
     public delegate Task CommandMiddlewareDelegate<in TCommand>(TCommand cmd, CancellationToken ct)
         where TCommand : ICommand;
 
     /// <summary>
-    /// Method invoked when an <see cref="ICommand{TResult}"/> is published.
+    /// Method invoked when an <see cref="ICommand{TResult}"/> is sent.
     /// </summary>
     /// <typeparam name="TCommand">The command type</typeparam>
     /// <typeparam name="TResult">The result type</typeparam>
-    /// <param name="cmd">The command published</param>
+    /// <param name="cmd">The command sent</param>
     /// <param name="ct">The cancellation token</param>
     /// <returns>A task to be awaited for the result</returns>
     public delegate Task<TResult> CommandMiddlewareDelegate<in TCommand, TResult>(TCommand cmd, CancellationToken ct)

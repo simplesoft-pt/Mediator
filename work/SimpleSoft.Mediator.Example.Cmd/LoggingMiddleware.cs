@@ -23,7 +23,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 if (_logger.IsEnabled(LogLevel.Debug))
                 {
                     _logger.LogDebug(
-                        "Command published: {command}", JsonConvert.SerializeObject(cmd));
+                        "Command sent: {command}", JsonConvert.SerializeObject(cmd));
                 }
 
                 await next(cmd, ct).ConfigureAwait(false);
@@ -48,7 +48,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
             {
                 if (_logger.IsEnabled(LogLevel.Debug))
                     _logger.LogDebug(
-                        "Command published: {command}", JsonConvert.SerializeObject(cmd));
+                        "Command sent: {command}", JsonConvert.SerializeObject(cmd));
 
                 var result = await next(cmd, ct).ConfigureAwait(false);
 

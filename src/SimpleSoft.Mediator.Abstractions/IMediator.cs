@@ -33,17 +33,17 @@ namespace SimpleSoft.Mediator
     public interface IMediator
     {
         /// <summary>
-        /// Publishes a command to an <see cref="ICommandHandler{TCommand}"/>.
+        /// Sends a command to an <see cref="ICommandHandler{TCommand}"/>.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
         /// <param name="cmd">The command to publish</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken))
+        Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken))
             where TCommand : ICommand;
 
         /// <summary>
-        /// Publishes a command to an <see cref="ICommandHandler{TCommand,TResult}"/> and 
+        /// Sends a command to an <see cref="ICommandHandler{TCommand,TResult}"/> and 
         /// returns the operation result.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
@@ -51,7 +51,7 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to publish</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
-        Task<TResult> PublishAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default(CancellationToken))
+        Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default(CancellationToken))
             where TCommand : ICommand<TResult>;
 
         /// <summary>

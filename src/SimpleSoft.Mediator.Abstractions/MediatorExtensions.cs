@@ -33,23 +33,23 @@ namespace SimpleSoft.Mediator
     public static class MediatorExtensions
     {
         /// <summary>
-        /// Publishes a command to an <see cref="ICommandHandler{TCommand}"/>.
+        /// Sends a command to an <see cref="ICommandHandler{TCommand}"/>.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
         /// <param name="mediator">The mediator to use</param>
         /// <param name="cmd">The command to publish</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static void Publish<TCommand>(this IMediator mediator, TCommand cmd)
+        public static void Send<TCommand>(this IMediator mediator, TCommand cmd)
             where TCommand : ICommand
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            mediator.PublishAsync(cmd, CancellationToken.None)
+            mediator.SendAsync(cmd, CancellationToken.None)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Publishes a command to an <see cref="ICommandHandler{TCommand,TResult}"/> and 
+        /// Sends a command to an <see cref="ICommandHandler{TCommand,TResult}"/> and 
         /// returns the operation result.
         /// </summary>
         /// <typeparam name="TCommand">The command type</typeparam>
@@ -58,12 +58,12 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to publish</param>
         /// <returns>The handler result</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static TResult Publish<TCommand, TResult>(this IMediator mediator, TCommand cmd)
+        public static TResult Send<TCommand, TResult>(this IMediator mediator, TCommand cmd)
             where TCommand : ICommand<TResult>
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            return mediator.PublishAsync<TCommand, TResult>(cmd, CancellationToken.None)
+            return mediator.SendAsync<TCommand, TResult>(cmd, CancellationToken.None)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
         }
 

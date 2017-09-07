@@ -21,7 +21,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
             for (var i = 0; i < 20; i++)
             {
                 _logger.LogDebug("Creating new user");
-                var userId = await _mediator.PublishAsync<RegisterUserCommand, Guid>(
+                var userId = await _mediator.SendAsync<RegisterUserCommand, Guid>(
                     new RegisterUserCommand(Guid.NewGuid(), $"someuser{i:D2}@domain.com", "123456"), ct);
 
                 _logger.LogDebug("Getting user '{userId}'", userId);
@@ -35,7 +35,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                 else
                 {
                     _logger.LogDebug("Changing password for user '{userId}'", userId);
-                    await _mediator.PublishAsync(new ChangeUserPasswordCommand(
+                    await _mediator.SendAsync(new ChangeUserPasswordCommand(
                         Guid.NewGuid(), userId, "123456", "654321"), ct);
                 }
             }

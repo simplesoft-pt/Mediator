@@ -53,26 +53,26 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task PublishAsync<TCommand>(TCommand cmd, CancellationToken ct = new CancellationToken()) where TCommand : ICommand
+        public async Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = new CancellationToken()) where TCommand : ICommand
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
             using (_logger.BeginScope(
                 "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
             {
-                _logger.LogDebug("Publishing command");
-                await _mediator.PublishAsync(cmd, ct).ConfigureAwait(false);
+                _logger.LogDebug("Sending command");
+                await _mediator.SendAsync(cmd, ct).ConfigureAwait(false);
             }
         }
 
         /// <inheritdoc />
-        public async Task<TResult> PublishAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = new CancellationToken()) where TCommand : ICommand<TResult>
+        public async Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = new CancellationToken()) where TCommand : ICommand<TResult>
         {
             using (_logger.BeginScope(
                 "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
             {
-                _logger.LogDebug("Publishing command");
-                return await _mediator.PublishAsync<TCommand, TResult>(cmd, ct).ConfigureAwait(false);
+                _logger.LogDebug("Sending command");
+                return await _mediator.SendAsync<TCommand, TResult>(cmd, ct).ConfigureAwait(false);
             }
         }
 

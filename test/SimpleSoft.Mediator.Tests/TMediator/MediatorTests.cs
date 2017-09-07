@@ -21,33 +21,33 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         }
 
         [Fact]
-        public async Task GivenAMediatorWhenPublishingNullCommandThenAnArgumentNullExceptionMustBeThrown()
+        public async Task GivenAMediatorWhenSendingNullCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
                 new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await mediator.PublishAsync<MockCommand>(null, CancellationToken.None);
+                await mediator.SendAsync<MockCommand>(null, CancellationToken.None);
             });
             Assert.NotNull(ex);
         }
 
         [Fact]
-        public async Task GivenAMediatorWhenPublishingNullResultCommandThenAnArgumentNullExceptionMustBeThrown()
+        public async Task GivenAMediatorWhenSendingNullResultCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
                 new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await mediator.PublishAsync<MockResultCommand, object>(null, CancellationToken.None);
+                await mediator.SendAsync<MockResultCommand, object>(null, CancellationToken.None);
             });
             Assert.NotNull(ex);
         }
 
         [Fact]
-        public async Task GivenAMediatorWhenPublishingNullEventThenAnArgumentNullExceptionMustBeThrown()
+        public async Task GivenAMediatorWhenSendingNullEventThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
                 new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
@@ -60,7 +60,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         }
 
         [Fact]
-        public async Task GivenAMediatorWhenPassingACommandWithAnHandlerThenPublishMustSucceed()
+        public async Task GivenAMediatorWhenPassingACommandWithAnHandlerThenSendMustSucceed()
         {
             var handlerFound = false;
 
@@ -73,12 +73,12 @@ namespace SimpleSoft.Mediator.Tests.TMediator
                     },
                     type => Enumerable.Empty<object>()));
 
-            await mediator.PublishAsync(new MockCommand(), CancellationToken.None);
+            await mediator.SendAsync(new MockCommand(), CancellationToken.None);
             Assert.True(handlerFound);
         }
 
         [Fact]
-        public async Task GivenAMediatorWhenPassingACommandResultWithAnHandlerThenPublishMustSucceed()
+        public async Task GivenAMediatorWhenPassingACommandResultWithAnHandlerThenSendMustSucceed()
         {
             var handlerFound = false;
 
@@ -91,7 +91,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
                     },
                     type => Enumerable.Empty<object>()));
 
-            await mediator.PublishAsync<MockResultCommand, object>(new MockResultCommand(), CancellationToken.None);
+            await mediator.SendAsync<MockResultCommand, object>(new MockResultCommand(), CancellationToken.None);
             Assert.True(handlerFound);
         }
 
@@ -106,7 +106,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var cmd = new MockCommand();
             var ex = await Assert.ThrowsAsync<CommandHandlerNotFoundException>(async () =>
             {
-                await mediator.PublishAsync(cmd, CancellationToken.None);
+                await mediator.SendAsync(cmd, CancellationToken.None);
             });
             Assert.NotNull(ex);
             Assert.Same(cmd, ex.CommandData);
