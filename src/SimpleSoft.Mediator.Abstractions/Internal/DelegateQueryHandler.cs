@@ -41,9 +41,9 @@ namespace SimpleSoft.Mediator.Internal
         }
 
         /// <inheritdoc />
-        public async Task<TResult> HandleAsync(TQuery query, CancellationToken ct = new CancellationToken())
+        public Task<TResult> HandleAsync(TQuery query, CancellationToken ct = new CancellationToken())
         {
-            return await _handler(query, ct).ConfigureAwait(false);
+            return _handler(query, ct).InternalConfigureAwait();
         }
     }
 }

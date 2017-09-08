@@ -24,6 +24,7 @@
 
 using System;
 using System.Threading;
+using SimpleSoft.Mediator.Internal;
 
 namespace SimpleSoft.Mediator
 {
@@ -44,8 +45,7 @@ namespace SimpleSoft.Mediator
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            mediator.SendAsync(cmd, CancellationToken.None)
-                .ConfigureAwait(false).GetAwaiter().GetResult();
+            mediator.SendAsync(cmd, CancellationToken.None).InternalWait();
         }
 
         /// <summary>
@@ -63,8 +63,7 @@ namespace SimpleSoft.Mediator
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            return mediator.SendAsync<TCommand, TResult>(cmd, CancellationToken.None)
-                .ConfigureAwait(false).GetAwaiter().GetResult();
+            return mediator.SendAsync<TCommand, TResult>(cmd, CancellationToken.None).InternalWait();
         }
 
         /// <summary>
@@ -79,8 +78,7 @@ namespace SimpleSoft.Mediator
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            mediator.BroadcastAsync(evt, CancellationToken.None)
-                .ConfigureAwait(false).GetAwaiter().GetResult();
+            mediator.BroadcastAsync(evt, CancellationToken.None).InternalWait();
         }
 
         /// <summary>
@@ -98,8 +96,7 @@ namespace SimpleSoft.Mediator
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            return mediator.FetchAsync<TQuery, TResult>(query, CancellationToken.None)
-                .ConfigureAwait(false).GetAwaiter().GetResult();
+            return mediator.FetchAsync<TQuery, TResult>(query, CancellationToken.None).InternalWait();
         }
     }
 }

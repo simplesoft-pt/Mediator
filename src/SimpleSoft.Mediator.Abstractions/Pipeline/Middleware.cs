@@ -24,6 +24,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using SimpleSoft.Mediator.Internal;
 
 namespace SimpleSoft.Mediator.Pipeline
 {
@@ -33,31 +34,31 @@ namespace SimpleSoft.Mediator.Pipeline
     public abstract class Middleware : IMiddleware
     {
         /// <inheritdoc />
-        public virtual async Task OnCommandAsync<TCommand>(CommandMiddlewareDelegate<TCommand> next, TCommand cmd, CancellationToken ct) 
+        public virtual Task OnCommandAsync<TCommand>(CommandMiddlewareDelegate<TCommand> next, TCommand cmd, CancellationToken ct) 
             where TCommand : ICommand
         {
-            await next(cmd, ct).ConfigureAwait(false);
+            return next(cmd, ct).InternalConfigureAwait();
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResult> OnCommandAsync<TCommand, TResult>(CommandMiddlewareDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)
+        public virtual Task<TResult> OnCommandAsync<TCommand, TResult>(CommandMiddlewareDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)
             where TCommand : ICommand<TResult>
         {
-            return await next(cmd, ct).ConfigureAwait(false);
+            return next(cmd, ct).InternalConfigureAwait();
         }
 
         /// <inheritdoc />
-        public virtual async Task OnEventAsync<TEvent>(EventMiddlewareDelegate<TEvent> next, TEvent evt, CancellationToken ct) 
+        public virtual Task OnEventAsync<TEvent>(EventMiddlewareDelegate<TEvent> next, TEvent evt, CancellationToken ct) 
             where TEvent : IEvent
         {
-            await next(evt, ct).ConfigureAwait(false);
+            return next(evt, ct).InternalConfigureAwait();
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResult> OnQueryAsync<TQuery, TResult>(QueryMiddlewareDelegate<TQuery, TResult> next, TQuery query, CancellationToken ct)
+        public virtual Task<TResult> OnQueryAsync<TQuery, TResult>(QueryMiddlewareDelegate<TQuery, TResult> next, TQuery query, CancellationToken ct)
             where TQuery : IQuery<TResult>
         {
-            return await next(query, ct).ConfigureAwait(false);
+            return next(query, ct).InternalConfigureAwait();
         }
     }
 }

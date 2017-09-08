@@ -29,9 +29,7 @@
 
     "frameworks": {
         "net4.0": {
-          "dependencies": {
-            "Microsoft.Bcl.Async": "1.0.168" 
-          }
+
         },
         "net4.5": {
 
