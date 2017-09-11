@@ -1,24 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E33BA8D-B206-4021-B031-79AFA8589A1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator", "src\SimpleSoft.Mediator\SimpleSoft.Mediator.xproj", "{5E0FA32F-C55A-432D-A65C-4CBB3F0EC992}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{7CDAAB98-B7A5-465E-AE84-1E6279125417}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Abstractions", "src\SimpleSoft.Mediator.Abstractions\SimpleSoft.Mediator.Abstractions.xproj", "{619AD8F7-E7A2-4B10-96A1-3B9D25595971}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{8CF88C14-1D18-4E9E-B57B-00E36E3223DC}"
 	ProjectSection(SolutionItems) = preProject
@@ -35,13 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{5E085FC3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{57101844-5C38-4886-A8EB-4885AC7E8F92}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Tests", "test\SimpleSoft.Mediator.Tests\SimpleSoft.Mediator.Tests.xproj", "{8881648B-46FF-4919-878E-730EE914D90A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "work", "work", "{0BD9E4D4-1E4B-4E73-A1E5-B730BCBE0F42}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Example.Cmd", "work\SimpleSoft.Mediator.Example.Cmd\SimpleSoft.Mediator.Example.Cmd.xproj", "{0675BDF9-1A58-41BD-A786-5679D863E869}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Microsoft.Extensions.Logging", "src\SimpleSoft.Mediator.Microsoft.Extensions.Logging\SimpleSoft.Mediator.Microsoft.Extensions.Logging.xproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9E75A35F-ED02-4712-A2C9-44B58EEA1BCD}"
 	ProjectSection(SolutionItems) = preProject
@@ -51,7 +38,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{
 		resources\Lifecycle.odp = resources\Lifecycle.odp
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection", "src\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection.xproj", "{3AEB01CF-526F-41B9-969E-7734A26B96FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator", "src\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj", "{5E0FA32F-C55A-432D-A65C-4CBB3F0EC992}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Abstractions", "src\SimpleSoft.Mediator.Abstractions\SimpleSoft.Mediator.Abstractions.csproj", "{619AD8F7-E7A2-4B10-96A1-3B9D25595971}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Tests", "test\SimpleSoft.Mediator.Tests\SimpleSoft.Mediator.Tests.csproj", "{8881648B-46FF-4919-878E-730EE914D90A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Example.Cmd", "work\SimpleSoft.Mediator.Example.Cmd\SimpleSoft.Mediator.Example.Cmd.csproj", "{0675BDF9-1A58-41BD-A786-5679D863E869}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.Logging", "src\SimpleSoft.Mediator.Microsoft.Extensions.Logging\SimpleSoft.Mediator.Microsoft.Extensions.Logging.csproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection", "src\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection.csproj", "{3AEB01CF-526F-41B9-969E-7734A26B96FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,15 +85,18 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5E0FA32F-C55A-432D-A65C-4CBB3F0EC992} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 		{7CDAAB98-B7A5-465E-AE84-1E6279125417} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
-		{619AD8F7-E7A2-4B10-96A1-3B9D25595971} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 		{8CF88C14-1D18-4E9E-B57B-00E36E3223DC} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
 		{5E085FC3-0FEF-49CC-89A1-497282B131BA} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
+		{9E75A35F-ED02-4712-A2C9-44B58EEA1BCD} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
+		{5E0FA32F-C55A-432D-A65C-4CBB3F0EC992} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
+		{619AD8F7-E7A2-4B10-96A1-3B9D25595971} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 		{8881648B-46FF-4919-878E-730EE914D90A} = {57101844-5C38-4886-A8EB-4885AC7E8F92}
 		{0675BDF9-1A58-41BD-A786-5679D863E869} = {0BD9E4D4-1E4B-4E73-A1E5-B730BCBE0F42}
 		{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
-		{9E75A35F-ED02-4712-A2C9-44B58EEA1BCD} = {A49075D0-EB7F-4CD4-A5D9-0173DFD34F8C}
 		{3AEB01CF-526F-41B9-969E-7734A26B96FC} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE066994-3479-4202-9D4A-485934D1A0C0}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Project with unit tests</Description>
+    <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
+    <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions.Logging</AssemblyTitle>
+    <VersionPrefix>1.0.0-rc05-final</VersionPrefix>
+    <Authors>João Simões</Authors>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AssemblyName>SimpleSoft.Mediator.Tests</AssemblyName>
+    <AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>SimpleSoft.Mediator.Tests</PackageId>
+    <PackageTags>patterns;mediator</PackageTags>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Product>SimpleSoft.Mediator</Product>
+    <Company>SimpleSoft.pt</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.3.0-beta5-build3769" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta5-build3769" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

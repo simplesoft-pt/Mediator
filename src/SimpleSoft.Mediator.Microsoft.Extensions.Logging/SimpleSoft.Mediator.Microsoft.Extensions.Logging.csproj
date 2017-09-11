@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Logging support using Microsot.Extensions.Logging.</Description>
+    <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
+    <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions.Logging</AssemblyTitle>
+    <VersionPrefix>1.0.0-rc05-final</VersionPrefix>
+    <Authors>João Simões</Authors>
+    <TargetFrameworks>net4.5;netstandard1.1;netstandard2.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>SimpleSoft.Mediator.Microsoft.Extensions.Logging</AssemblyName>
+    <AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>SimpleSoft.Mediator.Microsoft.Extensions.Logging</PackageId>
+    <PackageTags>patterns;mediator</PackageTags>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Product>SimpleSoft.Mediator</Product>
+    <Company>SimpleSoft.pt</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.0.0" Condition=" '$(TargetFramework)' != 'netstandard2.0' " />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>
