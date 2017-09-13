@@ -48,8 +48,8 @@ namespace SimpleSoft.Mediator.Tests
             Assert.Equal(commandType.Name, ex.CommandName);
 
             Assert.NotNull(ex.Message);
-            Assert.True(ex.Message.Contains(ex.CommandName));
-            
+            Assert.Contains(ex.CommandName, ex.Message);
+
             Assert.NotNull(ex.Command<MockCommand>());
             Assert.Throws<InvalidCastException>(() =>
             {
@@ -75,7 +75,7 @@ namespace SimpleSoft.Mediator.Tests
             Assert.Equal(commandType.Name, ex.CommandName);
 
             Assert.NotNull(ex.Message);
-            Assert.True(ex.Message.Contains(ex.CommandName));
+            Assert.Contains(ex.CommandName, ex.Message);
 
             Assert.NotNull(ex.Command<MockResultCommand, object>());
             Assert.Throws<InvalidCastException>(() =>

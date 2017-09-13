@@ -36,7 +36,7 @@ namespace SimpleSoft.Mediator.Tests
             Assert.Equal(queryType.Name, ex.QueryName);
 
             Assert.NotNull(ex.Message);
-            Assert.True(ex.Message.Contains(ex.QueryName));
+            Assert.Contains(ex.QueryName, ex.Message);
 
             Assert.NotNull(ex.Query<MockQuery, object>());
             Assert.Throws<InvalidCastException>(() =>
