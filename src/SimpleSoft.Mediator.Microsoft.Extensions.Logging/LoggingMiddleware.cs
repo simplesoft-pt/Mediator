@@ -56,7 +56,7 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
             {
-                _logger.LogDebug("Publishing command");
+                _logger.LogDebug("Sending command");
                 await next(cmd, ct).ConfigureAwait(false);
             }
         }
@@ -67,7 +67,7 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope(
                 "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
             {
-                _logger.LogDebug("Publishing command with result");
+                _logger.LogDebug("Sending command with result");
                 return await next(cmd, ct).ConfigureAwait(false);
             }
         }
