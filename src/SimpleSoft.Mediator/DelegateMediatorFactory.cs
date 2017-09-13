@@ -52,11 +52,8 @@ namespace SimpleSoft.Mediator
         /// <exception cref="ArgumentNullException"></exception>
         public DelegateMediatorFactory(Service serviceFactory, ServiceCollection serviceCollectionFactory)
         {
-            if (serviceFactory == null) throw new ArgumentNullException(nameof(serviceFactory));
-            if (serviceCollectionFactory == null) throw new ArgumentNullException(nameof(serviceCollectionFactory));
-
-            _serviceFactory = serviceFactory;
-            _serviceCollectionFactory = serviceCollectionFactory;
+            _serviceFactory = serviceFactory ?? throw new ArgumentNullException(nameof(serviceFactory));
+            _serviceCollectionFactory = serviceCollectionFactory ?? throw new ArgumentNullException(nameof(serviceCollectionFactory));
         }
 
         /// <inheritdoc />

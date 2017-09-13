@@ -35,9 +35,7 @@ namespace SimpleSoft.Mediator.Internal
 
         public DelegateQueryHandler(Func<TQuery, CancellationToken, Task<TResult>> handler)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-
-            _handler = handler;
+            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         /// <inheritdoc />

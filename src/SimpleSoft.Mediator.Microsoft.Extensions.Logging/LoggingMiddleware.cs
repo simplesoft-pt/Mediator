@@ -46,8 +46,7 @@ namespace SimpleSoft.Mediator
         /// <exception cref="ArgumentNullException"></exception>
         public LoggingMiddleware(ILogger<LoggingMiddleware> logger)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <inheritdoc />

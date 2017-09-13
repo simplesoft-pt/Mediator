@@ -46,11 +46,8 @@ namespace SimpleSoft.Mediator
         /// <exception cref="ArgumentNullException"></exception>
         public LoggingMediatorFactory(IMediatorFactory factory, ILogger<IMediatorFactory> logger)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-
-            _factory = factory;
-            _logger = logger;
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <inheritdoc />

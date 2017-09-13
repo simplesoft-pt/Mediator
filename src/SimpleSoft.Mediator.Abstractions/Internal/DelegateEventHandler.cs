@@ -35,8 +35,7 @@ namespace SimpleSoft.Mediator.Internal
 
         public DelegateEventHandler(Func<TEvent, CancellationToken, Task> handler)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            _handler = handler;
+            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         public Task HandleAsync(TEvent evt, CancellationToken ct)

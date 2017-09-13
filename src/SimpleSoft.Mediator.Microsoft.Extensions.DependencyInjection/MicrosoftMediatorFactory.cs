@@ -44,9 +44,7 @@ namespace SimpleSoft.Mediator
         /// <exception cref="ArgumentNullException"></exception>
         public MicrosoftMediatorFactory(IServiceProvider provider)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider));
-
-            _provider = provider;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         /// <inheritdoc />

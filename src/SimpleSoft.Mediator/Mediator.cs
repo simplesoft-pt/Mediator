@@ -44,9 +44,7 @@ namespace SimpleSoft.Mediator
         /// <exception cref="ArgumentNullException"></exception>
         public Mediator(IMediatorFactory factory)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
-
-            _factory = factory;
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         /// <inheritdoc />

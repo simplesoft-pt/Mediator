@@ -35,8 +35,7 @@ namespace SimpleSoft.Mediator.Internal
 
         public DelegateCommandHandler(Func<TCommand, CancellationToken, Task> handler)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            _handler = handler;
+            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         public Task HandleAsync(TCommand cmd, CancellationToken ct)
@@ -52,8 +51,7 @@ namespace SimpleSoft.Mediator.Internal
 
         public DelegateCommandHandler(Func<TCommand, CancellationToken, Task<TResult>> handler)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            _handler = handler;
+            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         public Task<TResult> HandleAsync(TCommand cmd, CancellationToken ct)
