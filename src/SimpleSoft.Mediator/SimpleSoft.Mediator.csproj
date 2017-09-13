@@ -21,7 +21,7 @@
     <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition=" '$(BuildConfiguration)' == 'release' ">true</GeneratePackageOnBuild>
     <Product>SimpleSoft.Mediator</Product>
     <Company>SimpleSoft.pt</Company>
   </PropertyGroup>
