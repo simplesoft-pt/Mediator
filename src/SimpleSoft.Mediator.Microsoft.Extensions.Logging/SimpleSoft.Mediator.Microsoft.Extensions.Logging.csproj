@@ -24,6 +24,7 @@
     <GeneratePackageOnBuild Condition=" '$(BuildConfiguration)' == 'release' ">true</GeneratePackageOnBuild>
     <Product>SimpleSoft.Mediator</Product>
     <Company>SimpleSoft.pt</Company>
+    <RootNamespace>SimpleSoft.Mediator</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
