@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>LDependency injection support using Microsot.Extensions.DependencyInjection</Description>
+    <Description>Dependency injection support using Microsot.Extensions.DependencyInjection</Description>
     <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
     <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection</AssemblyTitle>
     <VersionPrefix>1.0.0-rc05-final</VersionPrefix>
