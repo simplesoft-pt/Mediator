@@ -1,17 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Mediator implementation for commands and events.</Description>
-    <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
+    <RootNamespace>SimpleSoft.Mediator</RootNamespace>
     <AssemblyTitle>SimpleSoft.Mediator</AssemblyTitle>
-    <VersionPrefix>1.0.0-rc05-final</VersionPrefix>
-    <Authors>João Simões</Authors>
-    <TargetFrameworks>net4.5;netstandard1.0;netstandard2.0</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SimpleSoft.Mediator</AssemblyName>
+    <Description>Mediator implementation for commands and events.</Description>
+    <Product>SimpleSoft.Mediator</Product>
+    <Company>SimpleSoft.pt</Company>
+    <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
+    <Authors>João Simões</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <SignAssembly>true</SignAssembly>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <TargetFrameworks>net4.5;netstandard1.0;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <PackageId>SimpleSoft.Mediator</PackageId>
     <PackageTags>patterns;mediator</PackageTags>
     <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
@@ -19,19 +29,17 @@
     <PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
-    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GeneratePackageOnBuild Condition=" '$(BuildConfiguration)' == 'release' ">true</GeneratePackageOnBuild>
-    <Product>SimpleSoft.Mediator</Product>
-    <Company>SimpleSoft.pt</Company>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.17235</FileVersion>
+    <VersionPrefix>1.0.0-rc05-final</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleSoft.Mediator.Abstractions\SimpleSoft.Mediator.Abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
