@@ -31,10 +31,9 @@ dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.Logging
 ## Compatibility
 This library is compatible with the folowing frameworks:
 
-* .NET Framework 4.0;
 * .NET Framework 4.5;
 * .NET Standard 1.0;
-* .NET Core 5.0
+* .NET Standard 2.0;
 
 ## Usage
 Documentation is available via [wiki](https://github.com/simplesoft-pt/Mediator/wiki) or you can check the [working](https://github.com/simplesoft-pt/Mediator/tree/master/work/) examples or [test](https://github.com/simplesoft-pt/Mediator/tree/master/test) code.
@@ -59,7 +58,7 @@ public class User {
   public string Email { get; set; }
 }
 
-public class ExampleService : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
+public class ExampleHandlers : ICommandHandler<CreateUserCommand>, IQueryHandler<UserByIdQuery,User> {
   
   private readonly IMediator _mediator;
   
