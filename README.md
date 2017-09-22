@@ -31,9 +31,14 @@ dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.Logging
 ## Compatibility
 This library is compatible with the following frameworks:
 
-* .NET Framework 4.5;
-* .NET Standard 1.0;
-* .NET Standard 2.0;
+* `SimpleSoft.Mediator.Abstractions`
+  * .NET Standard 1.0;
+* `SimpleSoft.Mediator`
+  * .NET Standard 1.0;
+* `SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection`
+  * .NET Standard 1.0;
+* `SimpleSoft.Mediator.Microsoft.Extensions.Logging`
+  * .NET Standard 1.1;
 
 ## Usage
 Documentation is available via [wiki](https://github.com/simplesoft-pt/Mediator/wiki) or you can check the [working](https://github.com/simplesoft-pt/Mediator/tree/master/work/) examples or [test](https://github.com/simplesoft-pt/Mediator/tree/master/test) code.
