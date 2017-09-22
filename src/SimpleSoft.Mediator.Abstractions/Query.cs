@@ -30,7 +30,7 @@ namespace SimpleSoft.Mediator
     /// Represents a data query
     /// </summary>
     /// <typeparam name="TResult">The result type</typeparam>
-    public class Query<TResult> : IQuery<TResult>
+    public abstract class Query<TResult> : IQuery<TResult>
     {
         /// <summary>
         /// Creates a new instance using <see cref="Guid.NewGuid"/> and
