@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E33BA8D-B206-4021-B031-79AFA8589A1B}"
 EndProject
@@ -21,9 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{8CF88C14
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{5E085FC3-0FEF-49CC-89A1-497282B131BA}"
 	ProjectSection(SolutionItems) = preProject
-		tools\PackAllNuGets.ps1 = tools\PackAllNuGets.ps1
 		tools\SimpleSoft.Mediator.PublicKey = tools\SimpleSoft.Mediator.PublicKey
 		tools\SimpleSoft.Mediator.snk = tools\SimpleSoft.Mediator.snk
+		tools\UpdateAllVersions.ps1 = tools\UpdateAllVersions.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{57101844-5C38-4886-A8EB-4885AC7E8F92}"
