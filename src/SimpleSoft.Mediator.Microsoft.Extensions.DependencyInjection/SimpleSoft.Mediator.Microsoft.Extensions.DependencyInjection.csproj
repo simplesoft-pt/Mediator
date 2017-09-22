@@ -18,7 +18,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <TargetFrameworks>netstandard1.0</TargetFrameworks>
+    <TargetFramework>netstandard1.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
