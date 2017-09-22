@@ -4,86 +4,111 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleSoft.Hosting;
 
 namespace SimpleSoft.Mediator.Example.Cmd
 {
     public class Program
     {
-        private static readonly CancellationTokenSource TokenSource = new CancellationTokenSource();
-        private static readonly ILoggerFactory LoggerFactory;
-        private static readonly ILogger<Program> Logger;
+        private static readonly CancellationTokenSource TokenSource;
 
         static Program()
         {
-            LoggerFactory = new LoggerFactory()
-                .AddConsole(LogLevel.Trace, true);
-            Logger = LoggerFactory.CreateLogger<Program>();
+            TokenSource = new CancellationTokenSource();
+            Console.CancelKeyPress += (sender, eventArgs) =>
+            {
+                TokenSource.Cancel();
+                eventArgs.Cancel = true;
+            };
         }
 
         public static void Main(string[] args)
         {
-            Logger.LogInformation("Application started...");
+            var loggerFactory = new LoggerFactory()
+                .AddConsole(LogLevel.Trace, true);
+
+            var logger = loggerFactory.CreateLogger<Program>();
+            logger.LogInformation("Application started...");
             try
             {
-                Console.CancelKeyPress += (sender, eventArgs) =>
-                {
-                    TokenSource.Cancel();
-                    eventArgs.Cancel = true;
-                };
+                using (var hostBuilder = new HostBuilder()
+                    .UseLoggerFactory(loggerFactory)
+                    .ConfigureServiceCollection(param =>
+                    {
+                        param.ServiceCollection
+                            .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
+                            .AddMediator(options =>
+                            {
+                                options
+                                    .UseFactory(
+                                        s => MediatorOptions.DefaultFactoryBuilder(s)
+                                            .UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>()))
+                                    .UseMediator<LoggingMediator.Default>();
 
-                BuildServiceProvider().GetRequiredService<Application>()
-                    .RunAsync(TokenSource.Token).ConfigureAwait(false)
-                    .GetAwaiter().GetResult();
+                                options
+                                    .AddMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
+                                    .AddMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
+                            })
+                            .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
+                            .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
+                            .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
+                    })
+                    .UseServiceProviderBuilder(param => param.ServiceCollection.BuildServiceProvider(true)))
+                {
+                    hostBuilder.RunHostAsync<Host>(TokenSource.Token)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                }
             }
             catch (TaskCanceledException)
             {
-                Logger.LogWarning("The code execution has been canceled.");
+                logger.LogWarning("The code execution has been canceled.");
             }
             catch (Exception e)
             {
-                Logger.LogCritical(0, e, "Fatal exception!");
+                logger.LogCritical(0, e, "Fatal exception!");
             }
             finally
             {
-                Logger.LogInformation("Application terminated. Press <enter> to exit...");
+                logger.LogInformation("Application terminated. Press <enter> to exit...");
                 Console.ReadLine();
             }
         }
 
-        private static IServiceProvider BuildServiceProvider()
+        private class Host : IHost
         {
-            var services = new ServiceCollection()
-                .AddSingleton(LoggerFactory)
-                .AddLogging()
-                .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                .AddSingleton<Application>();
+            private readonly ILogger<Host> _logger;
+            private readonly IMediator _mediator;
 
-            services = ConfigureMediator(services);
-            
-            return services.BuildServiceProvider(true);
-        }
-
-        private static IServiceCollection ConfigureMediator(IServiceCollection services)
-        {
-            services.AddMediator(options =>
+            public Host(ILogger<Host> logger, IMediator mediator)
             {
-                options
-                    .UseFactory(
-                        s => MediatorOptions.DefaultFactoryBuilder(s)
-                            .UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>()))
-                    .UseMediator<LoggingMediator.Default>();
+                _logger = logger;
+                _mediator = mediator;
+            }
 
-                options
-                    .AddMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
-                    .AddMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
-            });
+            public async Task RunAsync(CancellationToken ct)
+            {
+                for (var i = 0; i < 20; i++)
+                {
+                    _logger.LogDebug("Creating new user");
+                    var userId = await _mediator.SendAsync<RegisterUserCommand, Guid>(
+                        new RegisterUserCommand(Guid.NewGuid(), $"someuser{i:D2}@domain.com", "123456"), ct);
 
-            services
-                .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
-                .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
-                .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
+                    _logger.LogDebug("Getting user '{userId}'", userId);
+                    var user = await _mediator.FetchAsync<UserByIdQuery, User>(
+                        new UserByIdQuery(Guid.NewGuid(), userId), ct);
 
-            return services;
+                    if (user == null)
+                    {
+                        _logger.LogDebug("User '{userId}' could not be found");
+                    }
+                    else
+                    {
+                        _logger.LogDebug("Changing password for user '{userId}'", userId);
+                        await _mediator.SendAsync(new ChangeUserPasswordCommand(
+                            Guid.NewGuid(), userId, "123456", "654321"), ct);
+                    }
+                }
+            }
         }
     }
 }
