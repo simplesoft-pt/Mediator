@@ -29,7 +29,7 @@ dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection
 dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.Logging
 ```
 ## Compatibility
-This library is compatible with the folowing frameworks:
+This library is compatible with the following frameworks:
 
 * .NET Framework 4.5;
 * .NET Standard 1.0;
