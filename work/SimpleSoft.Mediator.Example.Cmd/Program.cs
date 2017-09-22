@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SimpleSoft.Hosting;
+using SimpleSoft.Hosting.Params;
 
 namespace SimpleSoft.Mediator.Example.Cmd
 {
@@ -33,29 +34,9 @@ namespace SimpleSoft.Mediator.Example.Cmd
             {
                 using (var hostBuilder = new HostBuilder()
                     .UseLoggerFactory(loggerFactory)
-                    .ConfigureServiceCollection(param =>
-                    {
-                        param.ServiceCollection
-                            .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                            .AddMediator(options =>
-                            {
-                                options
-                                    .UseFactory(
-                                        s => MediatorOptions.DefaultFactoryBuilder(s)
-                                            .UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>()))
-                                    .UseMediator<LoggingMediator.Default>();
-
-                                options
-                                    .AddMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
-                                    .AddMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
-                            })
-                            .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
-                            .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
-                            .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
-                    })
-                    .UseServiceProviderBuilder(param => param.ServiceCollection.BuildServiceProvider(true)))
+                    .UseStartup<ExampleStartup>())
                 {
-                    hostBuilder.RunHostAsync<Host>(TokenSource.Token)
+                    hostBuilder.RunHostAsync<ExampleHost>(TokenSource.Token)
                         .ConfigureAwait(false).GetAwaiter().GetResult();
                 }
             }
@@ -74,12 +55,37 @@ namespace SimpleSoft.Mediator.Example.Cmd
             }
         }
 
-        private class Host : IHost
+        private class ExampleStartup : HostStartup
         {
-            private readonly ILogger<Host> _logger;
+            public override void ConfigureServiceCollection(IServiceCollectionHandlerParam param) =>
+                param.ServiceCollection
+                    .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
+                    .AddMediator(options =>
+                    {
+                        options
+                            .UseFactory(
+                                s => MediatorOptions.DefaultFactoryBuilder(s)
+                                    .UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>()))
+                            .UseMediator<LoggingMediator.Default>();
+
+                        options
+                            .AddMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
+                            .AddMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
+                    })
+                    .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
+                    .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
+                    .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
+
+            public override IServiceProvider BuildServiceProvider(IServiceProviderBuilderParam param) =>
+                param.ServiceCollection.BuildServiceProvider(true);
+        }
+
+        private class ExampleHost : IHost
+        {
+            private readonly ILogger<ExampleHost> _logger;
             private readonly IMediator _mediator;
 
-            public Host(ILogger<Host> logger, IMediator mediator)
+            public ExampleHost(ILogger<ExampleHost> logger, IMediator mediator)
             {
                 _logger = logger;
                 _mediator = mediator;
