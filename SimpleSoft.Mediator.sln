@@ -46,9 +46,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Example.Cmd", "work\SimpleSoft.Mediator.Example.Cmd\SimpleSoft.Mediator.Example.Cmd.csproj", "{0675BDF9-1A58-41BD-A786-5679D863E869}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.Logging", "src\SimpleSoft.Mediator.Microsoft.Extensions.Logging\SimpleSoft.Mediator.Microsoft.Extensions.Logging.csproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection", "src\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection.csproj", "{3AEB01CF-526F-41B9-969E-7734A26B96FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions", "src\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,10 +74,6 @@ Global
 		{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AEB01CF-526F-41B9-969E-7734A26B96FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AEB01CF-526F-41B9-969E-7734A26B96FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AEB01CF-526F-41B9-969E-7734A26B96FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AEB01CF-526F-41B9-969E-7734A26B96FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,7 +88,6 @@ Global
 		{8881648B-46FF-4919-878E-730EE914D90A} = {57101844-5C38-4886-A8EB-4885AC7E8F92}
 		{0675BDF9-1A58-41BD-A786-5679D863E869} = {0BD9E4D4-1E4B-4E73-A1E5-B730BCBE0F42}
 		{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
-		{3AEB01CF-526F-41B9-969E-7734A26B96FC} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE066994-3479-4202-9D4A-485934D1A0C0}

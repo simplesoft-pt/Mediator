@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // The MIT License (MIT)
 // 
 // Copyright (c) 2017 Simplesoft.pt
@@ -22,15 +22,16 @@
 // SOFTWARE.
 #endregion
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Pipeline
+namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Handling middleware that can be used to intercept commands
+    /// Handling middleware that can be used to intercept commands, events and queries
     /// </summary>
-    public interface ICommandMiddleware
+    public interface IPipeline
     {
         /// <summary>
         /// Method invoked when an <see cref="ICommand"/> is sent.
@@ -40,7 +41,7 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <param name="cmd">The command sent</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
-        Task OnCommandAsync<TCommand>(CommandMiddlewareDelegate<TCommand> next, TCommand cmd, CancellationToken ct)
+        Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct)
             where TCommand : ICommand;
 
         /// <summary>
@@ -52,7 +53,30 @@ namespace SimpleSoft.Mediator.Pipeline
         /// <param name="cmd">The command sent</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
-        Task<TResult> OnCommandAsync<TCommand, TResult>(CommandMiddlewareDelegate<TCommand, TResult> next, TCommand cmd, CancellationToken ct)
+        Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct)
             where TCommand : ICommand<TResult>;
+
+        /// <summary>
+        /// Method invoked when an <see cref="IEvent"/> is broadcast.
+        /// </summary>
+        /// <typeparam name="TEvent">The event type</typeparam>
+        /// <param name="next">The next middleware into the chain</param>
+        /// <param name="evt">The event broadcasted</param>
+        /// <param name="ct">The cancellation token</param>
+        /// <returns>A task to be awaited</returns>
+        Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct)
+            where TEvent : IEvent;
+
+        /// <summary>
+        /// Method invoked when an <see cref="IQuery{TResult}"/> is fetched.
+        /// </summary>
+        /// <typeparam name="TQuery">The query type</typeparam>
+        /// <typeparam name="TResult">The result type</typeparam>
+        /// <param name="next">The next middleware into the chain</param>
+        /// <param name="query">The query to fetch</param>
+        /// <param name="ct">The cancellation token</param>
+        /// <returns>A task to be awaited for the result</returns>
+        Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct)
+            where TQuery : IQuery<TResult>;
     }
 }

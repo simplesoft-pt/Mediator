@@ -23,24 +23,32 @@
 #endregion
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using SimpleSoft.Mediator;
 
-namespace SimpleSoft.Mediator.Internal
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection
 {
-    internal sealed class DelegateEventHandler<TEvent> : IEventHandler<TEvent>
-        where TEvent : IEvent
+    /// <summary>
+    /// Extensions for the <see cref="IServiceCollection"/> interface.
+    /// </summary>
+    public static class ServiceCollectionExtensions
     {
-        private readonly Func<TEvent, CancellationToken, Task> _handler;
-
-        public DelegateEventHandler(Func<TEvent, CancellationToken, Task> handler)
+        /// <summary>
+        /// Configures the mediator into the <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The service collection</param>
+        /// <param name="config">An optional configuration delegate</param>
+        /// <returns>The service collection after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IServiceCollection AddMediator(this IServiceCollection services)
         {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
-        }
+            if (services == null) throw new ArgumentNullException(nameof(services));
 
-        public Task HandleAsync(TEvent evt, CancellationToken ct)
-        {
-            return _handler(evt, ct).InternalConfigureAwait();
+            services.TryAddScoped<IMediatorFactory, MicrosoftMediatorFactory>();
+            services.TryAddScoped<IMediator, MicrosoftMediator>();
+
+            return services;
         }
     }
 }

@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {
@@ -34,15 +33,10 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class DelegateMediatorFactory : IMediatorFactory
     {
-        private static readonly IEnumerable<ICommandMiddleware> EmptyCommandMiddlewares =
-            Enumerable.Empty<ICommandMiddleware>();
-        private static readonly IEnumerable<IEventMiddleware> EmptyEventMiddlewares =
-            Enumerable.Empty<IEventMiddleware>();
-        private static readonly IEnumerable<IQueryMiddleware> EmptyQueryMiddlewares =
-            Enumerable.Empty<IQueryMiddleware>();
+        private static readonly IEnumerable<IPipeline> EmptyPipelines = Enumerable.Empty<IPipeline>();
 
-        private readonly Service _serviceFactory;
-        private readonly ServiceCollection _serviceCollectionFactory;
+        private readonly Func<Type, object> _serviceFactory;
+        private readonly Func<Type, IEnumerable<object>> _serviceCollectionFactory;
 
         /// <summary>
         /// Creates a new instance
@@ -50,7 +44,7 @@ namespace SimpleSoft.Mediator
         /// <param name="serviceFactory">The factory for single services</param>
         /// <param name="serviceCollectionFactory">The factory for collections of services</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DelegateMediatorFactory(Service serviceFactory, ServiceCollection serviceCollectionFactory)
+        public DelegateMediatorFactory(Func<Type, object> serviceFactory, Func<Type, IEnumerable<object>> serviceCollectionFactory)
         {
             _serviceFactory = serviceFactory ?? throw new ArgumentNullException(nameof(serviceFactory));
             _serviceCollectionFactory = serviceCollectionFactory ?? throw new ArgumentNullException(nameof(serviceCollectionFactory));
@@ -93,41 +87,11 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public IEnumerable<ICommandMiddleware> BuildCommandMiddlewares()
+        public IEnumerable<IPipeline> BuildPipelines()
         {
-            var services = _serviceCollectionFactory(typeof(ICommandMiddleware));
+            var services = _serviceCollectionFactory(typeof(IPipeline));
 
-            return services?.Cast<ICommandMiddleware>() ?? EmptyCommandMiddlewares;
+            return services?.Cast<IPipeline>() ?? EmptyPipelines;
         }
-
-        /// <inheritdoc />
-        public IEnumerable<IEventMiddleware> BuildEventMiddlewares()
-        {
-            var services = _serviceCollectionFactory(typeof(IEventMiddleware));
-
-            return services?.Cast<IEventMiddleware>() ?? EmptyEventMiddlewares;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IQueryMiddleware> BuildQueryMiddlewares()
-        {
-            var services = _serviceCollectionFactory(typeof(IQueryMiddleware));
-
-            return services?.Cast<IQueryMiddleware>() ?? EmptyQueryMiddlewares;
-        }
-
-        /// <summary>
-        /// Delegate used to resolve handler services.
-        /// </summary>
-        /// <param name="serviceType">The service type</param>
-        /// <returns>The resolved instance</returns>
-        public delegate object Service(Type serviceType);
-
-        /// <summary>
-        /// Delegate used to resolve a collection of services.
-        /// </summary>
-        /// <param name="serviceType">The service type</param>
-        /// <returns>The collection of resolved instances</returns>
-        public delegate IEnumerable<object> ServiceCollection(Type serviceType);
     }
 }

@@ -32,7 +32,7 @@ namespace SimpleSoft.Mediator
     /// <summary>
     /// Mediator wrapper with logging support
     /// </summary>
-    public class LoggingMediator : IMediator
+    public class MicrosoftMediator : IMediator
     {
         private readonly ILogger<IMediator> _logger;
         private readonly IMediator _mediator;
@@ -40,13 +40,13 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        /// <param name="mediator">The mediator to be wrapped</param>
+        /// <param name="factory">The mediator factory</param>
         /// <param name="logger">The logger instance</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public LoggingMediator(IMediator mediator, ILogger<IMediator> logger)
+        public MicrosoftMediator(IMediatorFactory factory, ILogger<IMediator> logger)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mediator = new Mediator(factory);
         }
 
         /// <inheritdoc />
@@ -96,24 +96,6 @@ namespace SimpleSoft.Mediator
             {
                 _logger.LogDebug("Fetching query data");
                 return await _mediator.FetchAsync<TQuery, TResult>(query, ct).ConfigureAwait(false);
-            }
-        }
-
-        /// <summary>
-        /// Default wrapper using an instance of <see cref="Mediator"/>.
-        /// </summary>
-        public class Default : LoggingMediator
-        {
-            /// <summary>
-            /// Creates a new instance.
-            /// </summary>
-            /// <param name="factory">The factory to be used</param>
-            /// <param name="logger">The logger instance</param>
-            /// <exception cref="ArgumentNullException"></exception>
-            public Default(IMediatorFactory factory, ILogger<IMediator> logger)
-                : base(new Mediator(factory), logger)
-            {
-
             }
         }
     }

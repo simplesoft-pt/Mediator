@@ -22,26 +22,31 @@
 // SOFTWARE.
 #endregion
 
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Pipeline
+namespace SimpleSoft.Mediator
 {
-    /// <summary>
-    /// Handling middleware that can be used to intercept queries
-    /// </summary>
-    public interface IQueryMiddleware
+    internal static class TaskExtensions
     {
-        /// <summary>
-        /// Method invoked when an <see cref="IQuery{TResult}"/> is fetched.
-        /// </summary>
-        /// <typeparam name="TQuery">The query type</typeparam>
-        /// <typeparam name="TResult">The result type</typeparam>
-        /// <param name="next">The next middleware into the chain</param>
-        /// <param name="query">The query to fetch</param>
-        /// <param name="ct">The cancellation token</param>
-        /// <returns>A task to be awaited for the result</returns>
-        Task<TResult> OnQueryAsync<TQuery, TResult>(QueryMiddlewareDelegate<TQuery, TResult> next, TQuery query, CancellationToken ct)
-            where TQuery : IQuery<TResult>;
+        public static async Task InternalConfigureAwait(this Task task, bool continueOnCapturedContext = false)
+        {
+            await task.ConfigureAwait(continueOnCapturedContext);
+        }
+
+        public static async Task<T> InternalConfigureAwait<T>(this Task<T> task, bool continueOnCapturedContext = false)
+        {
+            return await task.ConfigureAwait(continueOnCapturedContext);
+        }
+
+        public static void InternalWait(this Task task)
+        {
+            task.ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static T InternalWait<T>(this Task<T> task)
+        {
+            return task.ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
     }
 }

@@ -23,7 +23,6 @@
 #endregion
 
 using System.Collections.Generic;
-using SimpleSoft.Mediator.Pipeline;
 
 namespace SimpleSoft.Mediator
 {
@@ -69,21 +68,9 @@ namespace SimpleSoft.Mediator
             where TQuery : IQuery<TResult>;
 
         /// <summary>
-        /// Builds a collection of all registered <see cref="ICommandMiddleware"/>.
+        /// Builds a collection of all registered <see cref="IPipeline"/>.
         /// </summary>
-        /// <returns>A collection of command middlewares</returns>
-        IEnumerable<ICommandMiddleware> BuildCommandMiddlewares();
-
-        /// <summary>
-        /// Builds a collection of all registered <see cref="IEventMiddleware"/>.
-        /// </summary>
-        /// <returns>A collection of event middlewares</returns>
-        IEnumerable<IEventMiddleware> BuildEventMiddlewares();
-
-        /// <summary>
-        /// Builds a collection of all registered <see cref="IQueryMiddleware"/>.
-        /// </summary>
-        /// <returns>A collection of query middlewares</returns>
-        IEnumerable<IQueryMiddleware> BuildQueryMiddlewares();
+        /// <returns>A collection of pipelines</returns>
+        IEnumerable<IPipeline> BuildPipelines();
     }
 }

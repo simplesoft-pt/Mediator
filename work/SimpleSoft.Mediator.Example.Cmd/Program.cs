@@ -60,21 +60,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
             public override void ConfigureServiceCollection(IServiceCollectionHandlerParam param) =>
                 param.ServiceCollection
                     .AddSingleton<IDictionary<Guid, User>>(s => new Dictionary<Guid, User>())
-                    .AddMediator(options =>
-                    {
-                        options
-                            .UseFactory(
-                                s => MediatorOptions.DefaultFactoryBuilder(s)
-                                    .UsingLogger(s.GetRequiredService<ILogger<IMediatorFactory>>()))
-                            .UseMediator<LoggingMediator.Default>();
-
-                        options
-                            .AddMiddleware<LoggingMiddleware>(ServiceLifetime.Singleton)
-                            .AddMiddleware<IgnoreHandlerNotFoundExceptionMiddleware>(ServiceLifetime.Singleton);
-                    })
-                    .AddMediatorHandlerForCommand<RegisterUserCommand, Guid, RegisterUserCommandHandler>(ServiceLifetime.Transient)
-                    .AddMediatorHandlerForCommand<ChangeUserPasswordCommand, ChangeUserPasswordCommandHandler>(ServiceLifetime.Transient)
-                    .AddMediatorHandlerForQuery<UserByIdQuery, User, UserByIdQueryHandler>(ServiceLifetime.Transient);
+                    .AddMediator();
 
             public override IServiceProvider BuildServiceProvider(IServiceProviderBuilderParam param) =>
                 param.ServiceCollection.BuildServiceProvider(true);

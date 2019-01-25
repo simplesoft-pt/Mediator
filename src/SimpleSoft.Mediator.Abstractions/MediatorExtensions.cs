@@ -24,7 +24,6 @@
 
 using System;
 using System.Threading;
-using SimpleSoft.Mediator.Internal;
 
 namespace SimpleSoft.Mediator
 {

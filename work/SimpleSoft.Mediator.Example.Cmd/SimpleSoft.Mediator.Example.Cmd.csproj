@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -11,8 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection\SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.Logging\SimpleSoft.Mediator.Microsoft.Extensions.Logging.csproj" />
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

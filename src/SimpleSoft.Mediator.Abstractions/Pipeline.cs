@@ -26,37 +26,39 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Internal
+namespace SimpleSoft.Mediator
 {
-    internal sealed class DelegateCommandHandler<TCommand> : ICommandHandler<TCommand>
-        where TCommand : ICommand
+    /// <summary>
+    /// Handling middleware that can be used to intercept commands events and queries
+    /// </summary>
+    public abstract class Pipeline : IPipeline
     {
-        private readonly Func<TCommand, CancellationToken, Task> _handler;
-
-        public DelegateCommandHandler(Func<TCommand, CancellationToken, Task> handler)
+        /// <inheritdoc />
+        public virtual Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) 
+            where TCommand : ICommand
         {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            return next(cmd, ct).InternalConfigureAwait();
         }
 
-        public Task HandleAsync(TCommand cmd, CancellationToken ct)
+        /// <inheritdoc />
+        public virtual Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct)
+            where TCommand : ICommand<TResult>
         {
-            return _handler(cmd, ct).InternalConfigureAwait();
-        }
-    }
-
-    internal sealed class DelegateCommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
-        where TCommand : ICommand<TResult>
-    {
-        private readonly Func<TCommand, CancellationToken, Task<TResult>> _handler;
-
-        public DelegateCommandHandler(Func<TCommand, CancellationToken, Task<TResult>> handler)
-        {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            return next(cmd, ct).InternalConfigureAwait();
         }
 
-        public Task<TResult> HandleAsync(TCommand cmd, CancellationToken ct)
+        /// <inheritdoc />
+        public virtual Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) 
+            where TEvent : IEvent
         {
-            return _handler(cmd, ct).InternalConfigureAwait();
+            return next(evt, ct).InternalConfigureAwait();
+        }
+
+        /// <inheritdoc />
+        public virtual Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct)
+            where TQuery : IQuery<TResult>
+        {
+            return next(query, ct).InternalConfigureAwait();
         }
     }
 }

@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleSoft.Mediator.Pipeline;
+using Microsoft.Extensions.Logging;
 
 namespace SimpleSoft.Mediator
 {
@@ -36,57 +36,59 @@ namespace SimpleSoft.Mediator
     public class MicrosoftMediatorFactory : IMediatorFactory
     {
         private readonly IServiceProvider _provider;
+        private readonly ILogger<MicrosoftMediatorFactory> _logger;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
         /// <param name="provider">The service provider</param>
+        /// <param name="logger">The factory logger</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MicrosoftMediatorFactory(IServiceProvider provider)
+        public MicrosoftMediatorFactory(IServiceProvider provider, ILogger<MicrosoftMediatorFactory> logger)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <inheritdoc />
         public ICommandHandler<TCommand> BuildCommandHandlerFor<TCommand>() where TCommand : ICommand
         {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Building command handler for '{commandType}'", typeof(TCommand));
             return _provider.GetService<ICommandHandler<TCommand>>();
         }
 
         /// <inheritdoc />
         public ICommandHandler<TCommand, TResult> BuildCommandHandlerFor<TCommand, TResult>() where TCommand : ICommand<TResult>
         {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug(
+                    "Building command handler for '{commandType}<{resultType}>'", typeof(TCommand), typeof(TResult));
             return _provider.GetService<ICommandHandler<TCommand, TResult>>();
         }
 
         /// <inheritdoc />
         public IEnumerable<IEventHandler<TEvent>> BuildEventHandlersFor<TEvent>() where TEvent : IEvent
         {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Building event handlers for '{eventType}'", typeof(TEvent));
             return _provider.GetServices<IEventHandler<TEvent>>();
         }
 
         /// <inheritdoc />
         public IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>() where TQuery : IQuery<TResult>
         {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug(
+                    "Building query handler for '{queryType}<{resultType}>'", typeof(TQuery), typeof(TResult));
             return _provider.GetService<IQueryHandler<TQuery, TResult>>();
         }
 
         /// <inheritdoc />
-        public IEnumerable<ICommandMiddleware> BuildCommandMiddlewares()
+        public IEnumerable<IPipeline> BuildPipelines()
         {
-            return _provider.GetServices<ICommandMiddleware>();
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IEventMiddleware> BuildEventMiddlewares()
-        {
-            return _provider.GetServices<IEventMiddleware>();
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IQueryMiddleware> BuildQueryMiddlewares()
-        {
-            return _provider.GetServices<IQueryMiddleware>();
+            _logger.LogDebug("Building pipeline collection");
+            return _provider.GetServices<IPipeline>();
         }
     }
 }
