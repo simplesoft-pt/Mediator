@@ -22,14 +22,29 @@
 // SOFTWARE.
 #endregion
 
+using System;
+
 namespace SimpleSoft.Mediator
 {
     /// <summary>
     /// Represents a command
     /// </summary>
-    public interface ICommand : IHaveIdentifier, IHaveCreatedMeta
+    public interface ICommand
     {
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
+        Guid Id { get; }
 
+        /// <summary>
+        /// The date and time in which the instance was created
+        /// </summary>
+        DateTimeOffset CreatedOn { get; }
+
+        /// <summary>
+        /// The identifier for the user that created this instance
+        /// </summary>
+        string CreatedBy { get; }
     }
 
     /// <summary>
@@ -37,8 +52,21 @@ namespace SimpleSoft.Mediator
     /// </summary>
     /// <typeparam name="TResult">The result type</typeparam>
     // ReSharper disable once UnusedTypeParameter
-    public interface ICommand<out TResult> : IHaveIdentifier, IHaveCreatedMeta
+    public interface ICommand<out TResult>
     {
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
+        Guid Id { get; }
 
+        /// <summary>
+        /// The date and time in which the instance was created
+        /// </summary>
+        DateTimeOffset CreatedOn { get; }
+
+        /// <summary>
+        /// The identifier for the user that created this instance
+        /// </summary>
+        string CreatedBy { get; }
     }
 }

@@ -22,13 +22,28 @@
 // SOFTWARE.
 #endregion
 
+using System;
+
 namespace SimpleSoft.Mediator
 {
     /// <summary>
     /// Represents an event
     /// </summary>
-    public interface IEvent : IHaveIdentifier, IHaveCreatedMeta
+    public interface IEvent
     {
-        
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
+        Guid Id { get; }
+
+        /// <summary>
+        /// The date and time in which the instance was created
+        /// </summary>
+        DateTimeOffset CreatedOn { get; }
+
+        /// <summary>
+        /// The identifier for the user that created this instance
+        /// </summary>
+        string CreatedBy { get; }
     }
 }

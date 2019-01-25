@@ -22,6 +22,8 @@
 // SOFTWARE.
 #endregion
 
+using System;
+
 namespace SimpleSoft.Mediator
 {
     /// <summary>
@@ -29,8 +31,21 @@ namespace SimpleSoft.Mediator
     /// </summary>
     /// <typeparam name="TResult">The result type</typeparam>
     // ReSharper disable once UnusedTypeParameter
-    public interface IQuery<out TResult> : IHaveIdentifier, IHaveCreatedMeta
+    public interface IQuery<out TResult>
     {
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
+        Guid Id { get; }
 
+        /// <summary>
+        /// The date and time in which the instance was created
+        /// </summary>
+        DateTimeOffset CreatedOn { get; }
+
+        /// <summary>
+        /// The identifier for the user that created this instance
+        /// </summary>
+        string CreatedBy { get; }
     }
 }
