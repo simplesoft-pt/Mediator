@@ -34,11 +34,11 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// The date and time in which the instance was created
         /// </summary>
-        DateTimeOffset CreatedOn { get; set; }
+        DateTimeOffset CreatedOn { get; }
 
         /// <summary>
         /// The identifier for the user that created this instance
         /// </summary>
-        string CreatedBy { get; set; }
+        string CreatedBy { get; }
     }
 }

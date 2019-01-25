@@ -34,6 +34,6 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// The unique identifier
         /// </summary>
-        Guid Id { get; set; }
+        Guid Id { get; }
     }
 }
