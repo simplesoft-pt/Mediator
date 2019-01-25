@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -41,12 +42,13 @@ namespace SimpleSoft.Mediator
         /// Creates a new instance.
         /// </summary>
         /// <param name="factory">The mediator factory</param>
+        /// <param name="pipelines">The mediator pipeline collection</param>
         /// <param name="logger">The logger instance</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MicrosoftMediator(IMediatorFactory factory, ILogger<IMediator> logger)
+        public MicrosoftMediator(IMediatorFactory factory, IEnumerable<IPipeline> pipelines, ILogger<IMediator> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mediator = new Mediator(factory);
+            _mediator = new Mediator(factory, pipelines);
         }
 
         /// <inheritdoc />

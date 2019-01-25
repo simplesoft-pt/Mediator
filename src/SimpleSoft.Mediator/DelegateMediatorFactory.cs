@@ -33,8 +33,6 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class DelegateMediatorFactory : IMediatorFactory
     {
-        private static readonly IEnumerable<IPipeline> EmptyPipelines = Enumerable.Empty<IPipeline>();
-
         private readonly Func<Type, object> _serviceFactory;
         private readonly Func<Type, IEnumerable<object>> _serviceCollectionFactory;
 
@@ -84,14 +82,6 @@ namespace SimpleSoft.Mediator
             var service = _serviceFactory(typeof(IQueryHandler<TQuery, TResult>));
 
             return (IQueryHandler<TQuery, TResult>) service;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IPipeline> BuildPipelines()
-        {
-            var services = _serviceCollectionFactory(typeof(IPipeline));
-
-            return services?.Cast<IPipeline>() ?? EmptyPipelines;
         }
     }
 }

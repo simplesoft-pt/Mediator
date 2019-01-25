@@ -66,11 +66,5 @@ namespace SimpleSoft.Mediator
         /// <returns>The query handler or null if not found</returns>
         IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>()
             where TQuery : IQuery<TResult>;
-
-        /// <summary>
-        /// Builds a collection of all registered <see cref="IPipeline"/>.
-        /// </summary>
-        /// <returns>A collection of pipelines</returns>
-        IEnumerable<IPipeline> BuildPipelines();
     }
 }

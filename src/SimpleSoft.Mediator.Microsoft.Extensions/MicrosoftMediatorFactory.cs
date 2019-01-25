@@ -83,12 +83,5 @@ namespace SimpleSoft.Mediator
                     "Building query handler for '{queryType}<{resultType}>'", typeof(TQuery), typeof(TResult));
             return _provider.GetService<IQueryHandler<TQuery, TResult>>();
         }
-
-        /// <inheritdoc />
-        public IEnumerable<IPipeline> BuildPipelines()
-        {
-            _logger.LogDebug("Building pipeline collection");
-            return _provider.GetServices<IPipeline>();
-        }
     }
 }

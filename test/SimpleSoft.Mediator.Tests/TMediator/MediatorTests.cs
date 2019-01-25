@@ -14,7 +14,14 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         {
             var ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var m = new Mediator(null);
+                var m = new Mediator(null, new IPipeline[0]);
+                Assert.Null(m);
+            });
+            Assert.NotNull(ex);
+
+            ex = Assert.Throws<ArgumentNullException>(() =>
+            {
+                var m = new Mediator(null, null);
                 Assert.Null(m);
             });
             Assert.NotNull(ex);
@@ -24,7 +31,8 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenSendingNullCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
+                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()),
+                new IPipeline[0]);
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
@@ -37,7 +45,8 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenSendingNullResultCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
+                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()),
+                new IPipeline[0]);
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
@@ -50,7 +59,8 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenSendingNullEventThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()));
+                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()),
+                new IPipeline[0]);
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
@@ -71,7 +81,8 @@ namespace SimpleSoft.Mediator.Tests.TMediator
                         handlerFound = type == typeof(ICommandHandler<MockCommand>);
                         return handlerFound ? new MockCommandHandler() : null;
                     },
-                    type => Enumerable.Empty<object>()));
+                    type => Enumerable.Empty<object>()),
+                new IPipeline[0]);
 
             await mediator.SendAsync(new MockCommand(), CancellationToken.None);
             Assert.True(handlerFound);
@@ -89,7 +100,8 @@ namespace SimpleSoft.Mediator.Tests.TMediator
                         handlerFound = type == typeof(ICommandHandler<MockResultCommand, object>);
                         return handlerFound ? new MockResultCommandHandler() : null;
                     },
-                    type => Enumerable.Empty<object>()));
+                    type => Enumerable.Empty<object>()),
+                new IPipeline[0]);
 
             await mediator.SendAsync<MockResultCommand, object>(new MockResultCommand(), CancellationToken.None);
             Assert.True(handlerFound);
@@ -101,7 +113,8 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var mediator = new Mediator(
                 new DelegateMediatorFactory(
                     type => null,
-                    type => Enumerable.Empty<object>()));
+                    type => Enumerable.Empty<object>()),
+                new IPipeline[0]);
 
             var cmd = new MockCommand();
             var ex = await Assert.ThrowsAsync<CommandHandlerNotFoundException>(async () =>

@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,16 +35,21 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class Mediator : IMediator
     {
+        private static readonly IEnumerable<IPipeline> EmptyPipelines = Enumerable.Empty<IPipeline>();
+
         private readonly IMediatorFactory _factory;
+        private readonly IEnumerable<IPipeline> _pipelines;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
         /// <param name="factory">The handler factory</param>
+        /// <param name="pipelines">The mediator pipeline collection</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mediator(IMediatorFactory factory)
+        public Mediator(IMediatorFactory factory, IEnumerable<IPipeline> pipelines)
         {
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _pipelines = pipelines?.Reverse() ?? EmptyPipelines;
         }
 
         /// <inheritdoc />
@@ -60,7 +66,7 @@ namespace SimpleSoft.Mediator
                 await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             };
 
-            foreach (var middleware in _factory.BuildPipelines().Reverse())
+            foreach (var middleware in _pipelines)
             {
                 var old = next;
                 next = async (command, cancellationToken) =>
@@ -84,7 +90,7 @@ namespace SimpleSoft.Mediator
                 return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             };
 
-            foreach (var middleware in _factory.BuildPipelines().Reverse())
+            foreach (var middleware in _pipelines)
             {
                 var old = next;
                 next = async (command, cancellationToken) =>
@@ -107,7 +113,7 @@ namespace SimpleSoft.Mediator
                     await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
             };
 
-            foreach (var middleware in _factory.BuildPipelines().Reverse())
+            foreach (var middleware in _pipelines)
             {
                 var old = next;
                 next = async (@event, cancellationToken) =>
@@ -118,8 +124,7 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query,
-            CancellationToken ct = default(CancellationToken))
+        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default(CancellationToken))
             where TQuery : IQuery<TResult>
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
@@ -132,7 +137,7 @@ namespace SimpleSoft.Mediator
                 return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
             };
 
-            foreach (var middleware in _factory.BuildPipelines().Reverse())
+            foreach (var middleware in _pipelines)
             {
                 var old = next;
                 next = async (q, cancellationToken) =>
