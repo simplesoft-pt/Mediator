@@ -64,19 +64,19 @@ namespace SimpleSoft.Mediator
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
-            Func<TCommand, CancellationToken, Task> next = async (command, cancellationToken) =>
+            Func<TCommand, CancellationToken, Task> next = async (c, cancellationToken) =>
             {
                 var handler = _serviceProvider.BuildService<ICommandHandler<TCommand>>();
                 if (handler == null)
-                    throw CommandHandlerNotFoundException.Build(cmd);
-                await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                    throw CommandHandlerNotFoundException.Build(c);
+                await handler.HandleAsync(c, cancellationToken).ConfigureAwait(false);
             };
 
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (command, cancellationToken) =>
-                    await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
+                next = async (c, cancellationToken) =>
+                    await middleware.OnCommandAsync(old, c, cancellationToken).ConfigureAwait(false);
             }
 
             await next(cmd, ct).ConfigureAwait(false);
@@ -88,19 +88,19 @@ namespace SimpleSoft.Mediator
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
-            Func<TCommand, CancellationToken, Task<TResult>> next = async (command, cancellationToken) =>
+            Func<TCommand, CancellationToken, Task<TResult>> next = async (c, cancellationToken) =>
             {
                 var handler = _serviceProvider.BuildService<ICommandHandler<TCommand, TResult>>();
                 if (handler == null)
-                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
-                return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>(c);
+                return await handler.HandleAsync(c, cancellationToken).ConfigureAwait(false);
             };
 
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (command, cancellationToken) =>
-                    await middleware.OnCommandAsync(old, command, cancellationToken).ConfigureAwait(false);
+                next = async (c, cancellationToken) =>
+                    await middleware.OnCommandAsync(old, c, cancellationToken).ConfigureAwait(false);
             }
 
             return await next(cmd, ct).ConfigureAwait(false);
@@ -112,18 +112,18 @@ namespace SimpleSoft.Mediator
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
-            Func<TEvent, CancellationToken, Task> next = async (@event, cancellationToken) =>
+            Func<TEvent, CancellationToken, Task> next = async (e, cancellationToken) =>
             {
                 var handlers = _serviceProvider.BuildServices<IEventHandler<TEvent>>();
                 foreach (var handler in handlers)
-                    await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
+                    await handler.HandleAsync(e, cancellationToken).ConfigureAwait(false);
             };
 
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (@event, cancellationToken) =>
-                    await middleware.OnEventAsync(old, @event, cancellationToken).ConfigureAwait(false);
+                next = async (e, cancellationToken) =>
+                    await middleware.OnEventAsync(old, e, cancellationToken).ConfigureAwait(false);
             }
 
             await next(evt, ct).ConfigureAwait(false);
@@ -139,7 +139,7 @@ namespace SimpleSoft.Mediator
             {
                 var handler = _serviceProvider.BuildService<IQueryHandler<TQuery, TResult>>();
                 if (handler == null)
-                    throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
+                    throw QueryHandlerNotFoundException.Build<TQuery, TResult>(q);
                 return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
             };
 
