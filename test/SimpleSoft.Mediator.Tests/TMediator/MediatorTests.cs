@@ -31,7 +31,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenSendingNullCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()),
+                new DelegateMediatorServiceProvider(type => null, type => Enumerable.Empty<object>()),
                 new IPipeline[0]);
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -45,7 +45,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenSendingNullResultCommandThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()),
+                new DelegateMediatorServiceProvider(type => null, type => Enumerable.Empty<object>()),
                 new IPipeline[0]);
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -59,7 +59,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenSendingNullEventThenAnArgumentNullExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(type => null, type => Enumerable.Empty<object>()),
+                new DelegateMediatorServiceProvider(type => null, type => Enumerable.Empty<object>()),
                 new IPipeline[0]);
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -75,7 +75,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var handlerFound = false;
 
             var mediator = new Mediator(
-                new DelegateMediatorFactory(
+                new DelegateMediatorServiceProvider(
                     type =>
                     {
                         handlerFound = type == typeof(ICommandHandler<MockCommand>);
@@ -94,7 +94,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
             var handlerFound = false;
 
             var mediator = new Mediator(
-                new DelegateMediatorFactory(
+                new DelegateMediatorServiceProvider(
                     type =>
                     {
                         handlerFound = type == typeof(ICommandHandler<MockResultCommand, object>);
@@ -111,7 +111,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
         public async Task GivenAMediatorWhenPassingACommandWithoutAnHandlerThenCommandHandlerNotFoundExceptionMustBeThrown()
         {
             var mediator = new Mediator(
-                new DelegateMediatorFactory(
+                new DelegateMediatorServiceProvider(
                     type => null,
                     type => Enumerable.Empty<object>()),
                 new IPipeline[0]);

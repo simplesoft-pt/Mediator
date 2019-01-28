@@ -29,9 +29,9 @@ using System.Linq;
 namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Mediator factory that uses delegates to build the required services
+    /// Mediator service that uses delegates to build the required services
     /// </summary>
-    public class DelegateMediatorFactory : IMediatorFactory
+    public class DelegateMediatorServiceProvider : IMediatorServiceProvider
     {
         private readonly Func<Type, object> _serviceFactory;
         private readonly Func<Type, IEnumerable<object>> _serviceCollectionFactory;
@@ -42,46 +42,26 @@ namespace SimpleSoft.Mediator
         /// <param name="serviceFactory">The factory for single services</param>
         /// <param name="serviceCollectionFactory">The factory for collections of services</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DelegateMediatorFactory(Func<Type, object> serviceFactory, Func<Type, IEnumerable<object>> serviceCollectionFactory)
+        public DelegateMediatorServiceProvider(Func<Type, object> serviceFactory, Func<Type, IEnumerable<object>> serviceCollectionFactory)
         {
             _serviceFactory = serviceFactory ?? throw new ArgumentNullException(nameof(serviceFactory));
             _serviceCollectionFactory = serviceCollectionFactory ?? throw new ArgumentNullException(nameof(serviceCollectionFactory));
         }
 
         /// <inheritdoc />
-        public ICommandHandler<TCommand> BuildCommandHandlerFor<TCommand>() 
-            where TCommand : ICommand
+        public T BuildService<T>() where T : class
         {
-            var service = _serviceFactory(typeof(ICommandHandler<TCommand>));
+            var service = _serviceFactory(typeof(T));
 
-            return (ICommandHandler<TCommand>) service;
+            return (T) service;
         }
 
         /// <inheritdoc />
-        public ICommandHandler<TCommand, TResult> BuildCommandHandlerFor<TCommand, TResult>()
-            where TCommand : ICommand<TResult>
+        public IEnumerable<T> BuildServices<T>() where T : class
         {
-            var service = _serviceFactory(typeof(ICommandHandler<TCommand, TResult>));
+            var services = _serviceCollectionFactory(typeof(T));
 
-            return (ICommandHandler<TCommand, TResult>) service;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IEventHandler<TEvent>> BuildEventHandlersFor<TEvent>() 
-            where TEvent : IEvent
-        {
-            var services = _serviceCollectionFactory(typeof(IEventHandler<TEvent>));
-
-            return services?.Cast<IEventHandler<TEvent>>() ?? Enumerable.Empty<IEventHandler<TEvent>>();
-        }
-
-        /// <inheritdoc />
-        public IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>()
-            where TQuery : IQuery<TResult>
-        {
-            var service = _serviceFactory(typeof(IQueryHandler<TQuery, TResult>));
-
-            return (IQueryHandler<TQuery, TResult>) service;
+            return services?.Cast<T>() ?? Enumerable.Empty<T>();
         }
     }
 }

@@ -36,18 +36,18 @@ namespace SimpleSoft.Mediator
     {
         private static readonly List<IPipeline> EmptyPipelines = new List<IPipeline>(0);
 
-        private readonly IMediatorFactory _factory;
+        private readonly IMediatorServiceProvider _serviceProvider;
         private readonly List<IPipeline> _reversedPipelines;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
-        /// <param name="factory">The handler factory</param>
+        /// <param name="serviceProvider">The handler factory</param>
         /// <param name="pipelines">The mediator pipeline collection</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mediator(IMediatorFactory factory, IEnumerable<IPipeline> pipelines)
+        public Mediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines)
         {
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             if (pipelines == null)
                 _reversedPipelines = EmptyPipelines;
@@ -66,7 +66,7 @@ namespace SimpleSoft.Mediator
 
             Func<TCommand, CancellationToken, Task> next = async (command, cancellationToken) =>
             {
-                var handler = _factory.BuildCommandHandlerFor<TCommand>();
+                var handler = _serviceProvider.BuildService<ICommandHandler<TCommand>>();
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build(cmd);
                 await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
@@ -90,7 +90,7 @@ namespace SimpleSoft.Mediator
 
             Func<TCommand, CancellationToken, Task<TResult>> next = async (command, cancellationToken) =>
             {
-                var handler = _factory.BuildCommandHandlerFor<TCommand, TResult>();
+                var handler = _serviceProvider.BuildService<ICommandHandler<TCommand, TResult>>();
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build<TCommand, TResult>(cmd);
                 return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
@@ -114,7 +114,7 @@ namespace SimpleSoft.Mediator
 
             Func<TEvent, CancellationToken, Task> next = async (@event, cancellationToken) =>
             {
-                var handlers = _factory.BuildEventHandlersFor<TEvent>();
+                var handlers = _serviceProvider.BuildServices<IEventHandler<TEvent>>();
                 foreach (var handler in handlers)
                     await handler.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
             };
@@ -137,7 +137,7 @@ namespace SimpleSoft.Mediator
             
             Func<TQuery, CancellationToken, Task<TResult>> next = async (q, cancellationToken) =>
             {
-                var handler = _factory.BuildQueryHandlerFor<TQuery, TResult>();
+                var handler = _serviceProvider.BuildService<IQueryHandler<TQuery, TResult>>();
                 if (handler == null)
                     throw QueryHandlerNotFoundException.Build<TQuery, TResult>(query);
                 return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);

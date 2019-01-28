@@ -41,14 +41,14 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        /// <param name="factory">The mediator factory</param>
+        /// <param name="serviceProvider">The mediator factory</param>
         /// <param name="pipelines">The mediator pipeline collection</param>
         /// <param name="logger">The logger instance</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MicrosoftMediator(IMediatorFactory factory, IEnumerable<IPipeline> pipelines, ILogger<IMediator> logger)
+        public MicrosoftMediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines, ILogger<IMediator> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mediator = new Mediator(factory, pipelines);
+            _mediator = new Mediator(serviceProvider, pipelines);
         }
 
         /// <inheritdoc />

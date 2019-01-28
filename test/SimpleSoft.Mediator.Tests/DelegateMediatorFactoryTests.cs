@@ -11,14 +11,14 @@ namespace SimpleSoft.Mediator.Tests
         {
             var ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var factory = new DelegateMediatorFactory(null, type => null);
+                var factory = new DelegateMediatorServiceProvider(null, type => null);
                 Assert.Null(factory);
             });
             Assert.NotNull(ex);
 
             ex = Assert.Throws<ArgumentNullException>(() =>
             {
-                var factory = new DelegateMediatorFactory(type => null, null);
+                var factory = new DelegateMediatorServiceProvider(type => null, null);
                 Assert.Null(factory);
             });
             Assert.NotNull(ex);
@@ -30,7 +30,7 @@ namespace SimpleSoft.Mediator.Tests
             var serviceInvoked = false;
             var serviceCollectionInvoked = false;
 
-            var factory = new DelegateMediatorFactory(
+            var factory = new DelegateMediatorServiceProvider(
                 type =>
                 {
                     serviceInvoked = true;
@@ -41,10 +41,10 @@ namespace SimpleSoft.Mediator.Tests
                     return Enumerable.Empty<object>();
                 });
 
-            factory.BuildCommandHandlerFor<Command>();
+            factory.BuildService<ICommandHandler<Command>>();
             Assert.True(serviceInvoked);
 
-            factory.BuildEventHandlersFor<Event>();
+            factory.BuildServices<IEventHandler<Event>>();
             Assert.True(serviceCollectionInvoked);
         }
     }

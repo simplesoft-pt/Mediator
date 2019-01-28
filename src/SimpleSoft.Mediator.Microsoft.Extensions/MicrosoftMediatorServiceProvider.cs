@@ -33,10 +33,10 @@ namespace SimpleSoft.Mediator
     /// Factory for mediator dependencies that build services directly from
     /// the <see cref="IServiceProvider"/> instance.
     /// </summary>
-    public class MicrosoftMediatorFactory : IMediatorFactory
+    public class MicrosoftMediatorServiceProvider : IMediatorServiceProvider
     {
         private readonly IServiceProvider _provider;
-        private readonly ILogger<MicrosoftMediatorFactory> _logger;
+        private readonly ILogger<MicrosoftMediatorServiceProvider> _logger;
 
         /// <summary>
         /// Creates a new instance
@@ -44,44 +44,28 @@ namespace SimpleSoft.Mediator
         /// <param name="provider">The service provider</param>
         /// <param name="logger">The factory logger</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MicrosoftMediatorFactory(IServiceProvider provider, ILogger<MicrosoftMediatorFactory> logger)
+        public MicrosoftMediatorServiceProvider(IServiceProvider provider, ILogger<MicrosoftMediatorServiceProvider> logger)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <inheritdoc />
-        public ICommandHandler<TCommand> BuildCommandHandlerFor<TCommand>() where TCommand : ICommand
+        public T BuildService<T>() where T : class
         {
             if (_logger.IsEnabled(LogLevel.Debug))
-                _logger.LogDebug("Building command handler for '{commandType}'", typeof(TCommand));
-            return _provider.GetService<ICommandHandler<TCommand>>();
+                _logger.LogDebug("Building service for type '{type}'", typeof(T));
+
+            return _provider.GetService<T>();
         }
 
         /// <inheritdoc />
-        public ICommandHandler<TCommand, TResult> BuildCommandHandlerFor<TCommand, TResult>() where TCommand : ICommand<TResult>
+        public IEnumerable<T> BuildServices<T>() where T : class
         {
             if (_logger.IsEnabled(LogLevel.Debug))
-                _logger.LogDebug(
-                    "Building command handler for '{commandType}<{resultType}>'", typeof(TCommand), typeof(TResult));
-            return _provider.GetService<ICommandHandler<TCommand, TResult>>();
-        }
+                _logger.LogDebug("Building services for type '{type}'", typeof(T));
 
-        /// <inheritdoc />
-        public IEnumerable<IEventHandler<TEvent>> BuildEventHandlersFor<TEvent>() where TEvent : IEvent
-        {
-            if (_logger.IsEnabled(LogLevel.Debug))
-                _logger.LogDebug("Building event handlers for '{eventType}'", typeof(TEvent));
-            return _provider.GetServices<IEventHandler<TEvent>>();
-        }
-
-        /// <inheritdoc />
-        public IQueryHandler<TQuery, TResult> BuildQueryHandlerFor<TQuery, TResult>() where TQuery : IQuery<TResult>
-        {
-            if (_logger.IsEnabled(LogLevel.Debug))
-                _logger.LogDebug(
-                    "Building query handler for '{queryType}<{resultType}>'", typeof(TQuery), typeof(TResult));
-            return _provider.GetService<IQueryHandler<TQuery, TResult>>();
+            return _provider.GetServices<T>();
         }
     }
 }

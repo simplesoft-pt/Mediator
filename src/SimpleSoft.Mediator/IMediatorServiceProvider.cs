@@ -22,33 +22,27 @@
 // SOFTWARE.
 #endregion
 
-using System;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using SimpleSoft.Mediator;
+using System.Collections.Generic;
 
-// ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection
+namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Extensions for the <see cref="IServiceCollection"/> interface.
+    /// The service provider for mediator dependencies
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public interface IMediatorServiceProvider
     {
         /// <summary>
-        /// Configures the mediator into the <see cref="IServiceCollection"/>.
+        /// Builds an instance for the given service type.
         /// </summary>
-        /// <param name="services">The service collection</param>
-        /// <param name="config">An optional configuration delegate</param>
-        /// <returns>The service collection after changes</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediator(this IServiceCollection services)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+        /// <typeparam name="T">The service type</typeparam>
+        /// <returns>The service instance or null if not found</returns>
+        T BuildService<T>() where T : class;
 
-            services.TryAddScoped<IMediatorServiceProvider, MicrosoftMediatorServiceProvider>();
-            services.TryAddScoped<IMediator, MicrosoftMediator>();
-
-            return services;
-        }
+        /// <summary>
+        /// Builds a collection of instances for the given service type.
+        /// </summary>
+        /// <typeparam name="T">The service type</typeparam>
+        /// <returns>The service instances or empty if none found</returns>
+        IEnumerable<T> BuildServices<T>() where T : class;
     }
 }
