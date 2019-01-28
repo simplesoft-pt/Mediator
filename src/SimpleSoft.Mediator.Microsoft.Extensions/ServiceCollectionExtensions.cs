@@ -56,6 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Configures the given type as a mediator <see cref="IPipeline"/>.
+        /// Registration order will be kept when executing the pipeline.
         /// </summary>
         /// <typeparam name="T">The pipeline type</typeparam>
         /// <param name="options">The mediator options</param>
@@ -73,6 +74,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Configures the given factory for mediator <see cref="IPipeline"/> instances.
+        /// Registration order will be kept when executing the pipeline.
         /// </summary>
         /// <param name="options">The mediator options</param>
         /// <param name="factory">The pipeline factory</param>
@@ -90,6 +92,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Configures the given instance as a mediator <see cref="IPipeline"/>.
+        /// Registration order will be kept when executing the pipeline.
         /// </summary>
         /// <typeparam name="T">The pipeline type</typeparam>
         /// <param name="options">The mediator options</param>
