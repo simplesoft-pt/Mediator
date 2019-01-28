@@ -31,7 +31,7 @@ namespace SimpleSoft.Mediator
     /// Represents a command handler
     /// </summary>
     /// <typeparam name="TCommand">The command type</typeparam>
-    public interface ICommandHandler<in TCommand> where TCommand : ICommand
+    public interface ICommandHandler<in TCommand> where TCommand : class, ICommand
     {
         /// <summary>
         /// Handles the given command
@@ -47,7 +47,7 @@ namespace SimpleSoft.Mediator
     /// </summary>
     /// <typeparam name="TCommand">The command type</typeparam>
     /// <typeparam name="TResult">The result type</typeparam>
-    public interface ICommandHandler<in TCommand, TResult> where TCommand : ICommand<TResult>
+    public interface ICommandHandler<in TCommand, TResult> where TCommand : class, ICommand<TResult>
     {
         /// <summary>
         /// Handles the given command

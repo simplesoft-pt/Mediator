@@ -31,7 +31,7 @@ namespace SimpleSoft.Mediator
     /// Represents an event handler
     /// </summary>
     /// <typeparam name="TEvent">The event type</typeparam>
-    public interface IEventHandler<in TEvent> where TEvent : IEvent
+    public interface IEventHandler<in TEvent> where TEvent : class, IEvent
     {
         /// <summary>
         /// Handles the given event

@@ -35,28 +35,28 @@ namespace SimpleSoft.Mediator
     {
         /// <inheritdoc />
         public virtual async Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) 
-            where TCommand : ICommand
+            where TCommand : class, ICommand
         {
             await next(cmd, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public virtual async Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct)
-            where TCommand : ICommand<TResult>
+            where TCommand : class, ICommand<TResult>
         {
             return await next(cmd, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public virtual async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) 
-            where TEvent : IEvent
+            where TEvent : class, IEvent
         {
             await next(evt, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public virtual async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct)
-            where TQuery : IQuery<TResult>
+            where TQuery : class, IQuery<TResult>
         {
             return await next(query, ct).ConfigureAwait(false);
         }

@@ -32,7 +32,7 @@ namespace SimpleSoft.Mediator
     /// </summary>
     /// <typeparam name="TQuery">The query type</typeparam>
     /// <typeparam name="TResult">The result type</typeparam>
-    public interface IQueryHandler<in TQuery, TResult> where TQuery : IQuery<TResult>
+    public interface IQueryHandler<in TQuery, TResult> where TQuery : class, IQuery<TResult>
     {
         /// <summary>
         /// Handles the given <see cref="IQuery{TResult}"/> and returns the
