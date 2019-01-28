@@ -23,35 +23,38 @@
 #endregion
 
 using System;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using SimpleSoft.Mediator;
+using Microsoft.Extensions.DependencyInjection;
 
-// ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection
+namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Extensions for the <see cref="IServiceCollection"/> interface.
+    /// Mediator options for container registration
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public class MediatorOptions
     {
         /// <summary>
-        /// Configures the mediator into the <see cref="IServiceCollection"/>.
+        /// Creates a new instance
         /// </summary>
         /// <param name="services">The service collection</param>
-        /// <param name="config">An optional configurations action</param>
-        /// <returns>The service collection after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMediator(this IServiceCollection services, Action<MediatorOptions> config = null)
+        public MediatorOptions(IServiceCollection services)
         {
-            var options = new MediatorOptions(services);
-            config?.Invoke(options);
-
-            services.TryAdd(new ServiceDescriptor(
-                typeof(IMediatorServiceProvider), typeof(MicrosoftMediatorServiceProvider), options.ServiceProviderLifetime));
-            services.TryAdd(new ServiceDescriptor(
-                typeof(IMediator), typeof(MicrosoftMediator), options.Lifetime));
-
-            return services;
+            Services = services ?? throw new ArgumentNullException(nameof(services));
         }
+
+        /// <summary>
+        /// The service collection
+        /// </summary>
+        public IServiceCollection Services { get; }
+
+        /// <summary>
+        /// The mediator instance lifetime. Defaults to '<see cref="ServiceLifetime.Scoped"/>'.
+        /// </summary>
+        public ServiceLifetime Lifetime { get; set; } = ServiceLifetime.Scoped;
+
+        /// <summary>
+        /// The mediator service provider instance lifetime. Defaults to '<see cref="ServiceLifetime.Scoped"/>'.
+        /// </summary>
+        public ServiceLifetime ServiceProviderLifetime { get; set; } = ServiceLifetime.Scoped;
     }
 }
