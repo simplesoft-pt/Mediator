@@ -53,5 +53,57 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
+
+        /// <summary>
+        /// Configures the given type as a mediator <see cref="IPipeline"/>.
+        /// </summary>
+        /// <typeparam name="T">The pipeline type</typeparam>
+        /// <param name="options">The mediator options</param>
+        /// <param name="lifetime">The pipeline lifetime</param>
+        /// <returns>The options instance after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static MediatorOptions AddPipeline<T>(this MediatorOptions options, ServiceLifetime lifetime = ServiceLifetime.Scoped) 
+            where T : class, IPipeline
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
+            options.Services.Add(new ServiceDescriptor(typeof(IPipeline), typeof(T), lifetime));
+            return options;
+        }
+
+        /// <summary>
+        /// Configures the given factory for mediator <see cref="IPipeline"/> instances.
+        /// </summary>
+        /// <param name="options">The mediator options</param>
+        /// <param name="factory">The pipeline factory</param>
+        /// <param name="lifetime">The pipeline lifetime</param>
+        /// <returns>The options instance after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static MediatorOptions AddPipeline(
+            this MediatorOptions options, Func<IServiceProvider, IPipeline> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
+            options.Services.Add(new ServiceDescriptor(typeof(IPipeline), factory, lifetime));
+            return options;
+        }
+
+        /// <summary>
+        /// Configures the given instance as a mediator <see cref="IPipeline"/>.
+        /// </summary>
+        /// <typeparam name="T">The pipeline type</typeparam>
+        /// <param name="options">The mediator options</param>
+        /// <param name="instance">The singleton instance</param>
+        /// <returns>The options instance after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static MediatorOptions AddPipeline<T>(this MediatorOptions options, T instance) 
+            where T : class, IPipeline
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+
+            options.Services.Add(new ServiceDescriptor(typeof(IPipeline), instance));
+            return options;
+        }
     }
 }
