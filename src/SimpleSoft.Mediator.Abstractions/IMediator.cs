@@ -40,7 +40,7 @@ namespace SimpleSoft.Mediator
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
         Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken))
-            where TCommand : ICommand;
+            where TCommand : class, ICommand;
 
         /// <summary>
         /// Sends a command to an <see cref="ICommandHandler{TCommand,TResult}"/> and 
@@ -52,7 +52,7 @@ namespace SimpleSoft.Mediator
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
         Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default(CancellationToken))
-            where TCommand : ICommand<TResult>;
+            where TCommand : class, ICommand<TResult>;
 
         /// <summary>
         /// Broadcast the event across all <see cref="IEventHandler{TEvent}"/>.
@@ -62,7 +62,7 @@ namespace SimpleSoft.Mediator
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited</returns>
         Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default(CancellationToken))
-            where TEvent : IEvent;
+            where TEvent : class, IEvent;
 
         /// <summary>
         /// Fetches a query from a <see cref="IQueryHandler{TQuery,TResult}"/> and 
@@ -74,6 +74,6 @@ namespace SimpleSoft.Mediator
         /// <param name="ct">The cancellation token</param>
         /// <returns>A task to be awaited for the result</returns>
         Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default(CancellationToken))
-            where TQuery : IQuery<TResult>;
+            where TQuery : class, IQuery<TResult>;
     }
 }

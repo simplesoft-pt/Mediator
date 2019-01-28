@@ -40,7 +40,7 @@ namespace SimpleSoft.Mediator
         /// <param name="cmd">The command to publish</param>
         /// <exception cref="ArgumentNullException"></exception>
         public static void Send<TCommand>(this IMediator mediator, TCommand cmd)
-            where TCommand : ICommand
+            where TCommand : class, ICommand
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
@@ -59,7 +59,7 @@ namespace SimpleSoft.Mediator
         /// <returns>The handler result</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static TResult Send<TCommand, TResult>(this IMediator mediator, TCommand cmd)
-            where TCommand : ICommand<TResult>
+            where TCommand : class, ICommand<TResult>
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
@@ -75,7 +75,7 @@ namespace SimpleSoft.Mediator
         /// <param name="evt">The event to broadcast</param>
         /// <exception cref="ArgumentNullException"></exception>
         public static void Broadcast<TEvent>(this IMediator mediator, TEvent evt)
-            where TEvent : IEvent
+            where TEvent : class, IEvent
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
@@ -94,7 +94,7 @@ namespace SimpleSoft.Mediator
         /// <returns>The handler result</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static TResult Fetch<TQuery, TResult>(this IMediator mediator, TQuery query)
-            where TQuery : IQuery<TResult>
+            where TQuery : class, IQuery<TResult>
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
