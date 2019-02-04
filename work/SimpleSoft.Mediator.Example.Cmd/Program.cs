@@ -36,10 +36,13 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         o.AddPipeline<ValidationPipeline>();
                         o.AddPipeline<TransactionPipeline>();
 
+                        //  will register all handlers from typeof(Program).Assembly
                         o.AddHandlersFromAssemblyOf<Program>();
                     });
-                    services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
-                    services.AddScoped<IValidator<DeleteUserCommand>, DeleteUserCommandValidator>();
+                    services.Scan(s => s.FromAssemblyOf<Program>()
+                        .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
+                        .AsImplementedInterfaces()
+                        .WithScopedLifetime());
 
                     services.AddHostedService<Program>();
                 })
