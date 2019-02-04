@@ -4,15 +4,14 @@ namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
     public class RegisterUserCommand : Command<Guid>
     {
-        public RegisterUserCommand(Guid id, string email, string password)
+        public RegisterUserCommand(string email, string name)
         {
-            Id = id;
             Email = email;
-            Password = password;
+            Name = name;
         }
 
         public string Email { get; }
 
-        public string Password { get; }
+        public string Name { get; }
     }
 }

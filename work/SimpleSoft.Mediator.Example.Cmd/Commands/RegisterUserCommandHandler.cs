@@ -1,41 +1,63 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
+using SimpleSoft.Mediator.Example.Cmd.Events;
 
 namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
     public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
     {
-        private readonly IDictionary<Guid, User> _store;
+        private readonly ConcurrentDictionary<string, User> _store;
+        private readonly IMediator _mediator;
+        private readonly ILogger<RegisterUserCommandHandler> _logger;
 
-        public RegisterUserCommandHandler(IDictionary<Guid, User> store)
+        public RegisterUserCommandHandler(ConcurrentDictionary<string, User> store, IMediator mediator,
+            ILogger<RegisterUserCommandHandler> logger)
         {
             _store = store;
+            _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<Guid> HandleAsync(RegisterUserCommand cmd, CancellationToken ct)
         {
-            if (_store.Values.Any(e => e.Email.Equals(cmd.Email, StringComparison.OrdinalIgnoreCase)))
+            var email = cmd.Email.Trim().ToLowerInvariant();
+
+            using (_logger.BeginScope("Email:'{email}'", email))
             {
-                // this could be a fail event instead
-                //  eg. await _mediator.BroadcastAsync(new CommandFailedEvent(cmd.Id), ct);
-                throw new InvalidOperationException("Duplicated user email");
+                _logger.LogDebug("Creating user");
+
+                var user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    Email = email,
+                    Name = cmd.Name
+                };
+
+                if (_store.TryAdd(email, user))
+                {
+                    await _mediator.BroadcastAsync(new UserCreatedEvent(user.Id), ct);
+                    return user.Id;
+                }
+
+                throw new InvalidOperationException($"Duplicated email '{email}'");
             }
+        }
 
-            await Task.Delay(1000, ct);
-
-            var userId = Guid.NewGuid();
-            _store.Add(userId, new User
+        public class Validator : AbstractValidator<RegisterUserCommand>
+        {
+            public Validator()
             {
-                Email = cmd.Email,
-                Password = cmd.Password
-            });
+                RuleFor(e => e.Email)
+                    .NotEmpty()
+                    .EmailAddress();
 
-            //  this could be a UserCreatedEvent instead of a command returning a result
-            //  eg. await _mediator.BroadcastAsync(new UserCreatedEvent(userId), ct);
-            return userId;
+                RuleFor(e => e.Name)
+                    .NotEmpty();
+            }
         }
     }
 }

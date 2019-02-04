@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SimpleSoft.Mediator.Example.Cmd.Commands;
+using SimpleSoft.Mediator.Example.Cmd.Events;
 using SimpleSoft.Mediator.Example.Cmd.Pipelines;
+using SimpleSoft.Mediator.Example.Cmd.Queries;
 
 namespace SimpleSoft.Mediator.Example.Cmd
 {
-    public class Program
+    public class Program : IHostedService
     {
+        private readonly IServiceScopeFactory _scopeFactory;
+
         public static async Task Main(string[] args)
         {
             await new HostBuilder()
@@ -18,8 +25,9 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     .SetMinimumLevel(LogLevel.Trace))
                 .ConfigureServices((ctx, services) =>
                 {
-                    //  simulating some database
-                    services.AddSingleton<ConcurrentDictionary<Guid, User>>();
+                    //  simulating some database store
+                    services.AddSingleton<ConcurrentDictionary<string, User>>();
+                    services.AddScoped<UsersTest>();
 
                     services.AddMediator(o =>
                     {
@@ -29,8 +37,54 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         o.AddPipeline<ValidationPipeline>();
                         o.AddPipeline<TransactionPipeline>();
                     });
+
+                    //  adding handlers to the container
+                    //  this could be done using libraries like Scrutor
+                    services.AddScoped<ICommandHandler<RegisterUserCommand, Guid>, RegisterUserCommandHandler>();
+                    services.AddScoped<IValidator<RegisterUserCommand>, RegisterUserCommandHandler.Validator>();
+                    services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
+                    services.AddScoped<IQueryHandler<UserByIdQuery, User>, UserByIdQueryHandler>();
+
+                    services.AddHostedService<Program>();
                 })
                 .RunConsoleAsync();
+        }
+
+        public Program(IServiceScopeFactory scopeFactory)
+        {
+            _scopeFactory = scopeFactory;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            //  required for test purposes only because are using Scoped lifetime
+            //  ex: in ASP.NET Core all controllers are scoped, this wouldn't be needed
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var test = scope.ServiceProvider.GetRequiredService<UsersTest>();
+                await test.RunAsync(cancellationToken);
+            }
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+        private class UsersTest
+        {
+            private readonly IMediator _mediator;
+
+            public UsersTest(IMediator mediator)
+            {
+                _mediator = mediator;
+            }
+
+            public async Task RunAsync(CancellationToken ct)
+            {
+                var userId = await _mediator.SendAsync<RegisterUserCommand, Guid>(
+                    new RegisterUserCommand("john.doe@email.com", "John Doe"), ct);
+
+                var user = await _mediator.FetchAsync<UserByIdQuery, User>(
+                    new UserByIdQuery(userId), ct);
+            }
         }
     }
 }

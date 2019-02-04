@@ -4,9 +4,8 @@ namespace SimpleSoft.Mediator.Example.Cmd.Queries
 {
     public class UserByIdQuery : Query<User>
     {
-        public UserByIdQuery(Guid id, Guid userId)
+        public UserByIdQuery(Guid userId)
         {
-            Id = id;
             UserId = userId;
         }
 
