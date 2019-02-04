@@ -2,9 +2,9 @@
 
 namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
-    public class RegisterUserCommand : Command<Guid>
+    public class CreateUserCommand : Command<Guid>
     {
-        public RegisterUserCommand(string email, string name)
+        public CreateUserCommand(string email, string name)
         {
             Email = email;
             Name = name;

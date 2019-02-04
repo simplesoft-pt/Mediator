@@ -40,8 +40,8 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
                     //  adding handlers to the container
                     //  this could be done using libraries like Scrutor
-                    services.AddScoped<ICommandHandler<RegisterUserCommand, Guid>, RegisterUserCommandHandler>();
-                    services.AddScoped<IValidator<RegisterUserCommand>, RegisterUserCommandHandler.Validator>();
+                    services.AddScoped<ICommandHandler<CreateUserCommand, Guid>, CreateUserCommandHandler>();
+                    services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandHandler.Validator>();
                     services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
                     services.AddScoped<IQueryHandler<UserByIdQuery, User>, UserByIdQueryHandler>();
 
@@ -79,8 +79,8 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
             public async Task RunAsync(CancellationToken ct)
             {
-                var userId = await _mediator.SendAsync<RegisterUserCommand, Guid>(
-                    new RegisterUserCommand("john.doe@email.com", "John Doe"), ct);
+                var userId = await _mediator.SendAsync<CreateUserCommand, Guid>(
+                    new CreateUserCommand("john.doe@email.com", "John Doe"), ct);
 
                 var user = await _mediator.FetchAsync<UserByIdQuery, User>(
                     new UserByIdQuery(userId), ct);

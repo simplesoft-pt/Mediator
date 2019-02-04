@@ -8,21 +8,21 @@ using SimpleSoft.Mediator.Example.Cmd.Events;
 
 namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
-    public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
+    public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
     {
         private readonly ConcurrentDictionary<string, User> _store;
         private readonly IMediator _mediator;
-        private readonly ILogger<RegisterUserCommandHandler> _logger;
+        private readonly ILogger<CreateUserCommandHandler> _logger;
 
-        public RegisterUserCommandHandler(ConcurrentDictionary<string, User> store, IMediator mediator,
-            ILogger<RegisterUserCommandHandler> logger)
+        public CreateUserCommandHandler(ConcurrentDictionary<string, User> store, IMediator mediator,
+            ILogger<CreateUserCommandHandler> logger)
         {
             _store = store;
             _mediator = mediator;
             _logger = logger;
         }
 
-        public async Task<Guid> HandleAsync(RegisterUserCommand cmd, CancellationToken ct)
+        public async Task<Guid> HandleAsync(CreateUserCommand cmd, CancellationToken ct)
         {
             var email = cmd.Email.Trim().ToLowerInvariant();
 
@@ -47,7 +47,7 @@ namespace SimpleSoft.Mediator.Example.Cmd.Commands
             }
         }
 
-        public class Validator : AbstractValidator<RegisterUserCommand>
+        public class Validator : AbstractValidator<CreateUserCommand>
         {
             public Validator()
             {
