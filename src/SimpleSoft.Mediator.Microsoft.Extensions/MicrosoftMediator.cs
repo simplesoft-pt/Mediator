@@ -35,7 +35,7 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class MicrosoftMediator : IMediator
     {
-        private readonly ILogger<IMediator> _logger;
+        private readonly ILogger<MicrosoftMediator> _logger;
         private readonly IMediator _mediator;
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SimpleSoft.Mediator
         /// <param name="pipelines">The mediator pipeline collection</param>
         /// <param name="logger">The logger instance</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MicrosoftMediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines, ILogger<IMediator> logger)
+        public MicrosoftMediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines, ILogger<MicrosoftMediator> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mediator = new Mediator(serviceProvider, pipelines);
