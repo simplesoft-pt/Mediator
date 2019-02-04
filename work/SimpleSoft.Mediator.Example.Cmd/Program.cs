@@ -42,7 +42,10 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     //  this could be done using libraries like Scrutor
                     services.AddScoped<ICommandHandler<CreateUserCommand, Guid>, CreateUserCommandHandler>();
                     services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandHandler.Validator>();
+                    services.AddScoped<ICommandHandler<DeleteUserCommand>, DeleteUserCommandHandler>();
+                    services.AddScoped<IValidator<DeleteUserCommand>, DeleteUserCommandHandler.Validator>();
                     services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
+                    services.AddScoped<IEventHandler<UserDeletedEvent>, UserDeletedEventHandler>();
                     services.AddScoped<IQueryHandler<UserByIdQuery, User>, UserByIdQueryHandler>();
 
                     services.AddHostedService<Program>();
@@ -84,6 +87,9 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
                 var user = await _mediator.FetchAsync<UserByIdQuery, User>(
                     new UserByIdQuery(userId), ct);
+
+                await _mediator.SendAsync(
+                    new DeleteUserCommand(user.Email), ct);
             }
         }
     }

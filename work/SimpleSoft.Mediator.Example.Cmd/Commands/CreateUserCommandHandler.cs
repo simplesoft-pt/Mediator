@@ -14,7 +14,9 @@ namespace SimpleSoft.Mediator.Example.Cmd.Commands
         private readonly IMediator _mediator;
         private readonly ILogger<CreateUserCommandHandler> _logger;
 
-        public CreateUserCommandHandler(ConcurrentDictionary<string, User> store, IMediator mediator,
+        public CreateUserCommandHandler(
+            ConcurrentDictionary<string, User> store, 
+            IMediator mediator,
             ILogger<CreateUserCommandHandler> logger)
         {
             _store = store;
