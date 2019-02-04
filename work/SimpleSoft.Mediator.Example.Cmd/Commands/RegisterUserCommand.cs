@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleSoft.Mediator.Example.Cmd
+namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
     public class RegisterUserCommand : Command<Guid>
     {

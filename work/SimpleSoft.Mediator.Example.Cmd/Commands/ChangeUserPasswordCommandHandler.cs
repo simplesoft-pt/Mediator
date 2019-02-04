@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Example.Cmd
+namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
     public class ChangeUserPasswordCommandHandler : ICommandHandler<ChangeUserPasswordCommand>
     {

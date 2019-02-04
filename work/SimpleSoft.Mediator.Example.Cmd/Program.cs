@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,6 +18,9 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     .SetMinimumLevel(LogLevel.Trace))
                 .ConfigureServices((ctx, services) =>
                 {
+                    //  simulating some database
+                    services.AddSingleton<ConcurrentDictionary<Guid, User>>();
+
                     services.AddMediator(o =>
                     {
                         // pipeline order:

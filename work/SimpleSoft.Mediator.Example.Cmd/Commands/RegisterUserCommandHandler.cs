@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleSoft.Mediator.Example.Cmd
+namespace SimpleSoft.Mediator.Example.Cmd.Commands
 {
     public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
     {
