@@ -23,6 +23,8 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SimpleSoft.Mediator;
 
@@ -106,6 +108,74 @@ namespace Microsoft.Extensions.DependencyInjection
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             options.Services.Add(new ServiceDescriptor(typeof(IPipeline), instance));
+            return options;
+        }
+
+        /// <summary>
+        /// Registers all the command, query and event handlers found in the given type assembly.
+        /// </summary>
+        /// <typeparam name="T">The type to scan the assembly</typeparam>
+        /// <param name="options">The mediator options</param>
+        /// <param name="lifetime">The handlers lifetime</param>
+        /// <returns>The options instance after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static MediatorOptions AddHandlersFromAssemblyOf<T>(this MediatorOptions options, 
+            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        {
+#if NETSTANDARD1_1
+            return options.AddHandlersFromAssemblyOf(typeof(T).GetTypeInfo().Assembly);
+#else
+            return options.AddHandlersFromAssemblyOf(typeof(T).Assembly);
+#endif
+        }
+
+
+        /// <summary>
+        /// Registers all the command, query and event handlers found in the given assembly.
+        /// </summary>
+        /// <param name="options">The mediator options</param>
+        /// <param name="assembly">The assembly to scan</param>
+        /// <param name="lifetime">The handlers lifetime</param>
+        /// <returns>The options instance after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static MediatorOptions AddHandlersFromAssemblyOf(this MediatorOptions options, 
+            Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
+#if NETSTANDARD1_1
+            var exportedTypes = assembly.ExportedTypes.Select(t => t.GetTypeInfo());
+#else
+            var exportedTypes = assembly.ExportedTypes;
+#endif
+            foreach (var t in exportedTypes.Where(t => t.IsClass && !t.IsAbstract))
+            {
+#if NETSTANDARD1_1
+                var implementedInterfaces = t.ImplementedInterfaces.Select(i => i.GetTypeInfo());
+#else
+                var implementedInterfaces = t.GetInterfaces();
+#endif
+                foreach (var i in implementedInterfaces.Where(e => e.IsGenericType))
+                {
+                    var iGenericType = i.GetGenericTypeDefinition();
+                    if (iGenericType == typeof(ICommandHandler<>) ||
+                        iGenericType == typeof(ICommandHandler<,>) ||
+                        iGenericType == typeof(IEventHandler<>) ||
+                        iGenericType == typeof(IQueryHandler<,>))
+                    {
+#if NETSTANDARD1_1
+                        var serviceType = i.AsType();
+                        var implementationType = t.AsType();
+#else
+                        var serviceType = i;
+                        var implementationType = t;
+#endif
+                        options.Services.Add(new ServiceDescriptor(serviceType, implementationType, lifetime));
+                    }
+                }
+            }
+
             return options;
         }
     }
