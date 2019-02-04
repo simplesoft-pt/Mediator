@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using SimpleSoft.Mediator.Example.Cmd.Events;
 
@@ -46,19 +45,6 @@ namespace SimpleSoft.Mediator.Example.Cmd.Commands
                 }
 
                 throw new InvalidOperationException($"Duplicated email '{email}'");
-            }
-        }
-
-        public class Validator : AbstractValidator<CreateUserCommand>
-        {
-            public Validator()
-            {
-                RuleFor(e => e.Email)
-                    .NotEmpty()
-                    .EmailAddress();
-
-                RuleFor(e => e.Name)
-                    .NotEmpty();
             }
         }
     }

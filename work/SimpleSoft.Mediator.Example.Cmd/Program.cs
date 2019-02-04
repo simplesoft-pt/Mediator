@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimpleSoft.Mediator.Example.Cmd.Commands;
-using SimpleSoft.Mediator.Example.Cmd.Events;
 using SimpleSoft.Mediator.Example.Cmd.Pipelines;
 using SimpleSoft.Mediator.Example.Cmd.Queries;
 
@@ -36,17 +35,11 @@ namespace SimpleSoft.Mediator.Example.Cmd
                         o.AddPipeline<LoggingPipeline>(ServiceLifetime.Singleton);
                         o.AddPipeline<ValidationPipeline>();
                         o.AddPipeline<TransactionPipeline>();
-                    });
 
-                    //  adding handlers to the container
-                    //  this could be done using libraries like Scrutor
-                    services.AddScoped<ICommandHandler<CreateUserCommand, Guid>, CreateUserCommandHandler>();
-                    services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandHandler.Validator>();
-                    services.AddScoped<ICommandHandler<DeleteUserCommand>, DeleteUserCommandHandler>();
-                    services.AddScoped<IValidator<DeleteUserCommand>, DeleteUserCommandHandler.Validator>();
-                    services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
-                    services.AddScoped<IEventHandler<UserDeletedEvent>, UserDeletedEventHandler>();
-                    services.AddScoped<IQueryHandler<UserByIdQuery, User>, UserByIdQueryHandler>();
+                        o.AddHandlersFromAssemblyOf<Program>();
+                    });
+                    services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
+                    services.AddScoped<IValidator<DeleteUserCommand>, DeleteUserCommandValidator>();
 
                     services.AddHostedService<Program>();
                 })

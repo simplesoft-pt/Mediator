@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using SimpleSoft.Mediator.Example.Cmd.Events;
 
@@ -36,16 +35,6 @@ namespace SimpleSoft.Mediator.Example.Cmd.Commands
                     await _mediator.BroadcastAsync(new UserDeletedEvent(user.Id), ct);
                 else
                     throw new InvalidOperationException($"User with email '{email}' not found");
-            }
-        }
-
-        public class Validator : AbstractValidator<DeleteUserCommand>
-        {
-            public Validator()
-            {
-                RuleFor(e => e.Email)
-                    .NotEmpty()
-                    .EmailAddress();
             }
         }
     }
