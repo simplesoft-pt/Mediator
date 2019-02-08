@@ -34,8 +34,8 @@
 
   <PropertyGroup>
     <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.19028</FileVersion>
-    <VersionPrefix>2.0.0-rc01</VersionPrefix>
+    <FileVersion>2.0.0.19039</FileVersion>
+    <VersionPrefix>2.0.0-rc02</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -48,6 +48,7 @@
   </ItemGroup>
 
 </Project>
+
 
 
 
