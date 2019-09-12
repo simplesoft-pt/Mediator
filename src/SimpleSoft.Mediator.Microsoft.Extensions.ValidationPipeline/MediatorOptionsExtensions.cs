@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers a <see cref="ValidationPipeline"/>.
         /// </summary>
         /// <param name="options">The mediator registration options</param>
-        /// <param name="config">Configures the validation pipeline</param>
+        /// <param name="config">Configures the pipeline options</param>
         /// <param name="lifetime">The pipeline lifetime</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
