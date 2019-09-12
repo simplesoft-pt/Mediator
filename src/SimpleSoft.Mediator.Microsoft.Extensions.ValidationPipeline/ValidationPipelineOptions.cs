@@ -13,17 +13,17 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// Should commands be validated? Defaults to 'true'.
         /// </summary>
-        public bool ValidateCommands { get; set; } = true;
+        public bool ValidateCommand { get; set; } = true;
 
         /// <summary>
         /// Should events be validated? Defaults to 'false'.
         /// </summary>
-        public bool ValidateEvents { get; set; } = false;
+        public bool ValidateEvent { get; set; } = false;
 
         /// <summary>
         /// Should commands be validated? Defaults to 'false'.
         /// </summary>
-        public bool ValidateQueries { get; set; } = false;
+        public bool ValidateQuery { get; set; } = false;
 
         /// <summary>
         /// Fail if the validator for a given class is not found? Defaults to 'true'.

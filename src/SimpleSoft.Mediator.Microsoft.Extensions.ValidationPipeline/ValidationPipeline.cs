@@ -37,7 +37,7 @@ namespace SimpleSoft.Mediator
         public async Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) 
             where TCommand : class, ICommand
         {
-            if (_options.ValidateCommands)
+            if (_options.ValidateCommand)
                 await ValidateInstanceAsync(cmd, ct).ConfigureAwait(false);
             await next(cmd, ct).ConfigureAwait(false);
         }
@@ -46,7 +46,7 @@ namespace SimpleSoft.Mediator
         public async Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct) 
             where TCommand : class, ICommand<TResult>
         {
-            if (_options.ValidateCommands)
+            if (_options.ValidateCommand)
                 await ValidateInstanceAsync(cmd, ct).ConfigureAwait(false);
             return await next(cmd, ct).ConfigureAwait(false);
         }
@@ -55,7 +55,7 @@ namespace SimpleSoft.Mediator
         public async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) 
             where TEvent : class, IEvent
         {
-            if (_options.ValidateEvents)
+            if (_options.ValidateEvent)
                 await ValidateInstanceAsync(evt, ct).ConfigureAwait(false);
             await next(evt, ct).ConfigureAwait(false);
         }
@@ -64,7 +64,7 @@ namespace SimpleSoft.Mediator
         public async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) 
             where TQuery : class, IQuery<TResult>
         {
-            if (_options.ValidateQueries)
+            if (_options.ValidateQuery)
                 await ValidateInstanceAsync(query, ct).ConfigureAwait(false);
             return await next(query, ct).ConfigureAwait(false);
         }
