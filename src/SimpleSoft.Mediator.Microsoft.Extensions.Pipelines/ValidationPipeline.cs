@@ -34,31 +34,39 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) 
+        public async Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) 
             where TCommand : class, ICommand
         {
-            throw new NotImplementedException();
+            if (_options.ValidateCommands)
+                await ValidateInstanceAsync(cmd, ct).ConfigureAwait(false);
+            await next(cmd, ct);
         }
 
         /// <inheritdoc />
-        public Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct) 
+        public async Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct) 
             where TCommand : class, ICommand<TResult>
         {
-            throw new NotImplementedException();
+            if (_options.ValidateCommands)
+                await ValidateInstanceAsync(cmd, ct).ConfigureAwait(false);
+            return await next(cmd, ct);
         }
 
         /// <inheritdoc />
-        public Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) 
+        public async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) 
             where TEvent : class, IEvent
         {
-            throw new NotImplementedException();
+            if (_options.ValidateEvents)
+                await ValidateInstanceAsync(evt, ct).ConfigureAwait(false);
+            await next(evt, ct);
         }
 
         /// <inheritdoc />
-        public Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) 
+        public async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) 
             where TQuery : class, IQuery<TResult>
         {
-            throw new NotImplementedException();
+            if (_options.ValidateQueries)
+                await ValidateInstanceAsync(query, ct).ConfigureAwait(false);
+            return await next(query, ct);
         }
 
         private async Task ValidateInstanceAsync<T>(T instance, CancellationToken ct) where  T : class
