@@ -39,6 +39,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj" />
   </ItemGroup>
 
