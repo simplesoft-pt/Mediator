@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <RootNamespace>SimpleSoft.Mediator</RootNamespace>
-    <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions.Pipelines</AssemblyTitle>
-    <AssemblyName>SimpleSoft.Mediator.Microsoft.Extensions.Pipelines</AssemblyName>
+    <AssemblyTitle>SimpleSoft.Mediator.Pipelines.Validation</AssemblyTitle>
+    <AssemblyName>SimpleSoft.Mediator.Pipelines.Validation</AssemblyName>
     <Description>Mediator implementation for commands and events.</Description>
     <Product>SimpleSoft.Mediator</Product>
     <Company>SimpleSoft.pt</Company>
@@ -18,11 +18,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.1;net4.5</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>SimpleSoft.Mediator.Microsoft.Extensions.Pipelines</PackageId>
+    <PackageId>SimpleSoft.Mediator.Pipelines.Validation</PackageId>
     <PackageTags>patterns;mediator</PackageTags>
     <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
     <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
@@ -39,8 +39,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj" />
-    <ProjectReference Include="..\SimpleSoft.Mediator.Pipelines.Validation\SimpleSoft.Mediator.Pipelines.Validation.csproj" />
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleSoft.Mediator.Abstractions\SimpleSoft.Mediator.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
