@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Example
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions", "src\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj", "{3A765D34-C3A8-44E6-ABF5-D37CA878ADA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.Pipelines", "src\SimpleSoft.Mediator.Microsoft.Extensions.Pipelines\SimpleSoft.Mediator.Microsoft.Extensions.Pipelines.csproj", "{EF9B63D4-6633-4089-95D0-CAEDA454ED7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline", "src\SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline\SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline.csproj", "{EF9B63D4-6633-4089-95D0-CAEDA454ED7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

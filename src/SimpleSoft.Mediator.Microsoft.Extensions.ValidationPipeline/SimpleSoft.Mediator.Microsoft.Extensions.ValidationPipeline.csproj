@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <RootNamespace>SimpleSoft.Mediator</RootNamespace>
-    <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions.Pipelines</AssemblyTitle>
-    <AssemblyName>SimpleSoft.Mediator.Microsoft.Extensions.Pipelines</AssemblyName>
+    <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline</AssemblyTitle>
+    <AssemblyName>SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline</AssemblyName>
     <Description>Mediator implementation for commands and events.</Description>
     <Product>SimpleSoft.Mediator</Product>
     <Company>SimpleSoft.pt</Company>
@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>SimpleSoft.Mediator.Microsoft.Extensions.Pipelines</PackageId>
+    <PackageId>SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline</PackageId>
     <PackageTags>patterns;mediator</PackageTags>
     <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
     <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
