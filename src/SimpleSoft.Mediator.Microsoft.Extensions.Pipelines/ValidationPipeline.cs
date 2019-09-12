@@ -39,7 +39,7 @@ namespace SimpleSoft.Mediator
         {
             if (_options.ValidateCommands)
                 await ValidateInstanceAsync(cmd, ct).ConfigureAwait(false);
-            await next(cmd, ct);
+            await next(cmd, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -48,7 +48,7 @@ namespace SimpleSoft.Mediator
         {
             if (_options.ValidateCommands)
                 await ValidateInstanceAsync(cmd, ct).ConfigureAwait(false);
-            return await next(cmd, ct);
+            return await next(cmd, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -57,7 +57,7 @@ namespace SimpleSoft.Mediator
         {
             if (_options.ValidateEvents)
                 await ValidateInstanceAsync(evt, ct).ConfigureAwait(false);
-            await next(evt, ct);
+            await next(evt, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -66,7 +66,7 @@ namespace SimpleSoft.Mediator
         {
             if (_options.ValidateQueries)
                 await ValidateInstanceAsync(query, ct).ConfigureAwait(false);
-            return await next(query, ct);
+            return await next(query, ct).ConfigureAwait(false);
         }
 
         private async Task ValidateInstanceAsync<T>(T instance, CancellationToken ct) where  T : class
