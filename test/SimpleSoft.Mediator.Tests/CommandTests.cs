@@ -13,8 +13,8 @@ namespace SimpleSoft.Mediator.Tests
 
             var evt = new MockCommand();
 
-            Assert.NotEqual(default(Guid), evt.Id);
-            Assert.NotEqual(default(DateTimeOffset), evt.CreatedOn);
+            Assert.NotEqual(default, evt.Id);
+            Assert.NotEqual(default, evt.CreatedOn);
             Assert.True(now <= evt.CreatedOn && evt.CreatedOn <= DateTimeOffset.Now);
             Assert.Null(evt.CreatedBy);
         }
@@ -26,8 +26,8 @@ namespace SimpleSoft.Mediator.Tests
 
             var evt = new MockResultCommand();
 
-            Assert.NotEqual(default(Guid), evt.Id);
-            Assert.NotEqual(default(DateTimeOffset), evt.CreatedOn);
+            Assert.NotEqual(default, evt.Id);
+            Assert.NotEqual(default, evt.CreatedOn);
             Assert.True(now <= evt.CreatedOn && evt.CreatedOn <= DateTimeOffset.Now);
             Assert.Null(evt.CreatedBy);
         }

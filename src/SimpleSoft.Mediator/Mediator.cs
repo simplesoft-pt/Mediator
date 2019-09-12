@@ -59,7 +59,7 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default(CancellationToken))
+        public async Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default)
             where TCommand : class, ICommand
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
@@ -83,7 +83,7 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default(CancellationToken)) 
+        public async Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default) 
             where TCommand : class, ICommand<TResult>
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
@@ -107,7 +107,7 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default(CancellationToken))
+        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
             where TEvent : class, IEvent
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
@@ -130,7 +130,7 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default(CancellationToken))
+        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
             where TQuery : class, IQuery<TResult>
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
