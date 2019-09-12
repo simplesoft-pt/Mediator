@@ -9,20 +9,23 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.1.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Scrutor" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline\SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline.csproj" />
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline\SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline.csproj" />
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline\SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SimpleSoft.Mediator.Example.Cmd.Commands;
 using SimpleSoft.Mediator.Example.Cmd.Pipelines;
 using SimpleSoft.Mediator.Example.Cmd.Queries;
@@ -32,8 +34,37 @@ namespace SimpleSoft.Mediator.Example.Cmd
                     {
                         // pipeline order:
                         //  mediator -> logging -> validation -> transaction -> handler
-                        o.AddPipeline<LoggingPipeline>(ServiceLifetime.Singleton);
-                        o.AddPipeline<ValidationPipeline>();
+                        o.AddPipelineForLogging(loggingOptions =>
+                        {
+                            loggingOptions.Level = LogLevel.Debug;
+
+                            loggingOptions.LogCommand = true;
+                            loggingOptions.LogCommandResult = true;
+
+                            loggingOptions.LogEvent = true;
+
+                            loggingOptions.LogQuery = true;
+                            loggingOptions.LogQueryResult = true;
+
+                            loggingOptions.SerializerSettings.Formatting = Formatting.Indented;
+                        });
+                        o.AddPipelineForValidation(validationOptions =>
+                        {
+                            validationOptions.ValidateCommand = true;
+                            validationOptions.ValidateEvent = true;
+                            validationOptions.ValidateQuery = true;
+
+                            validationOptions.FailIfValidatorNotFound = false;
+
+                            validationOptions.OnFailedValidation = (instance, errors, ct) =>
+                            {
+                                var sb = new StringBuilder("Invalid information has been submitted");
+                                foreach (var e in errors.Errors)
+                                    sb.Append("  ").Append(e.ErrorMessage).AppendLine();
+
+                                throw new InvalidOperationException(sb.ToString());
+                            };
+                        });
                         o.AddPipeline<TransactionPipeline>();
 
                         //  will register all handlers from typeof(Program).Assembly
