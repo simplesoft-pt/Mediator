@@ -1,0 +1,41 @@
+trigger:
+  tags:
+    include:
+    - v*
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+variables:
+  buildConfiguration: 'release'
+
+steps:
+- task: DotNetCoreInstaller@1
+  displayName: 'install dotnet sdk'
+  inputs:
+    version: '2.x'
+
+- script: dotnet restore
+  displayName: 'dotnet restore'
+  env:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+- script: dotnet build --configuration $(buildConfiguration) --no-restore
+  displayName: 'dotnet build'
+  env:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+- script: dotnet pack --output $(build.artifactStagingDirectory) --configuration $(buildConfiguration) --no-restore --no-build
+  displayName: 'dotnet pack nugets'
+  env:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  
+- task: PublishBuildArtifacts@1
+  displayName: 'publish artifacts'
+  inputs:
+    pathtoPublish: '$(build.artifactStagingDirectory)'
+    artifactName: '$(build.definitionName)'
+    publishLocation: 'Container'
