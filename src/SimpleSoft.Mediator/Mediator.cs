@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -59,55 +60,109 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default)
+        public Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default)
             where TCommand : class, ICommand
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
-            Func<TCommand, CancellationToken, Task> next = async (c, cancellationToken) =>
+            Func<TCommand, CancellationToken, Task> next = (c, cancellationToken) =>
             {
                 var handler = _serviceProvider.BuildService<ICommandHandler<TCommand>>();
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build(c);
-                await handler.HandleAsync(c, cancellationToken).ConfigureAwait(false);
+                return handler.HandleAsync(c, cancellationToken);
             };
 
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (c, cancellationToken) =>
-                    await middleware.OnCommandAsync(old, c, cancellationToken).ConfigureAwait(false);
+                next = (c, cancellationToken) => middleware.OnCommandAsync(old, c, cancellationToken);
             }
 
-            await next(cmd, ct).ConfigureAwait(false);
+            return next(cmd, ct);
         }
 
         /// <inheritdoc />
-        public async Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default) 
+        public Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default)
             where TCommand : class, ICommand<TResult>
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
-            Func<TCommand, CancellationToken, Task<TResult>> next = async (c, cancellationToken) =>
+            Func<TCommand, CancellationToken, Task<TResult>> next = (c, cancellationToken) =>
             {
                 var handler = _serviceProvider.BuildService<ICommandHandler<TCommand, TResult>>();
                 if (handler == null)
                     throw CommandHandlerNotFoundException.Build<TCommand, TResult>(c);
-                return await handler.HandleAsync(c, cancellationToken).ConfigureAwait(false);
+                return handler.HandleAsync(c, cancellationToken);
             };
 
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (c, cancellationToken) =>
-                    await middleware.OnCommandAsync(old, c, cancellationToken).ConfigureAwait(false);
+                next = (c, cancellationToken) => middleware.OnCommandAsync(old, c, cancellationToken);
             }
 
-            return await next(cmd, ct).ConfigureAwait(false);
+            return next(cmd, ct);
         }
 
+#if NET40
+
         /// <inheritdoc />
-        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
+        public Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
+            where TEvent : class, IEvent
+        {
+            if (evt == null) throw new ArgumentNullException(nameof(evt));
+
+            Func<TEvent, CancellationToken, Task> next = (e, cancellationToken) =>
+            {
+                var handlers = _serviceProvider.BuildServices<IEventHandler<TEvent>>().ToList();
+                if (handlers.Count == 0)
+                {
+                    var tcs = new TaskCompletionSource<bool>();
+                    if (cancellationToken.IsCancellationRequested)
+                        tcs.SetCanceled();
+                    else
+                        tcs.SetResult(true);
+                    return tcs.Task;
+                }
+
+                Task handlerTask = null;
+                foreach (var handler in handlers)
+                {
+                    if (handlerTask == null)
+                        handlerTask = handler.HandleAsync(e, cancellationToken);
+                    else
+                    {
+                        handlerTask = handlerTask.ContinueWith(t =>
+                        {
+                            if (t.Exception == null)
+                            {
+                                t.Wait(cancellationToken);
+                                handler.HandleAsync(e, cancellationToken);
+                                return;
+                            }
+
+                            throw t.Exception.InnerException ?? t.Exception;
+                        }, cancellationToken);
+                    }
+                }
+
+                return handlerTask;
+            };
+
+            foreach (var middleware in _reversedPipelines)
+            {
+                var old = next;
+                next = (e, cancellationToken) => middleware.OnEventAsync(old, e, cancellationToken);
+            }
+
+            return next(evt, ct);
+        }
+
+#else
+
+        /// <inheritdoc />
+        public Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
             where TEvent : class, IEvent
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
@@ -122,35 +177,107 @@ namespace SimpleSoft.Mediator
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (e, cancellationToken) =>
-                    await middleware.OnEventAsync(old, e, cancellationToken).ConfigureAwait(false);
+                next = (e, cancellationToken) => middleware.OnEventAsync(old, e, cancellationToken);
             }
 
-            await next(evt, ct).ConfigureAwait(false);
+            return next(evt, ct);
         }
 
+#endif
+
         /// <inheritdoc />
-        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
+        public Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
             where TQuery : class, IQuery<TResult>
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
-            
-            Func<TQuery, CancellationToken, Task<TResult>> next = async (q, cancellationToken) =>
+
+            Func<TQuery, CancellationToken, Task<TResult>> next = (q, cancellationToken) =>
             {
                 var handler = _serviceProvider.BuildService<IQueryHandler<TQuery, TResult>>();
                 if (handler == null)
                     throw QueryHandlerNotFoundException.Build<TQuery, TResult>(q);
-                return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
+                return handler.HandleAsync(q, cancellationToken);
             };
 
             foreach (var middleware in _reversedPipelines)
             {
                 var old = next;
-                next = async (q, cancellationToken) =>
-                    await middleware.OnQueryAsync(old, q, cancellationToken).ConfigureAwait(false);
+                next = (q, cancellationToken) => middleware.OnQueryAsync(old, q, cancellationToken);
             }
 
-            return await next(query, ct).ConfigureAwait(false);
+            return next(query, ct);
         }
+
+        ///// <inheritdoc />
+        //public async Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default)
+        //    where TCommand : class, ICommand
+        //{
+        //    if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+        //    Func<TCommand, CancellationToken, Task> next = async (c, cancellationToken) =>
+        //    {
+        //        var handler = _serviceProvider.BuildService<ICommandHandler<TCommand>>();
+        //        if (handler == null)
+        //            throw CommandHandlerNotFoundException.Build(c);
+        //        await handler.HandleAsync(c, cancellationToken).ConfigureAwait(false);
+        //    };
+
+        //    foreach (var middleware in _reversedPipelines)
+        //    {
+        //        var old = next;
+        //        next = async (c, cancellationToken) =>
+        //            await middleware.OnCommandAsync(old, c, cancellationToken).ConfigureAwait(false);
+        //    }
+
+        //    await next(cmd, ct).ConfigureAwait(false);
+        //}
+
+        ///// <inheritdoc />
+        //public async Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default) 
+        //    where TCommand : class, ICommand<TResult>
+        //{
+        //    if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+        //    Func<TCommand, CancellationToken, Task<TResult>> next = async (c, cancellationToken) =>
+        //    {
+        //        var handler = _serviceProvider.BuildService<ICommandHandler<TCommand, TResult>>();
+        //        if (handler == null)
+        //            throw CommandHandlerNotFoundException.Build<TCommand, TResult>(c);
+        //        return await handler.HandleAsync(c, cancellationToken).ConfigureAwait(false);
+        //    };
+
+        //    foreach (var middleware in _reversedPipelines)
+        //    {
+        //        var old = next;
+        //        next = async (c, cancellationToken) =>
+        //            await middleware.OnCommandAsync(old, c, cancellationToken).ConfigureAwait(false);
+        //    }
+
+        //    return await next(cmd, ct).ConfigureAwait(false);
+        //}
+
+        ///// <inheritdoc />
+        //public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
+        //    where TQuery : class, IQuery<TResult>
+        //{
+        //    if (query == null) throw new ArgumentNullException(nameof(query));
+
+        //    Func<TQuery, CancellationToken, Task<TResult>> next = async (q, cancellationToken) =>
+        //    {
+        //        var handler = _serviceProvider.BuildService<IQueryHandler<TQuery, TResult>>();
+        //        if (handler == null)
+        //            throw QueryHandlerNotFoundException.Build<TQuery, TResult>(q);
+        //        return await handler.HandleAsync(q, cancellationToken).ConfigureAwait(false);
+        //    };
+
+        //    foreach (var middleware in _reversedPipelines)
+        //    {
+        //        var old = next;
+        //        next = async (q, cancellationToken) =>
+        //            await middleware.OnQueryAsync(old, q, cancellationToken).ConfigureAwait(false);
+        //    }
+
+        //    return await next(query, ct).ConfigureAwait(false);
+        //}
     }
 }
