@@ -34,31 +34,31 @@ namespace SimpleSoft.Mediator
     public abstract class Pipeline : IPipeline
     {
         /// <inheritdoc />
-        public virtual async Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) 
+        public virtual Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct)
             where TCommand : class, ICommand
         {
-            await next(cmd, ct).ConfigureAwait(false);
+            return next(cmd, ct);
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct)
+        public virtual Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct)
             where TCommand : class, ICommand<TResult>
         {
-            return await next(cmd, ct).ConfigureAwait(false);
+            return next(cmd, ct);
         }
 
         /// <inheritdoc />
-        public virtual async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) 
+        public virtual Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct)
             where TEvent : class, IEvent
         {
-            await next(evt, ct).ConfigureAwait(false);
+            return next(evt, ct);
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct)
+        public virtual Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct)
             where TQuery : class, IQuery<TResult>
         {
-            return await next(query, ct).ConfigureAwait(false);
+            return next(query, ct);
         }
     }
 }
