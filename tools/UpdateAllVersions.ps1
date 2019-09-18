@@ -1,8 +1,8 @@
 $ErrorActionPreference = "Stop"
 
 $assemblyVersion = "2.0.0"
-$assemblyFileVersion = "2.0.0.19255"
-$assemblyInformationalVersion = "2.0.0-rc03"
+$assemblyFileVersion = "2.0.0.19261"
+$assemblyInformationalVersion = "2.0.0-rc04"
 
 Write-Host "Updating project versions..."
 
