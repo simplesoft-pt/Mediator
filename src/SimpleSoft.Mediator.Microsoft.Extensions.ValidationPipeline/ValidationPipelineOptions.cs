@@ -11,9 +11,9 @@ namespace SimpleSoft.Mediator
     public class ValidationPipelineOptions
     {
         /// <summary>
-        /// Should commands be validated? Defaults to 'true'.
+        /// Should commands be validated? Defaults to 'false'.
         /// </summary>
-        public bool ValidateCommand { get; set; } = true;
+        public bool ValidateCommand { get; set; } = false;
 
         /// <summary>
         /// Should events be validated? Defaults to 'false'.
