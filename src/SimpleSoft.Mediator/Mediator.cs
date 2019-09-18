@@ -141,12 +141,12 @@ namespace SimpleSoft.Mediator
                 {
                     handler.HandleAsync(e, cancellationToken).ContinueWith(t =>
                     {
-                        Interlocked.Increment(ref completedTasks);
+                        var currentlyCompletedTasks = Interlocked.Increment(ref completedTasks);
 
                         if (t.Exception != null)
                             exceptions.Add(t.Exception.InnerException);
 
-                        if (completedTasks == totalTasks)
+                        if (currentlyCompletedTasks == totalTasks)
                         {
                             if(exceptions.IsEmpty)
                                 tcs.SetResult(true);
