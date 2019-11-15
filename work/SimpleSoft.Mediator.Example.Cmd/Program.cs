@@ -89,11 +89,10 @@ namespace SimpleSoft.Mediator.Example.Cmd
         {
             //  required for test purposes only because are using Scoped lifetime
             //  ex: in ASP.NET Core all controllers are scoped, this wouldn't be needed
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                var test = scope.ServiceProvider.GetRequiredService<UsersTest>();
-                await test.RunAsync(cancellationToken);
-            }
+            using var scope = _scopeFactory.CreateScope();
+
+            var test = scope.ServiceProvider.GetRequiredService<UsersTest>();
+            await test.RunAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

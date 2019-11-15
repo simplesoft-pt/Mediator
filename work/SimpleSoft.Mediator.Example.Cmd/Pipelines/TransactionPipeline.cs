@@ -21,28 +21,26 @@ namespace SimpleSoft.Mediator.Example.Cmd.Pipelines
         {
             _logger.LogDebug("Starting database transaction");
 
-            using (var tx = _connection?.BeginTransaction())
-            {
-                await next(cmd, ct);
+            using var tx = _connection?.BeginTransaction();
 
-                _logger.LogDebug("Committing database transaction");
-                tx?.Commit();
-            }
+            await next(cmd, ct);
+
+            _logger.LogDebug("Committing database transaction");
+            tx?.Commit();
         }
 
         public override async Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct)
         {
             _logger.LogDebug("Starting database transaction");
 
-            using (var tx = _connection?.BeginTransaction())
-            {
-                var result = await next(cmd, ct);
+            using var tx = _connection?.BeginTransaction();
 
-                _logger.LogDebug("Committing database transaction");
-                tx?.Commit();
+            var result = await next(cmd, ct);
 
-                return result;
-            }
+            _logger.LogDebug("Committing database transaction");
+            tx?.Commit();
+
+            return result;
         }
     }
 }
