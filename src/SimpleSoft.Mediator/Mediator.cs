@@ -48,6 +48,10 @@ namespace SimpleSoft.Mediator
             CompletedTask = tcs.Task;
         }
 
+#else
+
+        private static readonly Task CompletedTask = Task.FromResult(true);
+
 #endif
 
         private readonly IMediatorServiceProvider _serviceProvider;
@@ -118,8 +122,6 @@ namespace SimpleSoft.Mediator
             return next(cmd, ct);
         }
 
-#if NET40
-
         /// <inheritdoc />
         public Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
             where TEvent : class, IEvent
@@ -128,33 +130,32 @@ namespace SimpleSoft.Mediator
 
             Func<TEvent, CancellationToken, Task> next = (e, cancellationToken) =>
             {
-                var handlers = _serviceProvider.BuildServices<IEventHandler<TEvent>>().ToList();
-                if (handlers.Count == 0)
+                var handlers = _serviceProvider
+                    .BuildServices<IEventHandler<TEvent>>()
+                    .Select(handler => handler.HandleAsync(e, cancellationToken))
+                    .ToArray();
+                if (handlers.Length == 0)
                     return CompletedTask;
 
                 var tcs = new TaskCompletionSource<bool>();
-                var exceptions = new System.Collections.Concurrent.ConcurrentBag<Exception>();
-                var totalTasks = handlers.Count;
-                var completedTasks = 0;
-
-                foreach (var handler in handlers)
+                Task.Factory.ContinueWhenAll(handlers, tasks =>
                 {
-                    handler.HandleAsync(e, cancellationToken).ContinueWith(t =>
+                    List<Exception> exceptions = null;
+                    foreach (var t in tasks)
                     {
-                        var currentlyCompletedTasks = Interlocked.Increment(ref completedTasks);
+                        if (t.Exception == null)
+                            continue;
 
-                        if (t.Exception != null)
-                            exceptions.Add(t.Exception.InnerException);
+                        if (exceptions == null)
+                            exceptions = new List<Exception>(tasks.Length);
+                        exceptions.Add(t.Exception.InnerException);
+                    }
 
-                        if (currentlyCompletedTasks == totalTasks)
-                        {
-                            if(exceptions.IsEmpty)
-                                tcs.SetResult(true);
-                            else
-                                tcs.SetException(new AggregateException(exceptions));
-                        }
-                    }, cancellationToken, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Current);
-                }
+                    if (exceptions == null)
+                        tcs.SetResult(true);
+                    else
+                        tcs.SetException(new AggregateException(exceptions));
+                }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Current);
 
                 return tcs.Task;
             };
@@ -167,31 +168,6 @@ namespace SimpleSoft.Mediator
 
             return next(evt, ct);
         }
-
-#else
-
-        /// <inheritdoc />
-        public Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
-            where TEvent : class, IEvent
-        {
-            if (evt == null) throw new ArgumentNullException(nameof(evt));
-
-            Func<TEvent, CancellationToken, Task> next = (e, cancellationToken) =>
-            {
-                var handlers = _serviceProvider.BuildServices<IEventHandler<TEvent>>();
-                return Task.WhenAll(handlers.Select(handler => handler.HandleAsync(e, cancellationToken)));
-            };
-
-            foreach (var middleware in _reversedPipelines)
-            {
-                var old = next;
-                next = (e, cancellationToken) => middleware.OnEventAsync(old, e, cancellationToken);
-            }
-
-            return next(evt, ct);
-        }
-
-#endif
 
         /// <inheritdoc />
         public Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
