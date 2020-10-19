@@ -4,12 +4,22 @@
 
 	<PropertyGroup>
 		<Description>Mediator validation pipeline for commands, queries and events.</Description>
-		<TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
+		<TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1</TargetFrameworks>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="8.4.0" />
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+		<PackageReference Include="FluentValidation" Version="8.6.3" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="FluentValidation" Version="9.2.2" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<PackageReference Include="FluentValidation" Version="9.2.2" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
