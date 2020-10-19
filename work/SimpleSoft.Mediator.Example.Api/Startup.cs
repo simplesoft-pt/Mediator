@@ -15,7 +15,7 @@ namespace SimpleSoft.Mediator.Example.Api
         {
             services.AddMediator(o =>
             {
-                // order of execution is the same as the order of registration
+                // order of pipeline execution is the same as the order of registration
                 // in this case
                 // logging -> validation -> transaction -> handlers
 
@@ -42,8 +42,8 @@ namespace SimpleSoft.Mediator.Example.Api
                     // await tx.CommitAsync(ct);
                     //
                     // remarks: remember that updates and removes only happen on save changes
-                    //  if your command needs something, like an updated RowVersion, you still need to
-                    //  call it before exiting the command
+                    //  if your command needs to return something, like an updated RowVersion, you still need to
+                    //  call SaveChanges before exiting the command
                     cfg.BeginTransactionOnCommand = true;
                 });
 
