@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace SimpleSoft.Mediator
 {
@@ -38,12 +37,26 @@ namespace SimpleSoft.Mediator
         /// </summary>
         public LogLevel Level { get; set; } = LogLevel.Trace;
 
+#if NETSTANDARD1_1
+
         /// <summary>
         /// Settings for JSON serialization. Defaults to 'new JsonSerializerSettings(){ Formatting = Formatting.Indented }'.
         /// </summary>
-        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings
+        public Newtonsoft.Json.JsonSerializerSettings SerializerSettings { get; set; } = new Newtonsoft.Json.JsonSerializerSettings
         {
-            Formatting = Formatting.Indented
+            Formatting = Newtonsoft.Json.Formatting.Indented
         };
+
+#else
+
+        /// <summary>
+        /// Settings for JSON serialization. Defaults to 'new JsonSerializerOptions(){ WriteIndented = true }'.
+        /// </summary>
+        public System.Text.Json.JsonSerializerOptions SerializerSettings { get; set; } = new System.Text.Json.JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+
+#endif
     }
 }

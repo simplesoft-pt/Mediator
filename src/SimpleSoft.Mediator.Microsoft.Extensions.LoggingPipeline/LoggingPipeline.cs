@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace SimpleSoft.Mediator
 {
@@ -78,32 +77,39 @@ namespace SimpleSoft.Mediator
 
         private void Log<T>(bool isActive, string message, string name, T instance)
         {
-            if (_logger.IsEnabled(_options.Level) && isActive)
+            if (!_logger.IsEnabled(_options.Level) || !isActive) 
+                return;
+
+            switch (_options.Level)
             {
-                switch (_options.Level)
-                {
-                    case LogLevel.Trace:
-                        _logger.LogTrace(message, name, SerializeToJson(instance));
-                        break;
-                    case LogLevel.Debug:
-                        _logger.LogDebug(message, name, SerializeToJson(instance));
-                        break;
-                    case LogLevel.Information:
-                        _logger.LogInformation(message, name, SerializeToJson(instance));
-                        break;
-                    case LogLevel.Warning:
-                        _logger.LogWarning(message, name, SerializeToJson(instance));
-                        break;
-                    case LogLevel.Error:
-                        _logger.LogError(message, name, SerializeToJson(instance));
-                        break;
-                    case LogLevel.Critical:
-                        _logger.LogCritical(message, name, SerializeToJson(instance));
-                        break;
-                }
+                case LogLevel.Trace:
+                    _logger.LogTrace(message, name, SerializeToJson(instance));
+                    break;
+                case LogLevel.Debug:
+                    _logger.LogDebug(message, name, SerializeToJson(instance));
+                    break;
+                case LogLevel.Information:
+                    _logger.LogInformation(message, name, SerializeToJson(instance));
+                    break;
+                case LogLevel.Warning:
+                    _logger.LogWarning(message, name, SerializeToJson(instance));
+                    break;
+                case LogLevel.Error:
+                    _logger.LogError(message, name, SerializeToJson(instance));
+                    break;
+                case LogLevel.Critical:
+                    _logger.LogCritical(message, name, SerializeToJson(instance));
+                    break;
             }
         }
 
-        private string SerializeToJson<T>(T value) => JsonConvert.SerializeObject(value, _options.SerializerSettings);
+        private string SerializeToJson<T>(T value)
+        {
+#if NETSTANDARD1_1
+            return Newtonsoft.Json.JsonConvert.SerializeObject(value, _options.SerializerSettings);
+#else
+            return System.Text.Json.JsonSerializer.Serialize(value, _options.SerializerSettings);
+#endif
+        }
     }
 }

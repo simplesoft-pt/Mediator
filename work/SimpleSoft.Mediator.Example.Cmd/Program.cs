@@ -7,7 +7,6 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SimpleSoft.Mediator.Example.Cmd.Commands;
 using SimpleSoft.Mediator.Example.Cmd.Pipelines;
 using SimpleSoft.Mediator.Example.Cmd.Queries;
@@ -46,7 +45,7 @@ namespace SimpleSoft.Mediator.Example.Cmd
                             loggingOptions.LogQuery = true;
                             loggingOptions.LogQueryResult = true;
 
-                            loggingOptions.SerializerSettings.Formatting = Formatting.Indented;
+                            loggingOptions.SerializerSettings.WriteIndented = true;
                         });
                         o.AddPipelineForValidation(validationOptions =>
                         {
