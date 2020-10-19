@@ -39,17 +39,25 @@ namespace SimpleSoft.Mediator
             {
                 _logger.LogDebug("Starting a command transaction");
 
-                using (var tx = await _context.Database.BeginTransactionAsync(ct))
-                {
-                    await next(cmd, ct);
+#if NETSTANDARD2_1
+                await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+                using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
 
-                    _logger.LogDebug("Saving changes into the database");
+                await next(cmd, ct);
 
-                    await _context.SaveChangesAsync(ct);
-                    tx.Commit();
+                _logger.LogDebug("Saving changes into the database");
 
-                    _logger.LogInformation("Changes committed into the database");
-                }
+                await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+                await tx.CommitAsync(ct);
+#else
+                tx.Commit();
+#endif
+
+                _logger.LogInformation("Changes committed into the database");
             }
             else
                 await next(cmd, ct);
@@ -63,17 +71,25 @@ namespace SimpleSoft.Mediator
             {
                 _logger.LogDebug("Starting a command transaction");
 
-                using (var tx = await _context.Database.BeginTransactionAsync(ct))
-                {
-                    result = await next(cmd, ct);
+#if NETSTANDARD2_1
+                await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+                using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
 
-                    _logger.LogDebug("Saving changes into the database");
+                result = await next(cmd, ct);
 
-                    await _context.SaveChangesAsync(ct);
-                    tx.Commit();
+                _logger.LogDebug("Saving changes into the database");
 
-                    _logger.LogInformation("Changes committed into the database");
-                }
+                await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+                await tx.CommitAsync(ct);
+#else
+                tx.Commit();
+#endif
+
+                _logger.LogInformation("Changes committed into the database");
             }
             else
                 result = await next(cmd, ct);
@@ -88,17 +104,25 @@ namespace SimpleSoft.Mediator
             {
                 _logger.LogDebug("Starting an event transaction");
 
-                using (var tx = await _context.Database.BeginTransactionAsync(ct))
-                {
-                    await next(evt, ct);
+#if NETSTANDARD2_1
+                await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+                using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
 
-                    _logger.LogDebug("Saving changes into the database");
+                await next(evt, ct);
 
-                    await _context.SaveChangesAsync(ct);
-                    tx.Commit();
+                _logger.LogDebug("Saving changes into the database");
 
-                    _logger.LogInformation("Changes committed into the database");
-                }
+                await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+                await tx.CommitAsync(ct);
+#else
+                tx.Commit();
+#endif
+
+                _logger.LogInformation("Changes committed into the database");
             }
             else
                 await next(evt, ct);
@@ -112,17 +136,25 @@ namespace SimpleSoft.Mediator
             {
                 _logger.LogDebug("Starting a query transaction");
 
-                using (var tx = await _context.Database.BeginTransactionAsync(ct))
-                {
-                    result = await next(query, ct);
+#if NETSTANDARD2_1
+                await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+                using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
 
-                    _logger.LogDebug("Saving changes into the database");
+                result = await next(query, ct);
 
-                    await _context.SaveChangesAsync(ct);
-                    tx.Commit();
+                _logger.LogDebug("Saving changes into the database");
 
-                    _logger.LogInformation("Changes committed into the database");
-                }
+                await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+                await tx.CommitAsync(ct);
+#else
+                tx.Commit();
+#endif
+
+                _logger.LogInformation("Changes committed into the database");
             }
             else
                 result = await next(query, ct);
