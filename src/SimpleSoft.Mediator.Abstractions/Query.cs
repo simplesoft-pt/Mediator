@@ -36,7 +36,7 @@ namespace SimpleSoft.Mediator
         public Guid Id { get; protected set; } = Guid.NewGuid();
 
         /// <inheritdoc />
-        public DateTimeOffset CreatedOn { get; protected set; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedOn { get; protected set; } = DateTimeOffset.UtcNow;
 
         /// <inheritdoc />
         public string CreatedBy { get; protected set; }
