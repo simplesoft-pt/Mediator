@@ -1,43 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
-  <PropertyGroup>
-    <RootNamespace>SimpleSoft.Mediator</RootNamespace>
-    <AssemblyTitle>SimpleSoft.Mediator.Abstractions</AssemblyTitle>
-    <AssemblyName>SimpleSoft.Mediator.Abstractions</AssemblyName>
-    <Description>Mediator interfaces for commands and events.</Description>
-    <Product>SimpleSoft.Mediator</Product>
-    <Company>SimpleSoft.pt</Company>
-    <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
-    <Authors>João Simões</Authors>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <SignAssembly>true</SignAssembly>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <TargetFrameworks>netstandard2.0;netstandard1.0;net4.5;net4.0</TargetFrameworks>
-  </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>SimpleSoft.Mediator.Abstractions</PackageId>
-    <PackageTags>patterns;mediator</PackageTags>
-    <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
+	<Import Project="..\..\common.props" />
 
-  <PropertyGroup>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.19261</FileVersion>
-    <VersionPrefix>2.0.0-rc04</VersionPrefix>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>Mediator interfaces for commands and events.</Description>
+		<TargetFrameworks>netstandard2.0;netstandard1.0;net4.5;net4.0</TargetFrameworks>
+	</PropertyGroup>
 
 </Project>
 

@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{7CDAAB98-B7A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{8CF88C14-1D18-4E9E-B57B-00E36E3223DC}"
 	ProjectSection(SolutionItems) = preProject
+		common.props = common.props
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection

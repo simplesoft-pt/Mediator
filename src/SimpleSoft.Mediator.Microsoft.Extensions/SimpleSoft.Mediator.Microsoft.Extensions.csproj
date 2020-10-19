@@ -1,52 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>SimpleSoft.Mediator</RootNamespace>
-    <AssemblyTitle>SimpleSoft.Mediator.Microsoft.Extensions</AssemblyTitle>
-    <AssemblyName>SimpleSoft.Mediator.Microsoft.Extensions</AssemblyName>
-    <Description>Mediator support using Microsot.Extensions</Description>
-    <Product>SimpleSoft.Mediator</Product>
-    <Company>SimpleSoft.pt</Company>
-    <Copyright>Copyright © 2017 SimpleSoft.pt</Copyright>
-    <Authors>João Simões</Authors>
-  </PropertyGroup>
+	<Import Project="..\..\common.props" />
 
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <SignAssembly>true</SignAssembly>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>Mediator support using Microsot.Extensions</Description>
+		<TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>SimpleSoft.Mediator.Microsoft.Extensions</PackageId>
-    <PackageTags>patterns;mediator;logging;dependencyinjection</PackageTags>
-    <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.0.0" />
+	</ItemGroup>
 
-  <PropertyGroup>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.19261</FileVersion>
-    <VersionPrefix>2.0.0-rc04</VersionPrefix>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj" />
+	</ItemGroup>
 
 </Project>
 
