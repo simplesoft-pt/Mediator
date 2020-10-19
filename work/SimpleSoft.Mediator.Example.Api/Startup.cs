@@ -42,8 +42,8 @@ namespace SimpleSoft.Mediator.Example.Api
                     // await tx.CommitAsync(ct);
                     //
                     // remarks: remember that updates and removes only happen on save changes
-                    //  if your command needs to return something, like an updated RowVersion, you still need to
-                    //  call SaveChanges before exiting the command
+                    //  if your command handler needs to return something, like an updated RowVersion,
+                    //  you still need to call SaveChanges before exiting
                     cfg.BeginTransactionOnCommand = true;
                 });
 
