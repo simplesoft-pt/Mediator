@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.9" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline\SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline.csproj" />
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline\SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline.csproj" />
+    <ProjectReference Include="..\..\src\SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline\SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline.csproj" />
+  </ItemGroup>
+
+</Project>
