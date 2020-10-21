@@ -1,0 +1,24 @@
+@startuml pipeline-queries
+title Pipeline for Queries 
+
+[-> IMediator ++: FetchAsync
+IMediator -> IMediator ++: next(query, ct)
+IMediator -> "IPipeline(1)" ++: OnQueryAsync
+"IPipeline(1)" -> "IPipeline(1)" ++: next(query, ct)
+"IPipeline(1)" -> "IPipeline(2)" ++: OnQueryAsync
+"IPipeline(2)" -> "IPipeline(2)" ++: next(query, ct)
+"IPipeline(2)" -> "IPipeline(N)" ++: OnQueryAsync
+"IPipeline(N)" -> "IPipeline(N)" ++: next(query, ct)
+"IPipeline(N)" -> IQueryHandler ++: HandleAsync
+IQueryHandler -> IQueryHandler : fetch data
+return Task<T>
+return
+return Task<T>
+return
+return Task<T>
+return
+return Task<T>
+return
+return Task<T>
+
+@enduml

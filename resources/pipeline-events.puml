@@ -1,0 +1,24 @@
+@startuml pipeline-events
+title Pipeline for Events 
+
+[-> IMediator ++: BroadcastAsync
+IMediator -> IMediator ++: next(event, ct)
+IMediator -> "IPipeline(1)" ++: OnEventAsync
+"IPipeline(1)" -> "IPipeline(1)" ++: next(event, ct)
+"IPipeline(1)" -> "IPipeline(2)" ++: OnEventAsync
+"IPipeline(2)" -> "IPipeline(2)" ++: next(event, ct)
+"IPipeline(2)" -> "IPipeline(N)" ++: OnEventAsync
+"IPipeline(N)" -> "IPipeline(N)" ++: next(event, ct)
+"IPipeline(N)" -> IEventHandler ++: HandleAsync
+IEventHandler -> IEventHandler : react to event
+return Task
+return
+return Task
+return
+return Task
+return
+return Task
+return
+return Task
+
+@enduml

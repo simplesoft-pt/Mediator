@@ -1,0 +1,24 @@
+@startuml pipeline-commands
+title Pipeline for Commands 
+
+[-> IMediator ++: SendAsync
+IMediator -> IMediator ++: next(cmd, ct)
+IMediator -> "IPipeline(1)" ++: OnCommandAsync
+"IPipeline(1)" -> "IPipeline(1)" ++: next(cmd, ct)
+"IPipeline(1)" -> "IPipeline(2)" ++: OnCommandAsync
+"IPipeline(2)" -> "IPipeline(2)" ++: next(cmd, ct)
+"IPipeline(2)" -> "IPipeline(N)" ++: OnCommandAsync
+"IPipeline(N)" -> "IPipeline(N)" ++: next(cmd, ct)
+"IPipeline(N)" -> ICommandHandler ++: HandleAsync
+ICommandHandler -> ICommandHandler : mutate data
+return Task / Task<T>
+return
+return Task / Task<T>
+return
+return Task / Task<T>
+return
+return Task / Task<T>
+return
+return Task / Task<T>
+
+@enduml
