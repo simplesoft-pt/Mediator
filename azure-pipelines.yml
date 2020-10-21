@@ -13,7 +13,7 @@ steps:
 - task: DotNetCoreInstaller@1
   displayName: 'install dotnet sdk'
   inputs:
-    version: '2.x'
+    version: '3.x'
 
 - script: dotnet restore
   displayName: 'dotnet restore'
