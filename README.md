@@ -10,35 +10,47 @@ The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft
 | --- | --- | --- |
 | [SimpleSoft.Mediator.Abstractions](https://www.nuget.org/packages/simplesoft.mediator.abstractions) | interfaces and abstract implementations (commands, events, queries, mediator, ...) | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.abstractions.svg)](https://www.nuget.org/packages/simplesoft.mediator.abstractions) |
 | [SimpleSoft.Mediator](https://www.nuget.org/packages/simplesoft.mediator) | library implementation that typically is only known by the main project (eg. dependency injection container) | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.svg)](https://www.nuget.org/packages/simplesoft.mediator) |
-| [SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.dependencyinjection) | specialized methods and classes for the container `Microsoft.Extensions.DependencyInjection` | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.dependencyinjection.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.dependencyinjection) |
-| [SimpleSoft.Mediator.Microsoft.Extensions.Logging](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.logging) | implementation wrappers that support logging using `Microsoft.Extensions.Logging` interfaces | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.logging.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.logging) |
+| [SimpleSoft.Mediator.Microsoft.Extensions](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions) | specialized methods and classes for the Microsoft dependency injection container and logging facades | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions) |
+| [SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.efcoretransactionpipeline) | mediator pipeline to enforce Entity Framework Core transactions | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.efcoretransactionpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.efcoretransactionpipeline) |
+| [SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.loggingpipeline) | pipeline that serializes commands, queries, events and results into the logging | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.loggingpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.loggingpipeline) |
+| [SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.validationpipeline) | pipeline that enforces validation into commands, queries and events before entering the handlers by using `FluentValidation` | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.validationpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.validationpipeline) |
 
 ### Package Manager
 ```powershell
 Install-Package SimpleSoft.Mediator.Abstractions
 Install-Package SimpleSoft.Mediator
-Install-Package SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection
-Install-Package SimpleSoft.Mediator.Microsoft.Extensions.Logging
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
 ```
 
 ### .NET CLI
 ```powershell
 dotnet add package SimpleSoft.Mediator.Abstractions
 dotnet add package SimpleSoft.Mediator
-dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection
-dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.Logging
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
 ```
 ## Compatibility
 This library is compatible with the following frameworks:
 
 * `SimpleSoft.Mediator.Abstractions`
-  * .NET Standard 1.0;
+  * .NET Framework 4.0+;
+  * .NET Standard 1.0+;
 * `SimpleSoft.Mediator`
-  * .NET Standard 1.0;
-* `SimpleSoft.Mediator.Microsoft.Extensions.DependencyInjection`
-  * .NET Standard 1.0;
-* `SimpleSoft.Mediator.Microsoft.Extensions.Logging`
-  * .NET Standard 1.1;
+  * .NET Framework 4.0+;
+  * .NET Standard 1.0+;
+* `SimpleSoft.Mediator.Microsoft.Extensions`
+  * .NET Standard 1.1+;
+* `SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline`
+  * .NET Standard 1.3+;
+* `SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline`
+  * .NET Standard 1.1+;
+* `SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline`
+  * .NET Standard 1.1+;
 
 ## Usage
 Documentation is available via [wiki](https://github.com/simplesoft-pt/Mediator/wiki) or you can check the [working](https://github.com/simplesoft-pt/Mediator/tree/master/work/) examples or [test](https://github.com/simplesoft-pt/Mediator/tree/master/test) code.
