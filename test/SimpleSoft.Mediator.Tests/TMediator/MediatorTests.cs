@@ -50,7 +50,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await mediator.SendAsync<MockResultCommand, object>(null, CancellationToken.None);
+                await mediator.SendAsync<object>(null, CancellationToken.None);
             });
             Assert.NotNull(ex);
         }
@@ -64,7 +64,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
 
             var ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await mediator.BroadcastAsync<MockEvent>(null, CancellationToken.None);
+                await mediator.BroadcastAsync(null, CancellationToken.None);
             });
             Assert.NotNull(ex);
         }
@@ -103,7 +103,7 @@ namespace SimpleSoft.Mediator.Tests.TMediator
                     type => Enumerable.Empty<object>()),
                 new IPipeline[0]);
 
-            await mediator.SendAsync<MockResultCommand, object>(new MockResultCommand(), CancellationToken.None);
+            await mediator.SendAsync(new MockResultCommand(), CancellationToken.None);
             Assert.True(handlerFound);
         }
 

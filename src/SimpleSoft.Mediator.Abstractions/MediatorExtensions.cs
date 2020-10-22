@@ -35,12 +35,10 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// Sends a command to an <see cref="ICommandHandler{TCommand}"/>.
         /// </summary>
-        /// <typeparam name="TCommand">The command type</typeparam>
         /// <param name="mediator">The mediator to use</param>
         /// <param name="cmd">The command to publish</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static void Send<TCommand>(this IMediator mediator, TCommand cmd)
-            where TCommand : class, ICommand
+        public static void Send(this IMediator mediator, ICommand cmd)
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
@@ -56,18 +54,16 @@ namespace SimpleSoft.Mediator
         /// Sends a command to an <see cref="ICommandHandler{TCommand,TResult}"/> and 
         /// returns the operation result.
         /// </summary>
-        /// <typeparam name="TCommand">The command type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="mediator">The mediator to use</param>
         /// <param name="cmd">The command to publish</param>
         /// <returns>The handler result</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static TResult Send<TCommand, TResult>(this IMediator mediator, TCommand cmd)
-            where TCommand : class, ICommand<TResult>
+        public static TResult Send<TResult>(this IMediator mediator, ICommand<TResult> cmd)
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            return mediator.SendAsync<TCommand, TResult>(cmd, CancellationToken.None)
+            return mediator.SendAsync(cmd, CancellationToken.None)
 #if NET40
                 .Result;
 #else
@@ -78,12 +74,10 @@ namespace SimpleSoft.Mediator
         /// <summary>
         /// Broadcast the event across all <see cref="IEventHandler{TEvent}"/>.
         /// </summary>
-        /// <typeparam name="TEvent">The event type</typeparam>
         /// <param name="mediator">The mediator to use</param>
         /// <param name="evt">The event to broadcast</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static void Broadcast<TEvent>(this IMediator mediator, TEvent evt)
-            where TEvent : class, IEvent
+        public static void Broadcast(this IMediator mediator, IEvent evt)
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
@@ -99,18 +93,16 @@ namespace SimpleSoft.Mediator
         /// Fetches a query from a <see cref="IQueryHandler{TQuery,TResult}"/> and 
         /// returns the query result.
         /// </summary>
-        /// <typeparam name="TQuery">The query type</typeparam>
         /// <typeparam name="TResult">The result type</typeparam>
         /// <param name="mediator">The mediator to use</param>
         /// <param name="query">The query to fetch</param>
         /// <returns>The handler result</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static TResult Fetch<TQuery, TResult>(this IMediator mediator, TQuery query)
-            where TQuery : class, IQuery<TResult>
+        public static TResult Fetch<TResult>(this IMediator mediator, IQuery<TResult> query)
         {
             if (mediator == null) throw new ArgumentNullException(nameof(mediator));
 
-            return mediator.FetchAsync<TQuery, TResult>(query, CancellationToken.None)
+            return mediator.FetchAsync(query, CancellationToken.None)
 #if NET40
                 .Result;
 #else

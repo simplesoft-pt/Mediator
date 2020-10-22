@@ -52,13 +52,12 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = new CancellationToken()) 
-            where TCommand : class, ICommand
+        public async Task SendAsync(ICommand cmd, CancellationToken ct)
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
             using (_logger.BeginScope(
-                "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
+                "CommandName:{commandName} CommandId:{commandId}", cmd.GetType().Name, cmd.Id))
             {
                 _logger.LogDebug("Sending command");
                 await _mediator.SendAsync(cmd, ct).ConfigureAwait(false);
@@ -66,25 +65,23 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = new CancellationToken()) 
-            where TCommand : class, ICommand<TResult>
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> cmd, CancellationToken ct)
         {
             using (_logger.BeginScope(
-                "CommandName:{commandName} CommandId:{commandId}", typeof(TCommand).Name, cmd.Id))
+                "CommandName:{commandName} CommandId:{commandId}", cmd.GetType().Name, cmd.Id))
             {
                 _logger.LogDebug("Sending command");
-                return await _mediator.SendAsync<TCommand, TResult>(cmd, ct).ConfigureAwait(false);
+                return await _mediator.SendAsync(cmd, ct).ConfigureAwait(false);
             }
         }
 
         /// <inheritdoc />
-        public async Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = new CancellationToken()) 
-            where TEvent : class, IEvent
+        public async Task BroadcastAsync(IEvent evt, CancellationToken ct)
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
             using (_logger.BeginScope(
-                "EventName:{eventName} EventId:{eventId}", typeof(TEvent).Name, evt.Id))
+                "EventName:{eventName} EventId:{eventId}", evt.GetType().Name, evt.Id))
             {
                 _logger.LogDebug("Broadcasting event");
                 await _mediator.BroadcastAsync(evt, ct).ConfigureAwait(false);
@@ -92,16 +89,15 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public async Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = new CancellationToken()) 
-            where TQuery : class, IQuery<TResult>
+        public async Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken ct)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
 
             using (_logger.BeginScope(
-                "QueryName:{queryName} QueryId:{queryId}", typeof(TQuery).Name, query.Id))
+                "QueryName:{queryName} QueryId:{queryId}", query.GetType().Name, query.Id))
             {
                 _logger.LogDebug("Fetching query data");
-                return await _mediator.FetchAsync<TQuery, TResult>(query, ct).ConfigureAwait(false);
+                return await _mediator.FetchAsync(query, ct).ConfigureAwait(false);
             }
         }
     }

@@ -107,10 +107,10 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
             public async Task RunAsync(CancellationToken ct)
             {
-                var userId = await _mediator.SendAsync<CreateUserCommand, Guid>(
+                var userId = await _mediator.SendAsync(
                     new CreateUserCommand("john.doe@email.com", "John Doe"), ct);
 
-                var user = await _mediator.FetchAsync<UserByIdQuery, User>(
+                var user = await _mediator.FetchAsync(
                     new UserByIdQuery(userId), ct);
 
                 await _mediator.SendAsync(
