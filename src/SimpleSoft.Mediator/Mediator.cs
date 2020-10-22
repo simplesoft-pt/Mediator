@@ -23,8 +23,11 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,24 +38,66 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class Mediator : IMediator
     {
-        private static readonly List<IPipeline> EmptyPipelines = new List<IPipeline>(0);
-
-#if NET40
-
+        private static readonly List<IPipeline> EmptyPipelines;
+        private static readonly ConcurrentDictionary<Type, Func<Mediator, object, CancellationToken, object>> ExpressionCache;
         private static readonly Task CompletedTask;
+        private static readonly MethodInfo MethodInternalSendWithResult;
+        private static readonly MethodInfo MethodInternalSend;
+        private static readonly MethodInfo MethodInternalBroadcast;
+        private static readonly MethodInfo MethodInternalFetch;
 
         static Mediator()
         {
+            EmptyPipelines = new List<IPipeline>(0);
+            ExpressionCache = new ConcurrentDictionary<Type, Func<Mediator, object, CancellationToken, object>>();
+#if NET40
             var tcs = new TaskCompletionSource<bool>();
             tcs.SetResult(true);
             CompletedTask = tcs.Task;
-        }
-
 #else
-
-        private static readonly Task CompletedTask = Task.FromResult(true);
-
+            CompletedTask = Task.FromResult(true);
 #endif
+
+#if NETSTANDARD1_1
+            var methods = typeof(Mediator).GetTypeInfo().DeclaredMethods;
+#else
+            var methods = typeof(Mediator).GetMethods();
+#endif
+
+            MethodInfo internalSendWithResult = null;
+            MethodInfo internalSend = null;
+            MethodInfo internalBroadcast = null;
+            MethodInfo internalFetch = null;
+            
+            foreach (var method in methods)
+            {
+                switch (method.Name)
+                {
+                    case nameof(InternalSendAsync):
+                        switch (method.GetGenericArguments().Length)
+                        {
+                            case 2:
+                                internalSendWithResult = method;
+                                break;
+                            case 1:
+                                internalSend = method;
+                                break;
+                        }
+                        break;
+                    case nameof(InternalBroadcastAsync):
+                        internalBroadcast = method;
+                        break;
+                    case nameof(InternalFetchAsync):
+                        internalFetch = method;
+                        break;
+                }
+            }
+
+            MethodInternalSendWithResult = internalSendWithResult ?? throw new InvalidOperationException("Method 'InternalSendAsync<TCommand, TResult>' not found");
+            MethodInternalSend = internalSend ?? throw new InvalidOperationException("Method 'InternalSendAsync<TCommand>' not found");
+            MethodInternalBroadcast = internalBroadcast ?? throw new InvalidOperationException("Method 'InternalBroadcastAsync<TEvent>' not found");
+            MethodInternalFetch = internalFetch ?? throw new InvalidOperationException("Method 'InternalFetchAsync<TQuery, TResult>' not found");
+        }
 
         private readonly IMediatorServiceProvider _serviceProvider;
         private readonly List<IPipeline> _reversedPipelines;
@@ -63,7 +108,7 @@ namespace SimpleSoft.Mediator
         /// <param name="serviceProvider">The handler factory</param>
         /// <param name="pipelines">The mediator pipeline collection</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines)
+        public Mediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines = null)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
@@ -77,7 +122,161 @@ namespace SimpleSoft.Mediator
         }
 
         /// <inheritdoc />
-        public Task SendAsync<TCommand>(TCommand cmd, CancellationToken ct = default)
+        public Task SendAsync(ICommand cmd, CancellationToken ct)
+        {
+            if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+            var caller = ExpressionCache.GetOrAdd(cmd.GetType(), commandType =>
+            {
+                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var commandParameter = Expression.Parameter(typeof(object));
+                var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
+
+                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                    Expression.Call(
+                        mediatorParameter,
+                        MethodInternalSend.MakeGenericMethod(commandType),
+                        Expression.TypeAs(commandParameter, commandType),
+                        cancellationTokenParameter
+                    ),
+                    mediatorParameter,
+                    commandParameter,
+                    cancellationTokenParameter
+                ).Compile();
+            });
+
+            return (Task) caller(this, cmd, ct);
+        }
+
+        /// <inheritdoc />
+        public Task<TResult> SendAsync<TResult>(ICommand<TResult> cmd, CancellationToken ct)
+        {
+            if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+            var caller = ExpressionCache.GetOrAdd(cmd.GetType(), commandType =>
+            {
+#if NETSTANDARD1_1
+                var interfaces = commandType.GetTypeInfo().ImplementedInterfaces;
+#else
+                var interfaces = commandType.GetInterfaces();
+#endif
+                var returnType = interfaces
+                    .Single(i =>
+#if NETSTANDARD1_1
+                        i.GetTypeInfo().IsGenericType &&
+#else
+                        i.IsGenericType &&
+#endif
+                        i.GetGenericTypeDefinition() == typeof(ICommand<>)
+#if NET40
+                    ).GetGenericArguments()[0];
+#else
+                    ).GenericTypeArguments[0];
+#endif
+
+                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var commandParameter = Expression.Parameter(typeof(object));
+                var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
+
+                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                    Expression.Call(
+                        mediatorParameter,
+                        MethodInternalSendWithResult.MakeGenericMethod(commandType, returnType),
+                        Expression.TypeAs(commandParameter, commandType),
+                        cancellationTokenParameter
+                    ),
+                    mediatorParameter,
+                    commandParameter,
+                    cancellationTokenParameter
+                ).Compile();
+            });
+
+            return (Task<TResult>) caller(this, cmd, ct);
+        }
+
+        /// <inheritdoc />
+        public Task BroadcastAsync(IEvent evt, CancellationToken ct)
+        {
+            if (evt == null) throw new ArgumentNullException(nameof(evt));
+
+            var caller = ExpressionCache.GetOrAdd(evt.GetType(), eventType =>
+            {
+                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var eventParameter = Expression.Parameter(typeof(object));
+                var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
+
+                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                    Expression.Call(
+                        mediatorParameter,
+                        MethodInternalBroadcast.MakeGenericMethod(eventType),
+                        Expression.TypeAs(eventParameter, eventType),
+                        cancellationTokenParameter
+                    ),
+                    mediatorParameter,
+                    eventParameter,
+                    cancellationTokenParameter
+                ).Compile();
+            });
+
+            return (Task) caller(this, evt, ct);
+        }
+
+        /// <inheritdoc />
+        public Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken ct)
+        {
+            if (query == null) throw new ArgumentNullException(nameof(query));
+
+            var caller = ExpressionCache.GetOrAdd(query.GetType(), queryType =>
+            {
+#if NETSTANDARD1_1
+                var interfaces = queryType.GetTypeInfo().ImplementedInterfaces;
+#else
+                var interfaces = queryType.GetInterfaces();
+#endif
+                var returnType = interfaces
+                    .Single(i =>
+#if NETSTANDARD1_1
+                        i.GetTypeInfo().IsGenericType &&
+#else
+                        i.IsGenericType &&
+#endif
+                        i.GetGenericTypeDefinition() == typeof(IQuery<>)
+#if NET40
+                    ).GetGenericArguments()[0];
+#else
+                    ).GenericTypeArguments[0];
+#endif
+
+                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var queryParameter = Expression.Parameter(typeof(object));
+                var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
+
+                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                    Expression.Call(
+                        mediatorParameter,
+                        MethodInternalFetch.MakeGenericMethod(queryType, returnType),
+                        Expression.TypeAs(queryParameter, queryType),
+                        cancellationTokenParameter
+                    ),
+                    mediatorParameter,
+                    queryParameter,
+                    cancellationTokenParameter
+                ).Compile();
+            });
+
+            return (Task<TResult>) caller(this, query, ct);
+        }
+
+        #region Typed Implementations
+
+        /// <summary>
+        /// Typed implementation for <see cref="SendAsync"/>.
+        /// </summary>
+        /// <typeparam name="TCommand"></typeparam>
+        /// <param name="cmd"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public Task InternalSendAsync<TCommand>(TCommand cmd, CancellationToken ct)
             where TCommand : class, ICommand
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
@@ -99,8 +298,15 @@ namespace SimpleSoft.Mediator
             return next(cmd, ct);
         }
 
-        /// <inheritdoc />
-        public Task<TResult> SendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct = default)
+        /// <summary>
+        /// Typed implementation for <see cref="SendAsync{TResult}"/>.
+        /// </summary>
+        /// <typeparam name="TCommand"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="cmd"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public Task<TResult> InternalSendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct)
             where TCommand : class, ICommand<TResult>
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
@@ -122,8 +328,14 @@ namespace SimpleSoft.Mediator
             return next(cmd, ct);
         }
 
-        /// <inheritdoc />
-        public Task BroadcastAsync<TEvent>(TEvent evt, CancellationToken ct = default)
+        /// <summary>
+        /// Typed implementation for <see cref="BroadcastAsync"/>
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="evt"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public Task InternalBroadcastAsync<TEvent>(TEvent evt, CancellationToken ct)
             where TEvent : class, IEvent
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
@@ -146,8 +358,7 @@ namespace SimpleSoft.Mediator
                         if (t.Exception == null)
                             continue;
 
-                        if (exceptions == null)
-                            exceptions = new List<Exception>(tasks.Length);
+                        exceptions ??= new List<Exception>(tasks.Length);
                         exceptions.Add(t.Exception.InnerException);
                     }
 
@@ -169,8 +380,15 @@ namespace SimpleSoft.Mediator
             return next(evt, ct);
         }
 
-        /// <inheritdoc />
-        public Task<TResult> FetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
+        /// <summary>
+        /// Typed implementation for <see cref="FetchAsync{TResult}"/>
+        /// </summary>
+        /// <typeparam name="TQuery"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public Task<TResult> InternalFetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct)
             where TQuery : class, IQuery<TResult>
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
@@ -191,5 +409,7 @@ namespace SimpleSoft.Mediator
 
             return next(query, ct);
         }
+
+#endregion
     }
 }
