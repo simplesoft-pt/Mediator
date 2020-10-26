@@ -51,7 +51,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAdd(new ServiceDescriptor(
                 typeof(IMediatorServiceProvider), typeof(MicrosoftMediatorServiceProvider), options.ServiceProviderLifetime));
             services.TryAdd(new ServiceDescriptor(
-                typeof(IMediator), typeof(MicrosoftMediator), options.Lifetime));
+                typeof(IMediator), typeof(Mediator), options.Lifetime));
+
+            services.TryAdd(new ServiceDescriptor(
+                typeof(IFetcher<,>), typeof(MicrosoftFetcher<,>), ServiceLifetime.Transient));
+            services.TryAdd(new ServiceDescriptor(
+                typeof(ISender<>), typeof(MicrosoftSender<>), ServiceLifetime.Transient));
+            services.TryAdd(new ServiceDescriptor(
+                typeof(ISender<,>), typeof(MicrosoftSender<,>), ServiceLifetime.Transient));
+            services.TryAdd(new ServiceDescriptor(
+                typeof(IBroadcaster<>), typeof(MicrosoftBroadcaster<>), ServiceLifetime.Transient));
 
             return services;
         }
@@ -141,8 +150,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static MediatorOptions AddHandlersFromAssemblyOf<T1, T2>(this MediatorOptions options,
             ServiceLifetime lifetime = ServiceLifetime.Scoped)
         {
-            options.AddHandlersFromAssemblyOf<T1>();
-            options.AddHandlersFromAssemblyOf<T2>();
+            options.AddHandlersFromAssemblyOf<T1>(lifetime);
+            options.AddHandlersFromAssemblyOf<T2>(lifetime);
 
             return options;
         }
@@ -160,9 +169,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static MediatorOptions AddHandlersFromAssemblyOf<T1, T2, T3>(this MediatorOptions options,
             ServiceLifetime lifetime = ServiceLifetime.Scoped)
         {
-            options.AddHandlersFromAssemblyOf<T1>();
-            options.AddHandlersFromAssemblyOf<T2>();
-            options.AddHandlersFromAssemblyOf<T3>();
+            options.AddHandlersFromAssemblyOf<T1>(lifetime);
+            options.AddHandlersFromAssemblyOf<T2>(lifetime);
+            options.AddHandlersFromAssemblyOf<T3>(lifetime);
 
             return options;
         }
