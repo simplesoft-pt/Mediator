@@ -38,87 +38,27 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class Mediator : IMediator
     {
-        private static readonly List<IPipeline> EmptyPipelines;
-        private static readonly ConcurrentDictionary<Type, Func<Mediator, object, CancellationToken, object>> ExpressionCache;
-        private static readonly Task CompletedTask;
-        private static readonly MethodInfo MethodInternalSendWithResult;
-        private static readonly MethodInfo MethodInternalSend;
-        private static readonly MethodInfo MethodInternalBroadcast;
-        private static readonly MethodInfo MethodInternalFetch;
+        private static readonly ConcurrentDictionary<Type, Func<IMediatorServiceProvider, object, CancellationToken, object>> ExpressionCache;
+        private static readonly MethodInfo MethodServiceProviderBuildService;
 
         static Mediator()
         {
-            EmptyPipelines = new List<IPipeline>(0);
-            ExpressionCache = new ConcurrentDictionary<Type, Func<Mediator, object, CancellationToken, object>>();
-#if NET40
-            var tcs = new TaskCompletionSource<bool>();
-            tcs.SetResult(true);
-            CompletedTask = tcs.Task;
-#else
-            CompletedTask = Task.FromResult(true);
-#endif
-
-#if NETSTANDARD1_1
-            var methods = typeof(Mediator).GetTypeInfo().DeclaredMethods;
-#else
-            var methods = typeof(Mediator).GetMethods();
-#endif
-
-            MethodInfo internalSendWithResult = null;
-            MethodInfo internalSend = null;
-            MethodInfo internalBroadcast = null;
-            MethodInfo internalFetch = null;
+            ExpressionCache = new ConcurrentDictionary<Type, Func<IMediatorServiceProvider, object, CancellationToken, object>>();
             
-            foreach (var method in methods)
-            {
-                switch (method.Name)
-                {
-                    case nameof(InternalSendAsync):
-                        switch (method.GetGenericArguments().Length)
-                        {
-                            case 2:
-                                internalSendWithResult = method;
-                                break;
-                            case 1:
-                                internalSend = method;
-                                break;
-                        }
-                        break;
-                    case nameof(InternalBroadcastAsync):
-                        internalBroadcast = method;
-                        break;
-                    case nameof(InternalFetchAsync):
-                        internalFetch = method;
-                        break;
-                }
-            }
-
-            MethodInternalSendWithResult = internalSendWithResult ?? throw new InvalidOperationException("Method 'InternalSendAsync<TCommand, TResult>' not found");
-            MethodInternalSend = internalSend ?? throw new InvalidOperationException("Method 'InternalSendAsync<TCommand>' not found");
-            MethodInternalBroadcast = internalBroadcast ?? throw new InvalidOperationException("Method 'InternalBroadcastAsync<TEvent>' not found");
-            MethodInternalFetch = internalFetch ?? throw new InvalidOperationException("Method 'InternalFetchAsync<TQuery, TResult>' not found");
+            MethodServiceProviderBuildService = GetMethods(typeof(IMediatorServiceProvider))
+                .Single(m => m.Name == nameof(IMediatorServiceProvider.BuildService));
         }
 
         private readonly IMediatorServiceProvider _serviceProvider;
-        private readonly List<IPipeline> _reversedPipelines;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
         /// <param name="serviceProvider">The handler factory</param>
-        /// <param name="pipelines">The mediator pipeline collection</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mediator(IMediatorServiceProvider serviceProvider, IEnumerable<IPipeline> pipelines = null)
+        public Mediator(IMediatorServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-
-            if (pipelines == null)
-                _reversedPipelines = EmptyPipelines;
-            else
-            {
-                _reversedPipelines = new List<IPipeline>(pipelines);
-                _reversedPipelines.Reverse();
-            }
         }
 
         /// <inheritdoc />
@@ -126,32 +66,51 @@ namespace SimpleSoft.Mediator
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
 
+            //Func<IMediatorServiceProvider, object, CancellationToken, object> caller = (provider, obj, cancellationToken) =>
+            //{
+            //    return provider
+            //        .BuildService<ISender<TCommand>>()
+            //        .SendAsync((TCommand) obj, cancellationToken);
+            //};
+
             var caller = ExpressionCache.GetOrAdd(cmd.GetType(), commandType =>
             {
-                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var senderType = typeof(ISender<>).MakeGenericType(commandType);
+
+                var mediatorServiceProviderParameter = Expression.Parameter(typeof(IMediatorServiceProvider));
                 var commandParameter = Expression.Parameter(typeof(object));
                 var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
 
-                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                return Expression.Lambda<Func<IMediatorServiceProvider, object, CancellationToken, object>>(
                     Expression.Call(
-                        mediatorParameter,
-                        MethodInternalSend.MakeGenericMethod(commandType),
+                        Expression.Call(
+                            mediatorServiceProviderParameter,
+                            MethodServiceProviderBuildService.MakeGenericMethod(senderType)
+                        ),
+                        GetMethods(senderType).Single(m => m.Name == "SendAsync"),
                         Expression.TypeAs(commandParameter, commandType),
                         cancellationTokenParameter
                     ),
-                    mediatorParameter,
+                    mediatorServiceProviderParameter,
                     commandParameter,
                     cancellationTokenParameter
                 ).Compile();
             });
 
-            return (Task) caller(this, cmd, ct);
+            return (Task) caller(_serviceProvider, cmd, ct);
         }
 
         /// <inheritdoc />
         public Task<TResult> SendAsync<TResult>(ICommand<TResult> cmd, CancellationToken ct)
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
+
+            //Func<IMediatorServiceProvider, object, CancellationToken, object> caller = (provider, obj, cancellationToken) =>
+            //{
+            //    return provider
+            //        .BuildService<ISender<TCommand<TResult>, TResult>>()
+            //        .SendAsync((TCommand<TResult>) obj, cancellationToken);
+            //};
 
             var caller = ExpressionCache.GetOrAdd(cmd.GetType(), commandType =>
             {
@@ -174,24 +133,29 @@ namespace SimpleSoft.Mediator
                     ).GenericTypeArguments[0];
 #endif
 
-                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var senderType = typeof(ISender<,>).MakeGenericType(commandType, returnType);
+
+                var mediatorServiceProviderParameter = Expression.Parameter(typeof(IMediatorServiceProvider));
                 var commandParameter = Expression.Parameter(typeof(object));
                 var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
 
-                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                return Expression.Lambda<Func<IMediatorServiceProvider, object, CancellationToken, object>>(
                     Expression.Call(
-                        mediatorParameter,
-                        MethodInternalSendWithResult.MakeGenericMethod(commandType, returnType),
+                        Expression.Call(
+                            mediatorServiceProviderParameter,
+                            MethodServiceProviderBuildService.MakeGenericMethod(senderType)
+                        ),
+                        GetMethods(senderType).Single(m => m.Name == "SendAsync"),
                         Expression.TypeAs(commandParameter, commandType),
                         cancellationTokenParameter
                     ),
-                    mediatorParameter,
+                    mediatorServiceProviderParameter,
                     commandParameter,
                     cancellationTokenParameter
                 ).Compile();
             });
 
-            return (Task<TResult>) caller(this, cmd, ct);
+            return (Task<TResult>) caller(_serviceProvider, cmd, ct);
         }
 
         /// <inheritdoc />
@@ -199,32 +163,51 @@ namespace SimpleSoft.Mediator
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
+            //Func<IMediatorServiceProvider, object, CancellationToken, object> caller = (provider, obj, cancellationToken) =>
+            //{
+            //    return provider
+            //        .BuildService<IBroadcaster<TEvent>>()
+            //        .BroadcastAsync((TEvent) obj, cancellationToken);
+            //};
+
             var caller = ExpressionCache.GetOrAdd(evt.GetType(), eventType =>
             {
-                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var broadcasterType = typeof(IBroadcaster<>).MakeGenericType(eventType);
+
+                var mediatorServiceProviderParameter = Expression.Parameter(typeof(IMediatorServiceProvider));
                 var eventParameter = Expression.Parameter(typeof(object));
                 var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
 
-                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                return Expression.Lambda<Func<IMediatorServiceProvider, object, CancellationToken, object>>(
                     Expression.Call(
-                        mediatorParameter,
-                        MethodInternalBroadcast.MakeGenericMethod(eventType),
+                        Expression.Call(
+                            mediatorServiceProviderParameter,
+                            MethodServiceProviderBuildService.MakeGenericMethod(broadcasterType)
+                        ),
+                        GetMethods(broadcasterType).Single(m => m.Name == "BroadcastAsync"),
                         Expression.TypeAs(eventParameter, eventType),
                         cancellationTokenParameter
                     ),
-                    mediatorParameter,
+                    mediatorServiceProviderParameter,
                     eventParameter,
                     cancellationTokenParameter
                 ).Compile();
             });
 
-            return (Task) caller(this, evt, ct);
+            return (Task) caller(_serviceProvider, evt, ct);
         }
 
         /// <inheritdoc />
         public Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken ct)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
+
+            //Func<IMediatorServiceProvider, object, CancellationToken, object> caller = (provider, obj, cancellationToken) =>
+            //{
+            //    return provider
+            //        .BuildService<IFetcher<TQuery<TResult>, TResult>>()
+            //        .FetchAsync((TQuery<TResult>) obj, cancellationToken);
+            //};
 
             var caller = ExpressionCache.GetOrAdd(query.GetType(), queryType =>
             {
@@ -247,169 +230,38 @@ namespace SimpleSoft.Mediator
                     ).GenericTypeArguments[0];
 #endif
 
-                var mediatorParameter = Expression.Parameter(typeof(Mediator));
+                var fetcherType = typeof(IFetcher<,>).MakeGenericType(queryType, returnType);
+
+                var mediatorServiceProviderParameter = Expression.Parameter(typeof(IMediatorServiceProvider));
                 var queryParameter = Expression.Parameter(typeof(object));
                 var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
 
-                return Expression.Lambda<Func<Mediator, object, CancellationToken, object>>(
+                return Expression.Lambda<Func<IMediatorServiceProvider, object, CancellationToken, object>>(
                     Expression.Call(
-                        mediatorParameter,
-                        MethodInternalFetch.MakeGenericMethod(queryType, returnType),
+                        Expression.Call(
+                            mediatorServiceProviderParameter,
+                            MethodServiceProviderBuildService.MakeGenericMethod(fetcherType)
+                        ),
+                        GetMethods(fetcherType).Single(m => m.Name == "FetchAsync"),
                         Expression.TypeAs(queryParameter, queryType),
                         cancellationTokenParameter
                     ),
-                    mediatorParameter,
+                    mediatorServiceProviderParameter,
                     queryParameter,
                     cancellationTokenParameter
                 ).Compile();
             });
 
-            return (Task<TResult>) caller(this, query, ct);
+            return (Task<TResult>) caller(_serviceProvider, query, ct);
         }
 
-        #region Typed Implementations
-
-        /// <summary>
-        /// Typed implementation for <see cref="SendAsync"/>.
-        /// </summary>
-        /// <typeparam name="TCommand"></typeparam>
-        /// <param name="cmd"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
-        public Task InternalSendAsync<TCommand>(TCommand cmd, CancellationToken ct)
-            where TCommand : class, ICommand
+        private static IEnumerable<MethodInfo> GetMethods(Type type)
         {
-            if (cmd == null) throw new ArgumentNullException(nameof(cmd));
-
-            Func<TCommand, CancellationToken, Task> next = (c, cancellationToken) =>
-            {
-                var handler = _serviceProvider.BuildService<ICommandHandler<TCommand>>();
-                if (handler == null)
-                    throw CommandHandlerNotFoundException.Build(c);
-                return handler.HandleAsync(c, cancellationToken);
-            };
-
-            foreach (var middleware in _reversedPipelines)
-            {
-                var old = next;
-                next = (c, cancellationToken) => middleware.OnCommandAsync(old, c, cancellationToken);
-            }
-
-            return next(cmd, ct);
+#if NETSTANDARD1_1
+            return type.GetTypeInfo().DeclaredMethods;
+#else
+            return type.GetMethods();
+#endif
         }
-
-        /// <summary>
-        /// Typed implementation for <see cref="SendAsync{TResult}"/>.
-        /// </summary>
-        /// <typeparam name="TCommand"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="cmd"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
-        public Task<TResult> InternalSendAsync<TCommand, TResult>(TCommand cmd, CancellationToken ct)
-            where TCommand : class, ICommand<TResult>
-        {
-            if (cmd == null) throw new ArgumentNullException(nameof(cmd));
-
-            Func<TCommand, CancellationToken, Task<TResult>> next = (c, cancellationToken) =>
-            {
-                var handler = _serviceProvider.BuildService<ICommandHandler<TCommand, TResult>>();
-                if (handler == null)
-                    throw CommandHandlerNotFoundException.Build<TCommand, TResult>(c);
-                return handler.HandleAsync(c, cancellationToken);
-            };
-
-            foreach (var middleware in _reversedPipelines)
-            {
-                var old = next;
-                next = (c, cancellationToken) => middleware.OnCommandAsync(old, c, cancellationToken);
-            }
-
-            return next(cmd, ct);
-        }
-
-        /// <summary>
-        /// Typed implementation for <see cref="BroadcastAsync"/>
-        /// </summary>
-        /// <typeparam name="TEvent"></typeparam>
-        /// <param name="evt"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
-        public Task InternalBroadcastAsync<TEvent>(TEvent evt, CancellationToken ct)
-            where TEvent : class, IEvent
-        {
-            if (evt == null) throw new ArgumentNullException(nameof(evt));
-
-            Func<TEvent, CancellationToken, Task> next = (e, cancellationToken) =>
-            {
-                var handlers = _serviceProvider
-                    .BuildServices<IEventHandler<TEvent>>()
-                    .Select(handler => handler.HandleAsync(e, cancellationToken))
-                    .ToArray();
-                if (handlers.Length == 0)
-                    return CompletedTask;
-
-                var tcs = new TaskCompletionSource<bool>();
-                Task.Factory.ContinueWhenAll(handlers, tasks =>
-                {
-                    List<Exception> exceptions = null;
-                    foreach (var t in tasks)
-                    {
-                        if (t.Exception == null)
-                            continue;
-
-                        exceptions ??= new List<Exception>(tasks.Length);
-                        exceptions.Add(t.Exception.InnerException);
-                    }
-
-                    if (exceptions == null)
-                        tcs.SetResult(true);
-                    else
-                        tcs.SetException(new AggregateException(exceptions));
-                }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Current);
-
-                return tcs.Task;
-            };
-
-            foreach (var middleware in _reversedPipelines)
-            {
-                var old = next;
-                next = (e, cancellationToken) => middleware.OnEventAsync(old, e, cancellationToken);
-            }
-
-            return next(evt, ct);
-        }
-
-        /// <summary>
-        /// Typed implementation for <see cref="FetchAsync{TResult}"/>
-        /// </summary>
-        /// <typeparam name="TQuery"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
-        public Task<TResult> InternalFetchAsync<TQuery, TResult>(TQuery query, CancellationToken ct)
-            where TQuery : class, IQuery<TResult>
-        {
-            if (query == null) throw new ArgumentNullException(nameof(query));
-
-            Func<TQuery, CancellationToken, Task<TResult>> next = (q, cancellationToken) =>
-            {
-                var handler = _serviceProvider.BuildService<IQueryHandler<TQuery, TResult>>();
-                if (handler == null)
-                    throw QueryHandlerNotFoundException.Build<TQuery, TResult>(q);
-                return handler.HandleAsync(q, cancellationToken);
-            };
-
-            foreach (var middleware in _reversedPipelines)
-            {
-                var old = next;
-                next = (q, cancellationToken) => middleware.OnQueryAsync(old, q, cancellationToken);
-            }
-
-            return next(query, ct);
-        }
-
-#endregion
     }
 }
