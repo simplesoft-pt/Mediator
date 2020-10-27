@@ -80,36 +80,28 @@ namespace SimpleSoft.Mediator
             if (!_logger.IsEnabled(_options.Level) || !isActive) 
                 return;
 
+            var serializedInstance = _options.Serializer(instance);
             switch (_options.Level)
             {
                 case LogLevel.Trace:
-                    _logger.LogTrace(message, name, SerializeToJson(instance));
+                    _logger.LogTrace(message, name, serializedInstance);
                     break;
                 case LogLevel.Debug:
-                    _logger.LogDebug(message, name, SerializeToJson(instance));
+                    _logger.LogDebug(message, name, serializedInstance);
                     break;
                 case LogLevel.Information:
-                    _logger.LogInformation(message, name, SerializeToJson(instance));
+                    _logger.LogInformation(message, name, serializedInstance);
                     break;
                 case LogLevel.Warning:
-                    _logger.LogWarning(message, name, SerializeToJson(instance));
+                    _logger.LogWarning(message, name, serializedInstance);
                     break;
                 case LogLevel.Error:
-                    _logger.LogError(message, name, SerializeToJson(instance));
+                    _logger.LogError(message, name, serializedInstance);
                     break;
                 case LogLevel.Critical:
-                    _logger.LogCritical(message, name, SerializeToJson(instance));
+                    _logger.LogCritical(message, name, serializedInstance);
                     break;
             }
-        }
-
-        private string SerializeToJson<T>(T value)
-        {
-#if NETSTANDARD1_1
-            return Newtonsoft.Json.JsonConvert.SerializeObject(value, _options.SerializerSettings);
-#else
-            return System.Text.Json.JsonSerializer.Serialize(value, _options.SerializerSettings);
-#endif
         }
     }
 }

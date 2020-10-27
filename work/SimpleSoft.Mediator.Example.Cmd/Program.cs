@@ -44,8 +44,6 @@ namespace SimpleSoft.Mediator.Example.Cmd
 
                             loggingOptions.LogQuery = true;
                             loggingOptions.LogQueryResult = true;
-
-                            loggingOptions.SerializerSettings.WriteIndented = true;
                         });
                         o.AddPipelineForValidation(validationOptions =>
                         {

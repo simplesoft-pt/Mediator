@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 
 namespace SimpleSoft.Mediator
 {
@@ -7,6 +8,29 @@ namespace SimpleSoft.Mediator
     /// </summary>
     public class LoggingPipelineOptions
     {
+        private Func<object, string> _serializer;
+
+        /// <summary>
+        /// Creates a new instance
+        /// </summary>
+        public LoggingPipelineOptions()
+        {
+#if NETSTANDARD1_1
+            var cachedSettings = new Newtonsoft.Json.JsonSerializerSettings
+            {
+                Formatting = Newtonsoft.Json.Formatting.Indented
+            };
+            _serializer = instance => Newtonsoft.Json.JsonConvert.SerializeObject(instance, cachedSettings);
+#else
+            var cachedSettings = new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            _serializer = instance => System.Text.Json.JsonSerializer.Serialize(instance, cachedSettings);
+#endif
+
+        }
+
         /// <summary>
         /// Serialize and log commands? Defaults to 'true'.
         /// </summary>
@@ -37,26 +61,13 @@ namespace SimpleSoft.Mediator
         /// </summary>
         public LogLevel Level { get; set; } = LogLevel.Trace;
 
-#if NETSTANDARD1_1
-
         /// <summary>
-        /// Settings for JSON serialization. Defaults to 'new JsonSerializerSettings(){ Formatting = Formatting.Indented }'.
+        /// Used to serialize the instance into the logs as a string. Defaults to an indented JSON representation.
         /// </summary>
-        public Newtonsoft.Json.JsonSerializerSettings SerializerSettings { get; set; } = new Newtonsoft.Json.JsonSerializerSettings
+        public Func<object, string> Serializer
         {
-            Formatting = Newtonsoft.Json.Formatting.Indented
-        };
-
-#else
-
-        /// <summary>
-        /// Settings for JSON serialization. Defaults to 'new JsonSerializerOptions(){ WriteIndented = true }'.
-        /// </summary>
-        public System.Text.Json.JsonSerializerOptions SerializerSettings { get; set; } = new System.Text.Json.JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-
-#endif
+            get => _serializer;
+            set => _serializer = value ?? throw new ArgumentNullException(nameof(value));
+        }
     }
 }
