@@ -1,5 +1,3 @@
-using System.Linq;
-using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -47,16 +45,13 @@ namespace SimpleSoft.Mediator.Example.Api
                     cfg.BeginTransactionOnCommand = true;
                 });
 
+                // searches for all IValidator<T> and adds them into the IServiceCollection
+                o.AddValidatorsFromAssemblyOf<Startup>();
+
                 // searches for all ICommandHandler, IQueryHandler and IEventHandler
                 // and adds them into the IServiceCollection
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
-
-            // scanning for validators into the container
-            foreach (var implementationType in typeof(Startup).Assembly.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract))
-            foreach (var serviceType in implementationType.GetInterfaces()
-                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IValidator<>)))
-                services.AddSingleton(serviceType, implementationType);
 
             services.AddDbContext<ExampleApiContext>(o =>
             {
