@@ -132,48 +132,10 @@ namespace Microsoft.Extensions.DependencyInjection
             ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
 #if NETSTANDARD1_1
-            return options.AddHandlersFromAssembly(typeof(T).GetTypeInfo().Assembly);
+            return options.AddHandlersFromAssembly(typeof(T).GetTypeInfo().Assembly, lifetime);
 #else
-            return options.AddHandlersFromAssembly(typeof(T).Assembly);
+            return options.AddHandlersFromAssembly(typeof(T).Assembly, lifetime);
 #endif
-        }
-
-        /// <summary>
-        /// Registers all the command, query and event handlers found in the given type assembly.
-        /// </summary>
-        /// <typeparam name="T1">The type to scan the assembly</typeparam>
-        /// <typeparam name="T2">The type to scan the assembly</typeparam>
-        /// <param name="options">The mediator options</param>
-        /// <param name="lifetime">The handlers lifetime</param>
-        /// <returns>The options instance after changes</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static MediatorOptions AddHandlersFromAssemblyOf<T1, T2>(this MediatorOptions options,
-            ServiceLifetime lifetime = ServiceLifetime.Transient)
-        {
-            options.AddHandlersFromAssemblyOf<T1>(lifetime);
-            options.AddHandlersFromAssemblyOf<T2>(lifetime);
-
-            return options;
-        }
-
-        /// <summary>
-        /// Registers all the command, query and event handlers found in the given type assembly.
-        /// </summary>
-        /// <typeparam name="T1">The type to scan the assembly</typeparam>
-        /// <typeparam name="T2">The type to scan the assembly</typeparam>
-        /// <typeparam name="T3">The type to scan the assembly</typeparam>
-        /// <param name="options">The mediator options</param>
-        /// <param name="lifetime">The handlers lifetime</param>
-        /// <returns>The options instance after changes</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static MediatorOptions AddHandlersFromAssemblyOf<T1, T2, T3>(this MediatorOptions options,
-            ServiceLifetime lifetime = ServiceLifetime.Transient)
-        {
-            options.AddHandlersFromAssemblyOf<T1>(lifetime);
-            options.AddHandlersFromAssemblyOf<T2>(lifetime);
-            options.AddHandlersFromAssemblyOf<T3>(lifetime);
-
-            return options;
         }
 
         /// <summary>
@@ -221,30 +183,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     }
                 }
             }
-
-            return options;
-        }
-
-        /// <summary>
-        /// Registers all the command, query and event handlers found in the given assemblies
-        /// as <see cref="ServiceLifetime.Transient"/>.
-        /// </summary>
-        /// <param name="options">The mediator options</param>
-        /// <param name="assembly1">The assembly to scan</param>
-        /// <param name="assembly2">The assembly to scan</param>
-        /// <param name="assemblies">The assemblies to scan</param>
-        /// <returns>The options instance after changes</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static MediatorOptions AddHandlersFromAssembly(this MediatorOptions options,
-            Assembly assembly1, Assembly assembly2, params Assembly[] assemblies)
-        {
-            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-            options.AddHandlersFromAssembly(assembly1);
-            options.AddHandlersFromAssembly(assembly2);
-
-            foreach (var a in assemblies)
-                options.AddHandlersFromAssembly(a);
 
             return options;
         }
