@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddPipelineForEFCoreTransaction<TDbContext>(
-            this MediatorOptions options, Action<EFCoreTransactionPipelineOptions> config = null, ServiceLifetime lifetime = ServiceLifetime.Scoped) 
+            this MediatorOptions options, Action<EFCoreTransactionPipelineOptions> config = null, ServiceLifetime lifetime = ServiceLifetime.Transient) 
             where TDbContext : DbContext
         {
             if (config != null)

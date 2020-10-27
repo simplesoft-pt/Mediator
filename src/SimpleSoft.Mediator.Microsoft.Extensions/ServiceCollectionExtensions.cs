@@ -74,7 +74,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="lifetime">The pipeline lifetime</param>
         /// <returns>The options instance after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static MediatorOptions AddPipeline<T>(this MediatorOptions options, ServiceLifetime lifetime = ServiceLifetime.Scoped) 
+        public static MediatorOptions AddPipeline<T>(this MediatorOptions options, ServiceLifetime lifetime = ServiceLifetime.Transient) 
             where T : class, IPipeline
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
@@ -93,7 +93,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The options instance after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddPipeline(
-            this MediatorOptions options, Func<IServiceProvider, IPipeline> factory, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            this MediatorOptions options, Func<IServiceProvider, IPipeline> factory, ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
@@ -129,7 +129,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The options instance after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddHandlersFromAssemblyOf<T>(this MediatorOptions options, 
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
 #if NETSTANDARD1_1
             return options.AddHandlersFromAssembly(typeof(T).GetTypeInfo().Assembly);
@@ -148,7 +148,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The options instance after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddHandlersFromAssemblyOf<T1, T2>(this MediatorOptions options,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
             options.AddHandlersFromAssemblyOf<T1>(lifetime);
             options.AddHandlersFromAssemblyOf<T2>(lifetime);
@@ -167,7 +167,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The options instance after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddHandlersFromAssemblyOf<T1, T2, T3>(this MediatorOptions options,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
             options.AddHandlersFromAssemblyOf<T1>(lifetime);
             options.AddHandlersFromAssemblyOf<T2>(lifetime);
@@ -185,7 +185,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The options instance after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddHandlersFromAssembly(this MediatorOptions options, 
-            Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
@@ -227,7 +227,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <summary>
         /// Registers all the command, query and event handlers found in the given assemblies
-        /// as a <see cref="ServiceLifetime.Scoped"/>.
+        /// as <see cref="ServiceLifetime.Transient"/>.
         /// </summary>
         /// <param name="options">The mediator options</param>
         /// <param name="assembly1">The assembly to scan</param>

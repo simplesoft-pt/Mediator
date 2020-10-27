@@ -48,13 +48,13 @@ namespace SimpleSoft.Mediator
         public IServiceCollection Services { get; }
 
         /// <summary>
-        /// The mediator instance lifetime. Defaults to '<see cref="ServiceLifetime.Scoped"/>'.
+        /// The mediator instance lifetime. Defaults to '<see cref="ServiceLifetime.Transient"/>'.
         /// </summary>
-        public ServiceLifetime Lifetime { get; set; } = ServiceLifetime.Scoped;
+        public ServiceLifetime Lifetime { get; set; } = ServiceLifetime.Transient;
 
         /// <summary>
-        /// The mediator service provider instance lifetime. Defaults to '<see cref="ServiceLifetime.Scoped"/>'.
+        /// The mediator service provider instance lifetime. Defaults to '<see cref="ServiceLifetime.Transient"/>'.
         /// </summary>
-        public ServiceLifetime ServiceProviderLifetime { get; set; } = ServiceLifetime.Scoped;
+        public ServiceLifetime ServiceProviderLifetime { get; set; } = ServiceLifetime.Transient;
     }
 }

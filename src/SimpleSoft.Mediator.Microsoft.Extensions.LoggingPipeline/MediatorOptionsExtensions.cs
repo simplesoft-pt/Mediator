@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MediatorOptions AddPipelineForLogging(
-            this MediatorOptions options, Action<LoggingPipelineOptions> config = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            this MediatorOptions options, Action<LoggingPipelineOptions> config = null, ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
             if (config != null)
                 options.Services.Configure(config);
