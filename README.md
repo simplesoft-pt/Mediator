@@ -3,6 +3,10 @@ Small .NET library that helps with the implementation of mediator pattern for co
 
 Using a mediator instance, send commands, broadcast events and fetch queries from their respective generic handlers.
 
+## Articles
+
+* [Introduction to the mediator pattern in ASP.NET Core applications](https://joaoprsimoes.medium.com/mediator-pattern-in-asp-net-core-applications-109b4231c0f8)
+
 ## Installation
 The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft.Mediator) packages:
 
