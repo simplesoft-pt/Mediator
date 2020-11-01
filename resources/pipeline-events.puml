@@ -9,8 +9,8 @@ IMediator -> "IPipeline(1)" ++: OnEventAsync
 "IPipeline(2)" -> "IPipeline(2)" ++: next(event, ct)
 "IPipeline(2)" -> "IPipeline(N)" ++: OnEventAsync
 "IPipeline(N)" -> "IPipeline(N)" ++: next(event, ct)
-"IPipeline(N)" -> IEventHandler ++: HandleAsync
-IEventHandler -> IEventHandler : react to event
+"IPipeline(N)" -> "IEventHandler(0...N)" ++: HandleAsync
+"IEventHandler(0...N)" -> "IEventHandler(0...N)" : react to event
 return Task
 return
 return Task
