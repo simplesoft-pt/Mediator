@@ -1,5 +1,5 @@
 @startuml pipeline-commands
-title Pipeline for Commands 
+'title Pipeline for Commands 
 
 [-> IMediator ++: SendAsync
 IMediator -> IMediator ++: next(cmd, ct)

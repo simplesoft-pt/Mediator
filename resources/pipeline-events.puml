@@ -1,5 +1,5 @@
 @startuml pipeline-events
-title Pipeline for Events 
+'title Pipeline for Events 
 
 [-> IMediator ++: BroadcastAsync
 IMediator -> IMediator ++: next(event, ct)
