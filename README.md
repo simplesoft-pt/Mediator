@@ -6,6 +6,7 @@ Using a mediator instance, send commands, broadcast events and fetch queries fro
 ## Articles
 
 * [Introduction to the mediator pattern in ASP.NET Core applications](https://joaoprsimoes.medium.com/mediator-pattern-in-asp-net-core-applications-109b4231c0f8)
+* [Mediator Pattern in ASP.NET Core Applications - Intercept commands, queries and events to apply transversal behavior](https://joaoprsimoes.medium.com/mediator-pattern-in-asp-net-core-applications-pipelines-ec0926e71bc8)
 
 ## Installation
 The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft.Mediator) packages:
