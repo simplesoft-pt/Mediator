@@ -80,7 +80,7 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) where TEvent : class, IEvent
         {
-            if (!_options.BeginTransactionOnCommand)
+            if (!_options.BeginTransactionOnEvent)
             {
                 await next(evt, ct);
                 return;
@@ -102,7 +102,7 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) where TQuery : class, IQuery<TResult>
         {
-            if (!_options.BeginTransactionOnCommand)
+            if (!_options.BeginTransactionOnQuery)
             {
                 return await next(query, ct);
             }
