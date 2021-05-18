@@ -35,64 +35,64 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task OnCommandAsync<TCommand>(Func<TCommand, CancellationToken, Task> next, TCommand cmd, CancellationToken ct) where TCommand : class, ICommand
         {
-            if (_options.BeginTransactionOnCommand)
+            if (!_options.BeginTransactionOnCommand)
             {
-                _logger.LogDebug("Starting a command transaction");
-
-#if NETSTANDARD2_1
-                await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-                using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
-
                 await next(cmd, ct);
-
-                _logger.LogDebug("Saving changes into the database");
-
-                await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-                await tx.CommitAsync(ct);
-#else
-                tx.Commit();
-#endif
-
-                _logger.LogInformation("Changes committed into the database");
+                return;
             }
-            else
-                await next(cmd, ct);
+
+            _logger.LogDebug("Starting a command transaction");
+
+#if NETSTANDARD2_1
+            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+            using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
+
+            await next(cmd, ct);
+
+            _logger.LogDebug("Saving changes into the database");
+
+            await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+            await tx.CommitAsync(ct);
+#else
+            tx.Commit();
+#endif
+
+            _logger.LogInformation("Changes committed into the database");
         }
 
         /// <inheritdoc />
         public async Task<TResult> OnCommandAsync<TCommand, TResult>(Func<TCommand, CancellationToken, Task<TResult>> next, TCommand cmd, CancellationToken ct) where TCommand : class, ICommand<TResult>
         {
-            TResult result;
-            if (_options.BeginTransactionOnCommand)
+            if (!_options.BeginTransactionOnCommand)
             {
-                _logger.LogDebug("Starting a command transaction");
-
-#if NETSTANDARD2_1
-                await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-                using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
-
-                result = await next(cmd, ct);
-
-                _logger.LogDebug("Saving changes into the database");
-
-                await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-                await tx.CommitAsync(ct);
-#else
-                tx.Commit();
-#endif
-
-                _logger.LogInformation("Changes committed into the database");
+                return await next(cmd, ct);
             }
-            else
-                result = await next(cmd, ct);
+
+            _logger.LogDebug("Starting a command transaction");
+
+#if NETSTANDARD2_1
+            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+            using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
+
+            var result = await next(cmd, ct);
+
+            _logger.LogDebug("Saving changes into the database");
+
+            await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+            await tx.CommitAsync(ct);
+#else
+            tx.Commit();
+#endif
+
+            _logger.LogInformation("Changes committed into the database");
 
             return result;
         }
@@ -100,64 +100,64 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) where TEvent : class, IEvent
         {
-            if (_options.BeginTransactionOnEvent)
+            if (!_options.BeginTransactionOnEvent)
             {
-                _logger.LogDebug("Starting an event transaction");
-
-#if NETSTANDARD2_1
-                await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-                using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
-
                 await next(evt, ct);
-
-                _logger.LogDebug("Saving changes into the database");
-
-                await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-                await tx.CommitAsync(ct);
-#else
-                tx.Commit();
-#endif
-
-                _logger.LogInformation("Changes committed into the database");
+                return;
             }
-            else
-                await next(evt, ct);
+
+            _logger.LogDebug("Starting an event transaction");
+
+#if NETSTANDARD2_1
+            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+            using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
+
+            await next(evt, ct);
+
+            _logger.LogDebug("Saving changes into the database");
+
+            await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+            await tx.CommitAsync(ct);
+#else
+            tx.Commit();
+#endif
+
+            _logger.LogInformation("Changes committed into the database");
         }
 
         /// <inheritdoc />
         public async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) where TQuery : class, IQuery<TResult>
         {
-            TResult result;
-            if (_options.BeginTransactionOnQuery)
+            if (!_options.BeginTransactionOnQuery)
             {
-                _logger.LogDebug("Starting a query transaction");
-
-#if NETSTANDARD2_1
-                await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-                using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
-
-                result = await next(query, ct);
-
-                _logger.LogDebug("Saving changes into the database");
-
-                await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-                await tx.CommitAsync(ct);
-#else
-                tx.Commit();
-#endif
-
-                _logger.LogInformation("Changes committed into the database");
+                return await next(query, ct);
             }
-            else
-                result = await next(query, ct);
+            
+            _logger.LogDebug("Starting a query transaction");
+
+#if NETSTANDARD2_1
+            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+#else
+            using var tx = await _context.Database.BeginTransactionAsync(ct);
+#endif
+
+            var result = await next(query, ct);
+
+            _logger.LogDebug("Saving changes into the database");
+
+            await _context.SaveChangesAsync(ct);
+
+#if NETSTANDARD2_1
+            await tx.CommitAsync(ct);
+#else
+            tx.Commit();
+#endif
+
+            _logger.LogInformation("Changes committed into the database");
 
             return result;
         }
