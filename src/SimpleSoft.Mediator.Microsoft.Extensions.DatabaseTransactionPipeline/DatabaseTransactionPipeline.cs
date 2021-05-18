@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SimpleSoft.Database;
 
 namespace SimpleSoft.Mediator
 {
     /// <summary>
-    /// Entity Framework Core pipeline 
+    /// SimpleSoft Database pipeline
     /// </summary>
-    public class EFCoreTransactionPipeline<TDbContext> : IPipeline where TDbContext : DbContext
+    public class DatabaseTransactionPipeline : IPipeline
     {
-        private readonly TDbContext _context;
-        private readonly EFCoreTransactionPipelineOptions _options;
-        private readonly ILogger<EFCoreTransactionPipeline<TDbContext>> _logger;
+        private readonly ITransaction _transaction;
+        private readonly DatabaseTransactionPipelineOptions _options;
+        private readonly ILogger<DatabaseTransactionPipeline> _logger;
 
         /// <summary>
         /// Creates a new instance
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="transaction"></param>
         /// <param name="options"></param>
         /// <param name="logger"></param>
-        public EFCoreTransactionPipeline(
-            TDbContext context,
-            IOptions<EFCoreTransactionPipelineOptions> options,
-            ILogger<EFCoreTransactionPipeline<TDbContext>> logger)
+        public DatabaseTransactionPipeline(
+            ITransaction transaction,
+            IOptions<DatabaseTransactionPipelineOptions> options,
+            ILogger<DatabaseTransactionPipeline> logger)
         {
-            _context = context;
+            _transaction = transaction;
             _options = options.Value;
             _logger = logger;
         }
@@ -43,23 +43,13 @@ namespace SimpleSoft.Mediator
 
             _logger.LogDebug("Starting a command transaction");
 
-#if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
+            await _transaction.BeginAsync(ct);
 
             await next(cmd, ct);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
-#else
-            tx.Commit();
-#endif
+            await _transaction.CommitAsync(ct);
 
             _logger.LogInformation("Changes committed into the database");
         }
@@ -71,26 +61,16 @@ namespace SimpleSoft.Mediator
             {
                 return await next(cmd, ct);
             }
-
+            
             _logger.LogDebug("Starting a command transaction");
 
-#if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
+            await _transaction.BeginAsync(ct);
 
             var result = await next(cmd, ct);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
-#else
-            tx.Commit();
-#endif
+            await _transaction.CommitAsync(ct);
 
             _logger.LogInformation("Changes committed into the database");
 
@@ -100,7 +80,7 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) where TEvent : class, IEvent
         {
-            if (!_options.BeginTransactionOnEvent)
+            if (!_options.BeginTransactionOnCommand)
             {
                 await next(evt, ct);
                 return;
@@ -108,23 +88,13 @@ namespace SimpleSoft.Mediator
 
             _logger.LogDebug("Starting an event transaction");
 
-#if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
+            await _transaction.BeginAsync(ct);
 
             await next(evt, ct);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
-#else
-            tx.Commit();
-#endif
+            await _transaction.CommitAsync(ct);
 
             _logger.LogInformation("Changes committed into the database");
         }
@@ -132,30 +102,20 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) where TQuery : class, IQuery<TResult>
         {
-            if (!_options.BeginTransactionOnQuery)
+            if (!_options.BeginTransactionOnCommand)
             {
                 return await next(query, ct);
             }
-            
+
             _logger.LogDebug("Starting a query transaction");
 
-#if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
-#else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
-#endif
+            await _transaction.BeginAsync(ct);
 
             var result = await next(query, ct);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
-
-#if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
-#else
-            tx.Commit();
-#endif
+            await _transaction.CommitAsync(ct);
 
             _logger.LogInformation("Changes committed into the database");
 

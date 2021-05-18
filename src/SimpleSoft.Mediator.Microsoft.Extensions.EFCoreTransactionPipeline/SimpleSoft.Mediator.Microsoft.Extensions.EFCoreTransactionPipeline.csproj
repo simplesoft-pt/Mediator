@@ -1,34 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="..\..\common.props" />
+  <Import Project="..\..\common.props" />
 
-	<PropertyGroup>
-		<Description>Mediator Entity Framework Core transaction pipeline for commands, queries and events.</Description>
-		<TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.3</TargetFrameworks>
-	</PropertyGroup>
+  <PropertyGroup>
+    <Description>Mediator Entity Framework Core transaction pipeline for commands, queries and events.</Description>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.3</TargetFrameworks>
+  </PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.0.0" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.0.0" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleSoft.Mediator.Microsoft.Extensions\SimpleSoft.Mediator.Microsoft.Extensions.csproj" />
+  </ItemGroup>
 
 </Project>
-
-
-
-
-
-
-
-
