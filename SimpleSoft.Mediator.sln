@@ -57,6 +57,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Example.Api", "work\SimpleSoft.Mediator.Example.Api\SimpleSoft.Mediator.Example.Api.csproj", "{C734A8C7-52E2-4B31-B31B-31FF3737E716}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline", "src\SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline\SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline.csproj", "{A7AFF684-ED19-4DCA-9C2A-01D326CFC5D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{C734A8C7-52E2-4B31-B31B-31FF3737E716}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C734A8C7-52E2-4B31-B31B-31FF3737E716}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C734A8C7-52E2-4B31-B31B-31FF3737E716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7AFF684-ED19-4DCA-9C2A-01D326CFC5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7AFF684-ED19-4DCA-9C2A-01D326CFC5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7AFF684-ED19-4DCA-9C2A-01D326CFC5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7AFF684-ED19-4DCA-9C2A-01D326CFC5D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{554CCCCE-E5DA-4371-AA59-3C7C12B30257} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 		{9F4BFC93-3AF5-4DFA-9DB1-7E533910422B} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 		{C734A8C7-52E2-4B31-B31B-31FF3737E716} = {0BD9E4D4-1E4B-4E73-A1E5-B730BCBE0F42}
+		{A7AFF684-ED19-4DCA-9C2A-01D326CFC5D5} = {6E33BA8D-B206-4021-B031-79AFA8589A1B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE066994-3479-4202-9D4A-485934D1A0C0}
