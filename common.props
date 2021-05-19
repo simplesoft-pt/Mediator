@@ -1,43 +1,43 @@
 <Project>
 
-	<PropertyGroup>
-		<RootNamespace>SimpleSoft.Mediator</RootNamespace>
-		<Product>SimpleSoft.Mediator</Product>
-		<Company>SimpleSoft.pt</Company>
-		<Copyright>Copyright © 2020 SimpleSoft.pt</Copyright>
-		<Authors>João Simões</Authors>
-	</PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>SimpleSoft.Mediator</RootNamespace>
+    <Product>SimpleSoft.Mediator</Product>
+    <Company>SimpleSoft.pt</Company>
+    <Copyright>Copyright © 2021 SimpleSoft.pt</Copyright>
+    <Authors>João Simões</Authors>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-		<GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-		<LangVersion>8</LangVersion>
-	</PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
-		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<SignAssembly>true</SignAssembly>
-		<GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-		<GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-		<IsPackable>true</IsPackable>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>../../tools/SimpleSoft.Mediator.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <SignAssembly>true</SignAssembly>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<PackageTags>patterns;mediator</PackageTags>
-		<PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
-		<PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
-		<PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-	</PropertyGroup>
+  <PropertyGroup>
+    <PackageTags>patterns;mediator</PackageTags>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/30837484</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/simplesoft-pt/Mediator</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/simplesoft-pt/Mediator/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/simplesoft-pt/Mediator.git</RepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<AssemblyVersion>2.0.0</AssemblyVersion>
-		<FileVersion>2.0.0.20301</FileVersion>
-		<VersionPrefix>2.0.0</VersionPrefix>
-	</PropertyGroup>
+  <PropertyGroup>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.21139</FileVersion>
+    <VersionPrefix>2.1.0-rc01</VersionPrefix>
+  </PropertyGroup>
 
 </Project>
