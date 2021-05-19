@@ -80,7 +80,7 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task OnEventAsync<TEvent>(Func<TEvent, CancellationToken, Task> next, TEvent evt, CancellationToken ct) where TEvent : class, IEvent
         {
-            if (!_options.BeginTransactionOnCommand)
+            if (!_options.BeginTransactionOnEvent)
             {
                 await next(evt, ct);
                 return;
@@ -102,7 +102,7 @@ namespace SimpleSoft.Mediator
         /// <inheritdoc />
         public async Task<TResult> OnQueryAsync<TQuery, TResult>(Func<TQuery, CancellationToken, Task<TResult>> next, TQuery query, CancellationToken ct) where TQuery : class, IQuery<TResult>
         {
-            if (!_options.BeginTransactionOnCommand)
+            if (!_options.BeginTransactionOnQuery)
             {
                 return await next(query, ct);
             }
@@ -115,9 +115,18 @@ namespace SimpleSoft.Mediator
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _transaction.CommitAsync(ct);
+            if (_options.ForceRollbackOnQuery)
+            {
+                await _transaction.RollbackAsync(ct);
 
-            _logger.LogInformation("Changes committed into the database");
+                _logger.LogInformation("Changes were reverted from the database");
+            }
+            else
+            {
+                await _transaction.CommitAsync(ct);
+
+                _logger.LogInformation("Changes committed into the database");
+            }
 
             return result;
         }
