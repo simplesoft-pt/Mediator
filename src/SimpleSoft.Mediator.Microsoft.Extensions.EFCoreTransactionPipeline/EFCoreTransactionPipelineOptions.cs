@@ -19,5 +19,11 @@
         /// Should a transaction be open on queries? Defaults to 'false'.
         /// </summary>
         public bool BeginTransactionOnQuery { get; set; } = false;
+
+        /// <summary>
+        /// When using transactions on queries (<see cref="BeginTransactionOnQuery"/>),
+        /// should a rollback be made to prevent changes? Defaults to 'false'.
+        /// </summary>
+        public bool ForceRollbackOnQuery { get; set; } = false;
     }
 }

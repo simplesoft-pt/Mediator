@@ -115,9 +115,18 @@ namespace SimpleSoft.Mediator
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _transaction.CommitAsync(ct);
+            if (_options.ForceRollbackOnQuery)
+            {
+                await _transaction.RollbackAsync(ct);
 
-            _logger.LogInformation("Changes committed into the database");
+                _logger.LogInformation("Changes were reverted from the database");
+            }
+            else
+            {
+                await _transaction.CommitAsync(ct);
+
+                _logger.LogInformation("Changes committed into the database");
+            }
 
             return result;
         }
