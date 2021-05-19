@@ -33,10 +33,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "work", "work", "{0BD9E4D4-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9E75A35F-ED02-4712-A2C9-44B58EEA1BCD}"
 	ProjectSection(SolutionItems) = preProject
-		resources\lifecycle-commands.png = resources\lifecycle-commands.png
-		resources\lifecycle-events.png = resources\lifecycle-events.png
-		resources\lifecycle-queries.png = resources\lifecycle-queries.png
-		resources\Lifecycle.odp = resources\Lifecycle.odp
+		resources\pipeline-commands.png = resources\pipeline-commands.png
+		resources\pipeline-commands.puml = resources\pipeline-commands.puml
+		resources\pipeline-events.png = resources\pipeline-events.png
+		resources\pipeline-events.puml = resources\pipeline-events.puml
+		resources\pipeline-queries.png = resources\pipeline-queries.png
+		resources\pipeline-queries.puml = resources\pipeline-queries.puml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSoft.Mediator", "src\SimpleSoft.Mediator\SimpleSoft.Mediator.csproj", "{5E0FA32F-C55A-432D-A65C-4CBB3F0EC992}"
