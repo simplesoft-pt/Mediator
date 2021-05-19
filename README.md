@@ -20,6 +20,7 @@ The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft
 | [SimpleSoft.Mediator.Abstractions](https://www.nuget.org/packages/simplesoft.mediator.abstractions) | interfaces and abstract implementations (commands, events, queries, mediator, ...) | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.abstractions.svg)](https://www.nuget.org/packages/simplesoft.mediator.abstractions) |
 | [SimpleSoft.Mediator](https://www.nuget.org/packages/simplesoft.mediator) | core implementation | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.svg)](https://www.nuget.org/packages/simplesoft.mediator) |
 | [SimpleSoft.Mediator.Microsoft.Extensions](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions) | specialized methods and classes for the Microsoft dependency injection container and logging facades | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions) |
+| [SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.databasetransactionpipeline) | mediator pipeline to enforce SimpleSoft.Database transactions | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.databasetransactionpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.databasetransactionpipeline) |
 | [SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.efcoretransactionpipeline) | mediator pipeline to enforce Entity Framework Core transactions | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.efcoretransactionpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.efcoretransactionpipeline) |
 | [SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.loggingpipeline) | pipeline that serializes commands, queries, events and results into the logging | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.loggingpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.loggingpipeline) |
 | [SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.validationpipeline) | pipeline that enforces validation into commands, queries and events before entering the handlers by using `FluentValidation` | [![NuGet](https://img.shields.io/nuget/vpre/simplesoft.mediator.microsoft.extensions.validationpipeline.svg)](https://www.nuget.org/packages/simplesoft.mediator.microsoft.extensions.validationpipeline) |
@@ -29,6 +30,7 @@ The library is available via [NuGet](https://www.nuget.org/packages?q=SimpleSoft
 Install-Package SimpleSoft.Mediator.Abstractions
 Install-Package SimpleSoft.Mediator
 Install-Package SimpleSoft.Mediator.Microsoft.Extensions
+Install-Package SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline
 Install-Package SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline
 Install-Package SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline
 Install-Package SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
@@ -39,6 +41,7 @@ Install-Package SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
 dotnet add package SimpleSoft.Mediator.Abstractions
 dotnet add package SimpleSoft.Mediator
 dotnet add package SimpleSoft.Mediator.Microsoft.Extensions
+dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline
 dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline
 dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.LoggingPipeline
 dotnet add package SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
@@ -53,6 +56,8 @@ This library is compatible with the following frameworks:
   * .NET Framework 4.0+;
   * .NET Standard 1.0+;
 * `SimpleSoft.Mediator.Microsoft.Extensions`
+  * .NET Standard 1.1+;
+* `SimpleSoft.Mediator.Microsoft.Extensions.DatabaseTransactionPipeline`
   * .NET Standard 1.1+;
 * `SimpleSoft.Mediator.Microsoft.Extensions.EFCoreTransactionPipeline`
   * .NET Standard 1.3+;
