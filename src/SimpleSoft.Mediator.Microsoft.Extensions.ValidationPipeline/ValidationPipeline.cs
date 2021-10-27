@@ -76,23 +76,23 @@ namespace SimpleSoft.Mediator
             {
                 if (_options.FailIfValidatorNotFound)
                     throw new InvalidOperationException($"Validator for '{typeof(T).FullName}' not found");
+                
+                return;
             }
-            else
+
+            _logger.LogDebug("Validating instance");
+            var result = await validator.ValidateAsync(instance, ct).ConfigureAwait(false);
+
+            if (result.IsValid)
             {
-                _logger.LogDebug("Validating instance");
-                var result = await validator.ValidateAsync(instance, ct).ConfigureAwait(false);
-
-                if (result.IsValid)
-                {
-                    _logger.LogInformation("Instance is valid");
-                    return;
-                }
-
-                if (_options.OnFailedValidation != null)
-                    await _options.OnFailedValidation(instance, result, ct).ConfigureAwait(false);
-
-                throw new ValidationException(result.Errors);
+                _logger.LogInformation("Instance is valid");
+                return;
             }
+
+            if (_options.OnFailedValidation != null)
+                await _options.OnFailedValidation(instance, result, ct).ConfigureAwait(false);
+
+            throw new ValidationException(result.Errors);
         }
     }
 }
