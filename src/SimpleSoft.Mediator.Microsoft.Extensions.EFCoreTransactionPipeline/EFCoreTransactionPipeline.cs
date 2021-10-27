@@ -37,26 +37,26 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnCommand)
             {
-                await next(cmd, ct);
+                await next(cmd, ct).ConfigureAwait(false);
                 return;
             }
 
             _logger.LogDebug("Starting a command transaction");
 
 #if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+            await using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
+            using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #endif
 
-            await next(cmd, ct);
+            await next(cmd, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(ct).ConfigureAwait(false);
 
 #if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
+            await tx.CommitAsync(ct).ConfigureAwait(false);
 #else
             tx.Commit();
 #endif
@@ -69,25 +69,25 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnCommand)
             {
-                return await next(cmd, ct);
+                return await next(cmd, ct).ConfigureAwait(false);
             }
 
             _logger.LogDebug("Starting a command transaction");
 
 #if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+            await using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
+            using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #endif
 
-            var result = await next(cmd, ct);
+            var result = await next(cmd, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(ct).ConfigureAwait(false);
 
 #if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
+            await tx.CommitAsync(ct).ConfigureAwait(false);
 #else
             tx.Commit();
 #endif
@@ -102,26 +102,26 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnEvent)
             {
-                await next(evt, ct);
+                await next(evt, ct).ConfigureAwait(false);
                 return;
             }
 
             _logger.LogDebug("Starting an event transaction");
 
 #if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+            await using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
+            using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #endif
 
-            await next(evt, ct);
+            await next(evt, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(ct).ConfigureAwait(false);
 
 #if NETSTANDARD2_1
-            await tx.CommitAsync(ct);
+            await tx.CommitAsync(ct).ConfigureAwait(false);
 #else
             tx.Commit();
 #endif
@@ -134,18 +134,18 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnQuery)
             {
-                return await next(query, ct);
+                return await next(query, ct).ConfigureAwait(false);
             }
             
             _logger.LogDebug("Starting a query transaction");
 
 #if NETSTANDARD2_1
-            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+            await using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #else
-            using var tx = await _context.Database.BeginTransactionAsync(ct);
+            using var tx = await _context.Database.BeginTransactionAsync(ct).ConfigureAwait(false);
 #endif
 
-            var result = await next(query, ct);
+            var result = await next(query, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
@@ -153,7 +153,7 @@ namespace SimpleSoft.Mediator
             {
 
 #if NETSTANDARD2_1
-                await tx.RollbackAsync(ct);
+                await tx.RollbackAsync(ct).ConfigureAwait(false);
 #else
                 tx.Rollback();
 #endif
@@ -162,10 +162,10 @@ namespace SimpleSoft.Mediator
             }
             else
             {
-                await _context.SaveChangesAsync(ct);
+                await _context.SaveChangesAsync(ct).ConfigureAwait(false);
 
 #if NETSTANDARD2_1
-                await tx.CommitAsync(ct);
+                await tx.CommitAsync(ct).ConfigureAwait(false);
 #else
                 tx.Commit();
 #endif

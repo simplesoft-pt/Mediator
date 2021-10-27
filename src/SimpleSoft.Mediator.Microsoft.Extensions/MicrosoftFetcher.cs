@@ -35,7 +35,7 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope("QueryName:{queryName} QueryId:{queryId}", query.GetType().Name, query.Id))
             {
                 _logger.LogDebug("Fetching query data");
-                return await base.FetchAsync(query, ct);
+                return await base.FetchAsync(query, ct).ConfigureAwait(false);
             }
         }
     }

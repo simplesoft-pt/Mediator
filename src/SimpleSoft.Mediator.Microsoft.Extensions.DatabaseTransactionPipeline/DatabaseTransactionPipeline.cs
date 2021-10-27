@@ -37,19 +37,19 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnCommand)
             {
-                await next(cmd, ct);
+                await next(cmd, ct).ConfigureAwait(false);
                 return;
             }
 
             _logger.LogDebug("Starting a command transaction");
 
-            await _transaction.BeginAsync(ct);
+            await _transaction.BeginAsync(ct).ConfigureAwait(false);
 
-            await next(cmd, ct);
+            await next(cmd, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _transaction.CommitAsync(ct);
+            await _transaction.CommitAsync(ct).ConfigureAwait(false);
 
             _logger.LogInformation("Changes committed into the database");
         }
@@ -59,18 +59,18 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnCommand)
             {
-                return await next(cmd, ct);
+                return await next(cmd, ct).ConfigureAwait(false);
             }
             
             _logger.LogDebug("Starting a command transaction");
 
-            await _transaction.BeginAsync(ct);
+            await _transaction.BeginAsync(ct).ConfigureAwait(false);
 
-            var result = await next(cmd, ct);
+            var result = await next(cmd, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _transaction.CommitAsync(ct);
+            await _transaction.CommitAsync(ct).ConfigureAwait(false);
 
             _logger.LogInformation("Changes committed into the database");
 
@@ -82,19 +82,19 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnEvent)
             {
-                await next(evt, ct);
+                await next(evt, ct).ConfigureAwait(false);
                 return;
             }
 
             _logger.LogDebug("Starting an event transaction");
 
-            await _transaction.BeginAsync(ct);
+            await _transaction.BeginAsync(ct).ConfigureAwait(false);
 
-            await next(evt, ct);
+            await next(evt, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
-            await _transaction.CommitAsync(ct);
+            await _transaction.CommitAsync(ct).ConfigureAwait(false);
 
             _logger.LogInformation("Changes committed into the database");
         }
@@ -104,26 +104,26 @@ namespace SimpleSoft.Mediator
         {
             if (!_options.BeginTransactionOnQuery)
             {
-                return await next(query, ct);
+                return await next(query, ct).ConfigureAwait(false);
             }
 
             _logger.LogDebug("Starting a query transaction");
 
-            await _transaction.BeginAsync(ct);
+            await _transaction.BeginAsync(ct).ConfigureAwait(false);
 
-            var result = await next(query, ct);
+            var result = await next(query, ct).ConfigureAwait(false);
 
             _logger.LogDebug("Saving changes into the database");
 
             if (_options.ForceRollbackOnQuery)
             {
-                await _transaction.RollbackAsync(ct);
+                await _transaction.RollbackAsync(ct).ConfigureAwait(false);
 
                 _logger.LogInformation("Changes were reverted from the database");
             }
             else
             {
-                await _transaction.CommitAsync(ct);
+                await _transaction.CommitAsync(ct).ConfigureAwait(false);
 
                 _logger.LogInformation("Changes committed into the database");
             }
