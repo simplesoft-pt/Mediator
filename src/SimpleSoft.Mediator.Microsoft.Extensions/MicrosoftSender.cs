@@ -34,7 +34,7 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope("CommandName:{commandName} CommandId:{commandId}", cmd.GetType().Name, cmd.Id))
             {
                 _logger.LogDebug("Sending command");
-                await base.SendAsync(cmd, ct);
+                await base.SendAsync(cmd, ct).ConfigureAwait(false);
             }
         }
     }
@@ -69,7 +69,7 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope("CommandName:{commandName} CommandId:{commandId}", cmd.GetType().Name, cmd.Id))
             {
                 _logger.LogDebug("Sending command");
-                return await base.SendAsync(cmd, ct);
+                return await base.SendAsync(cmd, ct).ConfigureAwait(false);
             }
         }
     }

@@ -34,7 +34,7 @@ namespace SimpleSoft.Mediator
             using (_logger.BeginScope("EventName:{eventName} EventId:{eventId}", evt.GetType().Name, evt.Id))
             {
                 _logger.LogDebug("Broadcasting event");
-                await base.BroadcastAsync(evt, ct);
+                await base.BroadcastAsync(evt, ct).ConfigureAwait(false);
             }
         }
     }
